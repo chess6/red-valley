@@ -1,8 +1,10 @@
 # Godot 4 import cache / editor state
 .godot/
 
-# Godot exports
-export_presets.cfg
+# Godot exports. Anchored: only the repository's own preset file is ignored
+# (Godot rewrites it with machine-local paths). tools/ci/export_presets.cfg is
+# the committed, code-reviewed preset the release workflow exports with.
+/export_presets.cfg
 build/
 *.translation
 

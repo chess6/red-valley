@@ -1,0 +1,92 @@
+name: asset-gate
+
+# Commercial-asset gate. The `gate` job runs on everything; `release-export`
+# only builds after `gate` has passed, re-runs the checker against the exact
+# tree it is about to export, and then verifies the produced package itself.
+# A build is only ever published if all three of those pass.
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: provenance + isolation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Gate self-tests
+        run: python3 tools/tests/test_asset_gate.py
+
+      - name: Check working tree
+        run: python3 tools/asset_gate.py check
+
+  release-export:
+    name: release export
+    needs: gate
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    env:
+      GODOT_VERSION: "4.7-stable"
+      PRESET: Linux
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Godot and export templates
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          curl -fsSL -o godot.zip "${base}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          curl -fsSL -o templates.tpz "${base}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+          unzip -q templates.tpz
+          # The .tpz unpacks to templates/; Godot wants it under the version dir.
+          target="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$target"
+          mv templates/* "$target/"
+
+      - name: Install the reviewed export preset
+        # The repository's own export_presets.cfg is gitignored (Godot rewrites
+        # it with machine-local paths), so the release build uses the committed,
+        # code-reviewed copy instead of whatever a developer had locally.
+        run: cp tools/ci/export_presets.cfg export_presets.cfg
+
+      - name: Gate the exact tree being exported
+        run: python3 tools/asset_gate.py check
+
+      - name: Import resources
+        run: godot --headless --path . --import
+
+      - name: Export
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          godot --headless --path . --export-release "$PRESET" build/red_valley.x86_64
+
+      - name: Gate the built package
+        # Independent of the preset: scans the produced bytes for any
+        # evaluation-only path, so a mis-edited filter cannot ship silently.
+        run: python3 tools/asset_gate.py check-package build/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: red-valley-linux
+          path: build/
+          if-no-files-found: error
