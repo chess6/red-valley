@@ -40,3 +40,11 @@ art/character/renders/*.png
 *_ed25519
 id_*
 .ssh/
+
+# assetgen: local venv + caches stay out of git
+tools/assetgen/.venv/
+tools/assetgen/cache/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
