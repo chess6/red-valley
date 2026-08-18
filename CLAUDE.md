@@ -11,7 +11,7 @@ next: `docs/STATUS.md`.
 - Godot **4.7**: `/opt/Godot4/Godot_v4.7-stable_linux.x86_64`
 - Blender **5.1**: `/opt/blender/blender`
 - Blender MCP is already configured in `.mcp.json` (a local clone at
-  `~/tools/blender_mcp`, the blender.org-maintained MCP server — not the
+  `tools/blender_mcp/` — gitignored, the blender.org-maintained MCP server — not the
   third-party `ahujasid/blender-mcp`). Verify it's live with `/mcp` before
   relying on it; it requires Blender running with the addon enabled.
 
@@ -51,6 +51,36 @@ If you run Godot manually outside that script, check `git diff
 project.godot` afterward and don't commit an unintended rewrite. Restore it
 with `git checkout -- project.godot` **only** if you have no intentional
 uncommitted changes in that file, since checkout discards them.
+
+## Art assets: automation only, never authoring
+
+**Do not create art assets. Full rules + evidence: `docs/ASSET_POLICY.md`.**
+
+The Blender MCP connector is for *pipeline automation*, not autonomous art
+generation. That distinction is load-bearing:
+
+- **Allowed** — importing/fitting authored assets through their own systems,
+  batch ops, LODs from authored meshes, validation (manifold, intersection,
+  symmetry, budgets), renders and review sheets, Godot export, licence and
+  provenance records, incremental checkpoints.
+- **Forbidden** — procedural garment/organic geometry, booleans to shape
+  clothing, coordinate-predicate vertex deletion, cloth parameter-tuning loops,
+  shrinkwrap-as-modelling, sculpting, scripted retopology, hair grooming.
+
+**If an asset is missing: stop and report it.** Propose sourcing it with a
+licence check. Never synthesise a substitute or present one as progress.
+
+Gate order for anything visual — the reverse of this order wasted an entire
+session: **silhouette & resemblance → fit & construction → materials →
+topology → deformation → retopo/LOD/export.**
+
+Never both build and sign off the same visual work. Stop at milestones, state
+what looks wrong, and let a human approve. Metrics are not a substitute for
+looking at the render.
+
+Third-party assets: record source URL, author, licence and SHA-256 in
+`art/character/SOURCE_LICENSES.md`. The boots are **CC-BY (Mindfront)** and
+require attribution in shipped credits.
 
 ## Protected design thesis
 
