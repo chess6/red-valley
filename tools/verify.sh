@@ -34,6 +34,20 @@ fi
 
 overall=0
 
+# First, because it needs no Godot and catches the expensive-to-discover-late
+# class of problem: an asset with no provenance, or evaluation-only output
+# leaking toward a build.
+echo "== commercial-asset gate (tools/asset_gate.py) =="
+if ! python3 tools/asset_gate.py check; then
+	echo "verify: asset gate FAILED" >&2
+	overall=1
+fi
+if ! python3 tools/tests/test_asset_gate.py >/dev/null 2>&1; then
+	echo "verify: asset gate self-tests FAILED -- rerun 'python3 tools/tests/test_asset_gate.py' for detail" >&2
+	overall=1
+fi
+
+echo
 echo "== unit tests (tests/run_tests.gd) =="
 if ! "$GODOT" --headless --path . --script tests/run_tests.gd; then
 	echo "verify: unit tests FAILED" >&2
