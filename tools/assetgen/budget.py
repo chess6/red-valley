@@ -281,18 +281,40 @@ def render(result: Assessment, title: str) -> None:
         print(f"   BREACH: {breach}", file=sys.stderr)
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Vast.ai spend guard.")
-    parser.add_argument("--json", action="store_true", help="machine-readable output")
+def _add_global_flags(parser: argparse.ArgumentParser, *, suppress: bool) -> None:
+    """Give `parser` its own copy of the flags that work on either side.
+
+    `budget.py --json assess` and `budget.py assess --json` must both work: a
+    caller that guesses wrong otherwise gets unparseable output, which is how
+    the doc example in VAST_BUDGET.md shipped broken.
+
+    Two details make it work. Each parser gets freshly constructed actions
+    rather than shared ones, because argparse's set_defaults() mutates action
+    objects in place -- with parents= the subparser and the main parser share
+    those objects, so setting a default on one silently changes the other. And
+    the subparser's defaults are SUPPRESS, so an absent flag leaves no key in
+    the sub-namespace to overwrite what the main parser already parsed.
+    """
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        default=argparse.SUPPRESS if suppress else False,
+        help="machine-readable output",
+    )
     parser.add_argument(
         "--min-hold-hours",
         type=float,
-        default=DEFAULT_MIN_HOLD_HOURS,
+        default=argparse.SUPPRESS if suppress else DEFAULT_MIN_HOLD_HOURS,
         help="minimum affordable hold time for a parked (stopped) instance",
     )
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Vast.ai spend guard.")
+    _add_global_flags(parser, suppress=False)
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("assess", help="report the current position")
+    assess_p = sub.add_parser("assess", help="report the current position")
 
     pre = sub.add_parser("preflight", help="check a proposed run before creating it")
     pre.add_argument("--hours", type=float, required=True)
@@ -302,7 +324,14 @@ def main(argv: list[str] | None = None) -> int:
     post.add_argument("--instance", required=True)
     post.add_argument("--hours", type=float, required=True)
 
-    args = parser.parse_args(argv)
+    for subparser in (assess_p, pre, post):
+        _add_global_flags(subparser, suppress=True)
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
 
     try:
         if args.command == "assess":

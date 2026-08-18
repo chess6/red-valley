@@ -54,32 +54,39 @@ Despite the name "1-Way Commercial", §3.3 reads:
 
 The commercial permission runs **one way — to NVIDIA**, not to licensees.
 
-### Where it actually applies (verified by source inspection)
+### Where it applies — CORRECTED by runtime evidence
 
-`nvdiffrast` is imported in exactly these places:
+An earlier version of this document claimed, from a source grep, that
+`nvdiffrast` appeared only in texturing/rendering modules and therefore did not
+touch the geometry path. **That claim was wrong.**
+
+A real inference run was instrumented to dump `sys.modules` after execution.
+The modules actually loaded during *geometry* inference include:
 
 ```
-Pixal3D/pixal3d/pipelines/trellis2_texturing.py     <- texturing
-Pixal3D/pixal3d/renderers/mesh_renderer.py          <- rendering
-Pixal3D/pixal3d/renderers/pbr_mesh_renderer.py      <- PBR rendering
-TRELLIS.2/trellis2/pipelines/trellis2_texturing.py  <- texturing
-TRELLIS.2/trellis2/renderers/mesh_renderer.py       <- rendering
+_nvdiffrast_c   nvdiffrast   nvdiffrast.torch   nvdiffrast.torch.ops
+o_voxel  o_voxel._C  cumesh  cumesh._C  flex_gemm  ...
 ```
 
-It is **not** imported by `Pixal3D/inference.py`, the geometry-generation
-entry point. TRELLIS.2's `setup.sh` likewise treats `--nvdiffrast` and
-`--nvdiffrec` as *optional* flags.
+The mechanism: **`o_voxel` — a core geometry extension — imports `nvdiffrast`
+at import time.** Loading it is unavoidable; `import o_voxel` fails outright
+with `ModuleNotFoundError: No module named 'nvdiffrast'` until nvdiffrast is
+installed.
 
-**Consequence — a real distinction, not a technicality:**
+**Consequence:** every asset this pipeline produces is nvdiffrast-derived,
+geometry included. The whole pipeline is therefore **research/evaluation
+only**, not merely its textures. Evidence: `player_v01/logs/out/smoke_modules.json`.
 
-- **Raw geometry** produced by the shape pipeline does not pass through
-  `nvdiffrast`.
-- **PBR textures** produced by the texturing pipeline **do**.
+A grep proves what a file mentions. It does not prove what a program loads.
 
-Since the brief requires 4K PBR textures, the delivered asset is
-texturing-derived and therefore **non-commercial**. If a licence-clean asset
-is ever needed, the untextured mesh is the cleaner starting point — but that
-is a decision for a human, and this note is not legal advice.
+### Additional gated / restricted dependency found at runtime
+
+`briaai/RMBG-2.0` (background removal) is **gated** on Hugging Face — the
+pipeline aborts with a 401 unless the account has accepted its terms — and is
+itself **non-commercial**. Pixal3D constructs it unconditionally at pipeline
+load, but `preprocess_image()` skips background removal when the input is RGBA
+with a real alpha channel. Supplying alpha inputs and stubbing the constructor
+avoids the gate and the extra licence entirely.
 
 ---
 
