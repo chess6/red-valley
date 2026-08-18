@@ -1,0 +1,459 @@
+{
+ "description": "manually created asset-packs file, name used for selection box, descr, size and license for tool tip",
+ "packs": {
+  "makehuman::system_assets": {
+	"descr": "Makehuman system assets",
+	"base": "hm08",
+	"url": "asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip",
+	"size": 267,
+	"license": "cc0"
+  },
+  "makehuman::system_clothes_materials01": {
+	"descr": "Extra materials for system clothes",
+	"base": "hm08",
+	"url": "asset_packs/system_clothes_materials01/system_clothes_materials01_cc0.zip",
+	"size": 45,
+	"license": "cc0"
+  },
+  "makehuman::system_hair_materials01": {
+	"descr": "Extra materials for system hair",
+	"base": "hm08",
+	"url": "asset_packs/system_hair_materials01/system_hair_materials01_cc0.zip",
+	"size": 82,
+	"license": "cc0"
+  },
+  "makehuman2::additional_assets": {
+	"descr": "Makehuman2 additional assets",
+	"base": "hm08",
+	"url": "functional/makehuman2_additional_assets/makehuman2_additional_assets_cc0.zip",
+	"size": 3.8,
+	"license": "cc0"
+  },
+  "makehuman2::additional_cubemaps": {
+	"descr": "Makehuman2 additional Cube-Maps",
+	"base": "*",
+	"url": "functional/makehuman2_cubemaps01/makehuman2_cubemaps01_cc0.zip",
+	"size": 102,
+	"license": "cc0"
+  },
+  "clothes::bodyparts01": {
+	"descr": "Bodyparts: horns",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts01/bodyparts01_cc0.zip",
+	"size": 0.7,
+	"license": "cc0"
+  },
+  "clothes::bodyparts02": {
+	"descr": "Bodyparts: horns",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts02/bodyparts02_cc-by.zip",
+	"size": 10,
+	"license": "cc-by"
+  },
+  "clothes::bodyparts03": {
+	"descr": "Bodyparts: tails and wings",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts03/bodyparts03_cc-by.zip",
+	"size": 37,
+	"license": "cc-by"
+  },
+  "clothes::bodyparts04": {
+	"descr": "Bodyparts: nails",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts04/bodyparts04_cc0.zip",
+	"size": 4,
+	"license": "cc0"
+  },
+  "clothes::bodyparts05": {
+	"descr": "Bodyparts: beards and moustaches",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts05/bodyparts05_cc0.zip",
+	"size": 6,
+	"license": "cc0"
+  },
+  "clothes::bodyparts06": {
+	"descr": "Bodyparts: beards and moustaches",
+	"base": "hm08",
+	"comment": "Note that these assets end up as 'clothes' in MPFB2",
+	"url": "asset_packs/bodyparts06/bodyparts06_cc-by.zip",
+	"size": 12,
+	"license": "cc-by"
+  },
+  "clothes::dress01": {
+	"descr": "Female gowns and dresses",
+	"base": "hm08",
+	"url": "asset_packs/dress01/dress01_cc0.zip",
+	"size": 44,
+	"license": "cc0"
+  },
+  "clothes::dress02": {
+	"descr": "Female gowns and dresses by Elvaerwyn",
+	"base": "hm08",
+	"url": "asset_packs/dress02/dress02_cc-by.zip",
+	"size": 145,
+	"license": "cc-by"
+  },
+  "clothes::dress03": {
+	"descr": "Female gowns and dresses",
+	"url": "asset_packs/dress03/dress03_cc-by.zip",
+	"size": 463,
+	"license": "cc-by"
+  },
+  "clothes::equipment01": {
+	"descr": "Various weapons",
+	"base": "hm08",
+	"url": "asset_packs/equipment01/equipment01_cc0.zip",
+	"size": 17,
+	"license": "cc0"
+  },
+  "clothes::equipment02": {
+	"descr": "Various weapons",
+	"base": "hm08",
+	"url": "asset_packs/equipment02/equipment02_cc-by.zip",
+	"size": 12,
+	"license": "cc-by"
+  },
+  "clothes::equipment03": {
+	"descr": "Various equipment",
+	"base": "hm08",
+	"url": "asset_packs/equipment03/equipment03_cc-by.zip",
+	"size": 122,
+	"license": "cc-by"
+  },
+  "clothes::glasses01": {
+	"descr": "Glasses",
+	"base": "hm08",
+	"url": "asset_packs/glasses01/glasses01_cc0.zip",
+	"size": 5,
+	"license": "cc0"
+  },
+  "clothes::glasses02": {
+	"descr": "Glasses",
+	"base": "hm08",
+	"url": "asset_packs/glasses02/glasses02_ccby.zip",
+	"size": 3,
+	"license": "cc-by"
+  },
+  "clothes::gloves01": {
+	"descr": "Gloves",
+	"base": "hm08",
+	"url": "asset_packs/gloves01/gloves01_cc0.zip",
+	"size": 3,
+	"license": "cc0"
+  },
+  "clothes::hats01": {
+	"descr": "Hats and caps",
+	"base": "hm08",
+	"url": "asset_packs/hats01/hats01_cc0.zip",
+	"size": 6,
+	"license": "cc0"
+  },
+  "clothes::hats03": {
+	"descr": "Hats and caps",
+	"base": "hm08",
+	"url": "asset_packs/hats03/hats03_cc-by.zip",
+	"size": 72,
+	"license": "cc-by"
+  },
+  "clothes::hats02": {
+	"descr": "Helmets",
+	"base": "hm08",
+	"url": "asset_packs/hats02/hats02_cc0.zip",
+	"size": 22,
+	"license": "cc0"
+  },
+  "clothes::hats04": {
+	"descr": "Helmets",
+	"base": "hm08",
+	"url": "asset_packs/hats04/hats04_cc-by.zip",
+	"size": 17,
+	"license": "cc-by"
+  },
+  "clothes::masks01": {
+	"descr": "Masks",
+	"base": "hm08",
+	"url": "asset_packs/masks01/masks01_cc0.zip",
+	"size": 4,
+	"license": "cc0"
+  },
+  "clothes::masks02": {
+	"descr": "Masks",
+	"base": "hm08",
+	"url": "asset_packs/masks02/masks02_ccby.zip",
+	"size": 17,
+	"license": "cc-by"
+  },
+  "clothes::pants01": {
+	"descr": "Pants",
+	"base": "hm08",
+	"url": "asset_packs/pants01/pants01_cc0.zip",
+	"size": 20,
+	"license": "cc0"
+  },
+  "clothes::pants02": {
+	"descr": "Long-legged pants",
+	"base": "hm08",
+	"url": "asset_packs/pants02/pants02_ccby.zip",
+	"size": 125,
+	"license": "cc-by"
+  },
+  "clothes::pants03": {
+	"descr": "Short legged pants swimming trunks",
+	"base": "hm08",
+	"url": "asset_packs/pants03/pants03_ccby.zip",
+	"size": 146,
+	"license": "cc-by"
+  },
+  "clothes::shirts01": {
+	"descr": "T-shirts, sweaters and tops",
+	"base": "hm08",
+	"url": "asset_packs/shirts01/shirts01_cc0.zip",
+	"size": 23,
+	"license": "cc0"
+  },
+  "clothes::shirts02": {
+	"descr": "Long sleeved cardigans, sweaters and shirts",
+	"base": "hm08",
+	"url": "asset_packs/shirts02/shirts02_ccby.zip",
+	"size": 167,
+	"license": "cc-by"
+  },
+  "clothes::shirts03": {
+	"descr": "Short sleeved shirts, tunics and tops",
+	"base": "hm08",
+	"url": "asset_packs/shirts03/shirts03_ccby.zip",
+	"size": 68,
+	"license": "cc-by"
+  },
+  "clothes::shoes01": {
+	"descr": "Shoes and boots",
+	"base": "hm08",
+	"url": "asset_packs/shoes01/shoes01_cc0.zip",
+	"size": 79,
+	"license": "cc0"
+  },
+  "clothes::shoes02": {
+	"descr": "Low shoes, sneakers and sandals",
+	"base": "hm08",
+	"url": "asset_packs/shoes02/shoes02_ccby.zip",
+	"size": 100,
+	"license": "cc-by"
+  },
+  "clothes::shoes03": {
+	"descr": "Boots",
+	"base": "hm08",
+	"url": "asset_packs/shoes03/shoes03_ccby.zip",
+	"size": 47,
+	"license": "cc-by"
+  },
+  "clothes::skirts01": {
+	"descr": "Skirts",
+	"base": "hm08",
+	"url": "asset_packs/skirts01/skirts01_cc0.zip",
+	"size": 28,
+	"license": "cc0"
+  },
+  "clothes::skirts02": {
+	"descr": "Skirts",
+	"base": "hm08",
+	"url": "asset_packs/skirts02/skirts02_cc-by.zip",
+	"size": 53,
+	"license": "cc-by"
+  },
+  "clothes::suits01": {
+	"descr": "Formal suits by Margaret Toigo",
+	"base": "hm08",
+	"url": "asset_packs/suits01/suits01_cc0.zip",
+	"size": 40,
+	"license": "cc0"
+  },
+  "clothes::suits02": {
+	"descr": "Thematic fantasy and sci-fi suits",
+	"base": "hm08",
+	"url": "asset_packs/suits02/suits02_cc0.zip",
+	"size": 183,
+	"license": "cc0"
+  },
+  "clothes::suits03": {
+	"descr": "Thematic suits shared",
+	"base": "hm08",
+	"url": "asset_packs/suits03/suits03_cc-by.zip",
+	"size": 33,
+	"license": "cc-by"
+  },
+  "clothes::underwear01": {
+	"descr": "Female underwear",
+	"base": "hm08",
+	"url": "asset_packs/underwear01/underwear01_cc0.zip",
+	"size": 57,
+	"license": "cc0"
+  },
+  "clothes::underwear02": {
+	"descr": "Female underwear and bikinis",
+	"base": "hm08",
+	"url": "asset_packs/underwear02/underwear02_cc0.zip",
+	"size": 100,
+	"license": "cc-by"
+  },
+  "clothes::underwear03": {
+	"descr": "Various underwear and swimwear",
+	"base": "hm08",
+	"url": "asset_packs/underwear03/underwear03_cc-by.zip",
+	"size": 38,
+	"license": "cc-by"
+  },
+  "clothes::underwear04": {
+	"descr": "Socks",
+	"base": "hm08",
+	"url": "asset_packs/underwear04/underwear04_cc0.zip",
+	"size": 5,
+	"license": "cc0"
+  },
+  "eyebrows::eyebrows01": {
+	"descr": "Eyebrows (high-res) by Mindfront",
+	"base": "hm08",
+	"url": "asset_packs/eyebrows01/eyebrows01_cc0.zip",
+	"size": 10,
+	"license": "cc0"
+  },
+  "eyelashes::eyelashes01": {
+	"descr": "Eyelashes (high-res) by Mindfront",
+	"base": "hm08",
+	"url": "asset_packs/eyelashes01/eyelashes01_cc0.zip",
+	"size": 3,
+	"license": "cc0"
+  },
+  "hair::hair01": {
+	"descr": "Hair: mostly low-poly and stylized",
+	"base": "hm08",
+	"url": "asset_packs/hair01/hair01_cc0.zip",
+	"size": 217,
+	"license": "cc0"
+  },
+  "hair::hair02": {
+	"descr": "Hair: mostly high-poly by Elvaerwyn",
+	"base": "hm08",
+	"url": "asset_packs/hair02/hair02_ccby.zip",
+	"size": 68,
+	"license": "cc-by"
+  },
+  "hair::hair03": {
+	"descr": "Hair: Alpha 7 hair adaptations and miscellaneous",
+	"base": "hm08",
+	"url": "asset_packs/hair03/hair03_ccby.zip",
+	"size": 38,
+	"license": "cc-by"
+  },
+  "poses::poses01" : {
+	"descr": "Poses: sitting",
+	"base": "hm08",
+	"url": "asset_packs/poses01/poses01_cc0.zip",
+	"size": 1.1,
+	"license": "cc0"
+  },
+  "poses::poses02" : {
+	"descr": "Poses: sport",
+	"base": "hm08",
+	"url": "asset_packs/poses02/poses02_cc0.zip",
+	"size": 1.4,
+	"license": "cc0"
+  },
+  "skins::skins01" : {
+	"descr": "Skins: natural female",
+	"base": "hm08",
+	"url": "asset_packs/skins01/skins01_cc0.zip",
+	"size": 99,
+	"license": "cc0"
+  },
+  "skins::skins02" : {
+	"descr": "Skins: natural male",
+	"base": "hm08",
+	"url": "asset_packs/skins02/skins02_cc0.zip",
+	"size": 72,
+	"license": "cc0"
+  },
+  "skins::skins03" : {
+	"descr": "Skins: non-natural",
+	"base": "hm08",
+	"url": "asset_packs/skins03/skins03_cc0.zip",
+	"size": 130,
+	"license": "cc0"
+  },
+  "targets::animal01": {
+	"descr": "Targets: various animal/furry style deforms",
+	"base": "hm08",
+	"url": "asset_packs/animal01/animal01_cc0.zip",
+	"size": 0.4,
+	"license": "cc0"
+  },
+  "targets::animal02": {
+	"descr": "Targets: animal/furry details by JALdMIC",
+	"base": "hm08",
+	"url": "asset_packs/animal02/animal02_ccby.zip",
+	"size": 0.5,
+	"license": "cc-by"
+  },
+  "targets::animal03": {
+	"descr": "Targets: animal/furry head deforms by JALdMIC",
+	"base": "hm08",
+	"url": "asset_packs/animal03/animal03_ccby.zip",
+	"size": 1.7,
+	"license": "cc-by"
+  },
+  "targets::animal04": {
+	"descr": "Targets: animal/furry full body transforms by JALdMIC",
+	"base": "hm08",
+	"url": "asset_packs/animal04/animal04_ccby.zip",
+	"size": 1.0,
+	"license": "cc-by"
+  },
+  "targets::arms01": {
+	"descr": "Targets: realistic details for arms",
+	"base": "hm08",
+	"url": "asset_packs/arms01/arms01_cc0.zip",
+	"size": 0.2,
+	"license": "cc0"
+  },
+  "targets::cartoon": {
+	"descr": "Targets: cartoon and anime style deforms",
+	"base": "hm08",
+	"url": "asset_packs/cartoon01/cartoon01_cc0.zip",
+	"size": 1.4,
+	"license": "cc0"
+  },
+  "targets::cheek01": {
+	"descr": "Targets: realistic or fantasy details for cheeks",
+	"base": "hm08",
+	"url": "asset_packs/cheek01/cheek01_cc0.zip",
+	"size": 0.3,
+	"license": "cc0"
+  },
+  "targets::ears01": {
+	"descr": "Targets: realistic or fantasy details for ears",
+	"base": "hm08",
+	"url": "asset_packs/ears01/ears01_cc0.zip",
+	"size": 0.5,
+	"license": "cc0"
+  },
+  "targets::hands01": {
+	"descr": "Targets: realistic details for hands",
+	"base": "hm08",
+	"url": "asset_packs/hands01/hands01_cc0.zip",
+	"size": 0.1,
+	"license": "cc0"
+  },
+  "targets::nose01": {
+	"descr": "Targets: realistic details for nose",
+	"base": "hm08",
+	"url": "asset_packs/nose01/nose01_cc0.zip",
+	"size": 1.2,
+	"license": "cc0"
+  }
+ }
+}
+

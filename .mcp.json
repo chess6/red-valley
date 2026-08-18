@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "blender": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "${HOME}/Dev/red-valley/tools/blender_mcp/mcp",
+        "run",
+        "blender-mcp"
+      ]
+    }
+  }
+}

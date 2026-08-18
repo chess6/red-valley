@@ -10,3 +10,23 @@ build/
 .DS_Store
 *~
 *.tmp
+
+# Claude Code: personal, machine-specific overrides (not shared/team config)
+.claude/settings.local.json
+
+# Vendored third-party tooling: upstream clone of
+# https://projects.blender.org/lab/blender_mcp.git (own .git + .venv, ~86 MB)
+tools/blender_mcp/
+
+# Source asset originals: 665 MB of re-downloadable CC0/CC-BY packs.
+# Provenance (URL + SHA-256 + licence) is recorded in
+# art/character/SOURCE_LICENSES.md, so these need not live in history.
+art/character/source_assets/**/*.zip
+
+# Scratch iteration renders. Curated review sets are kept:
+#   renders/turnaround/  and  renders/v03_review/
+art/character/renders/*.png
+
+# Blender auto-backups
+*.blend1
+*.blend2
