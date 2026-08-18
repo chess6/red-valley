@@ -35,6 +35,10 @@ tools/verify.sh
 
 # environment sanity check — run at the start of a session, or when something's off
 tools/doctor.sh
+
+# vast.ai spend guard — balance, burn rate, runway to the $6 stop line.
+# Run before and during any paid compute; nonzero exit means stop.
+tools/assetgen/vast.sh guard
 ```
 
 Screenshot harness (headless dev tool): see `README.md` → "Dev screenshot
@@ -81,6 +85,40 @@ looking at the render.
 Third-party assets: record source URL, author, licence and SHA-256 in
 `art/character/SOURCE_LICENSES.md`. The boots are **CC-BY (Mindfront)** and
 require attribution in shipped credits.
+
+## Paid compute — $5 is a wall, not a budget
+
+This vast.ai account **auto-refills when the balance falls below $5**, so
+crossing that line charges the card. It is not a spending limit you may lean
+on; it is a line that must never be reached.
+
+**Rule: while any agent-driven compute is running, the *projected* balance
+must never reach $5.** Work stops at the **$6 stop line** — the $5 floor plus
+a $1 reserve for billing lag, bandwidth and rounding. Full reasoning and the
+storage arithmetic: `docs/VAST_BUDGET.md`.
+
+- **Project, don't observe.** A $8 balance with a $1.20/h GPU and 6h left on
+  the clock is *already* a breach: the money is committed, it just has not
+  left the account yet. Current balance alone tells you nothing.
+- **Never start compute outside `tools/assetgen/vast.sh up`.** It refuses if
+  the guard says no, prices the instance the moment it exists, and destroys
+  it within seconds if it cannot finish above the stop line. Raw `vastai
+  create` bypasses every one of those.
+- **One running instance at a time.** Concurrent instances make the
+  projection meaningless.
+- **Storage bills while stopped.** This pilot's 300 GB disk costs ~$0.10/h —
+  $2.40/day — whether or not a GPU is attached. At most one parked instance,
+  and only if the balance can hold it for 72h without reaching the stop line.
+  Otherwise **destroy it rather than stop it**. "Offline storage is cheap" is
+  only true for small disks; check, don't assume.
+- **Never widen a limit to make a run fit.** Do not extend the watchdog
+  budget, do not lower the floor (`RV_VAST_FLOOR_USD` may only raise it), do
+  not disable the watchdog. If a job does not fit, it does not run.
+- **If the guard cannot read the balance, that is unsafe, not neutral.** Do
+  not start; stop what is running. The watchdog does this itself after 20
+  minutes blind.
+- **Never top up the balance, change billing settings, or add a payment
+  method.** If money is the blocker, stop and report it.
 
 ## Protected design thesis
 
