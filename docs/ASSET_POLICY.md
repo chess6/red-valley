@@ -96,6 +96,73 @@ the one that started from human-authored topology.
    A human approves visual milestones. The agent states what it thinks is
    wrong, and does not certify its own work.
 
+## The commercial-asset gate
+
+The policy above governs what an agent may *do*. This section governs what may
+*ship*, and unlike the rest of the document it is enforced by a program:
+`tools/asset_gate.py`, run by `tools/verify.sh` and by GitHub Actions before
+every release export.
+
+It is **fail-closed**. Silence is never consent:
+
+| Situation | Result |
+|---|---|
+| Production file with no manifest entry | **blocked** |
+| `commercial_status` missing, `unknown`, or a value the gate doesn't recognise | **blocked** |
+| Any dependency licence with `commercial_use: false` | **blocked** |
+| File changed since it was cleared (sha256 mismatch) | **blocked** |
+| Scene, script or `.import` referencing an evaluation-only path | **blocked** |
+| Export preset that doesn't exclude the evaluation roots | **blocked** |
+| Built package containing an evaluation-only path | **blocked** |
+| Missing `.gdignore` or `EVALUATION_ONLY.md` in an evaluation root | **blocked** |
+
+### The manifest
+
+`asset_provenance.json` records, for every file under a production root
+(`assets/`): `source`, `generator`, `dependency_licences` (each with an
+explicit `commercial_use` boolean and an evidence URL), `evidence_urls`,
+`commercial_status`, and the `sha256` of the cleared bytes.
+
+The hash is what makes clearance mean something. A clearance applies to the
+bytes a person reviewed, not to the filename — replace the file and the gate
+demands a fresh clearance.
+
+Entries seeded when the gate was introduced carry `clearance.method:
+"baseline"`: provenance derived from the repository rather than an individual
+sign-off. They pass, and `check --strict-baseline` lists them so the backlog
+stays visible.
+
+### Promotion — the only route from evaluation to production
+
+```bash
+tools/asset_gate.py promote art/character/ai_generated/player_v01/processed/x.glb \
+    assets/models/x.glb \
+    --source "..." --generator "..." \
+    --dep "component|licence|true|https://evidence" \
+    --evidence-url https://... --cleared-by "Name" \
+    --evidence "what was reviewed and how" --cleared-on 2026-08-18
+```
+
+**An agent must never set an asset's status to `cleared`.** The command
+enforces this as far as a program can: it refuses without a named person,
+written evidence and an evidence URL; it refuses outright if any dependency
+forbids commercial use; and it takes its confirmation from `/dev/tty`, which a
+piped or automated caller has no way to answer. That is a real barrier, not a
+complete one — anyone can still hand-edit JSON. The manifest is small and
+diffable precisely so that a status change is obvious in review. **A change to
+`commercial_status` is a human decision and should be reviewed as one.**
+
+### The specific thing being guarded
+
+`art/character/ai_generated/` holds AI-pipeline evaluation output. Its
+rendering dependencies (NVIDIA `nvdiffrast` / `nvdiffrec`) are under the
+*Nvidia Source Code License (1-Way Commercial)*, whose §3.3 limits **our** use
+to research or evaluation — the commercial permission is NVIDIA's, not ours.
+Clearing any of it requires either confirming `nvdiffrast` is absent from the
+asset-producing path, or a legal review. Until then it is walled off:
+`.gdignore` (Godot won't import it), gitignored (won't enter history),
+excluded from every export preset, and checked for in the built package.
+
 ## Working agreement
 
 - Human authors or sources the asset. Agent imports, fits, validates, renders,
