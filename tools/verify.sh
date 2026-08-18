@@ -46,6 +46,12 @@ if ! python3 tools/tests/test_asset_gate.py >/dev/null 2>&1; then
 	echo "verify: asset gate self-tests FAILED -- rerun 'python3 tools/tests/test_asset_gate.py' for detail" >&2
 	overall=1
 fi
+# Spend-guard arithmetic. Stubs the vast.ai API, so this makes no network
+# calls and does not depend on there being an account or an instance.
+if ! python3 tools/tests/test_budget.py >/dev/null 2>&1; then
+	echo "verify: vast.ai spend guard tests FAILED -- rerun 'python3 tools/tests/test_budget.py' for detail" >&2
+	overall=1
+fi
 
 echo
 echo "== unit tests (tests/run_tests.gd) =="
