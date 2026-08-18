@@ -1,0 +1,806 @@
+{
+  "schema_version": 1,
+  "_comment": [
+    "Machine-readable provenance for everything that can reach a production build.",
+    "Enforced by tools/asset_gate.py; see docs/ASSET_POLICY.md for the rules.",
+    "Fail-closed: a production file with no entry here, an unrecognised",
+    "commercial_status, a dependency licence that forbids commercial use, or a",
+    "sha256 that no longer matches the bytes on disk all block the build.",
+    "Only a human may set commercial_status to 'cleared' -- see the promote command."
+  ],
+  "production_roots": [
+    "assets"
+  ],
+  "evaluation_roots": [
+    "art/character/ai_generated"
+  ],
+  "ignored_suffixes": [
+    ".import",
+    ".uid"
+  ],
+  "ignored_names": [
+    ".gdignore",
+    ".gitkeep"
+  ],
+  "reference_scan_roots": [
+    "assets",
+    "scenes",
+    "src",
+    "tests"
+  ],
+  "reference_scan_files": [
+    "project.godot"
+  ],
+  "export_preset_globs": [
+    "export_presets.cfg",
+    "tools/ci/export_presets.cfg"
+  ],
+  "assets": {
+    "assets/grass.gdshader": {
+      "source": "Hand-written in this repository.",
+      "generator": "hand-authored; no generator",
+      "dependency_licences": [
+        {
+          "component": "none",
+          "licence": "project-owned, no third-party dependency",
+          "commercial_use": true,
+          "evidence_url": "repo:CLAUDE.md"
+        }
+      ],
+      "evidence_urls": [
+        "repo:assets/grass.gdshader"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "82a804af21ce57b558af020328f16946c317b2835838b2fd53d28d2e07d6815f",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/bin.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "66de3d382982c0763beefb6bb416f48a516113cd6821d2507413b89327a66d5f",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crate.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "4e7c0382ebdb49a20114860d4e3f846cc1fb8e394ab7029a0febdff86ebcd0e6",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_cabbage_grown.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "e3ead15619579847ed66a4429a7b5449592108134e1b02e0c9c2eb4c7d0bcc96",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_cabbage_mature.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "09a43bbb457915d4d657ccac68cca636753d04711f30d9c2808c2c0a9fa5a5af",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_cabbage_young.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "4c016f08f62f6a9b2ad02926811a911d73b9bc48a486852b68357461c099220f",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_dead.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "45b5bf74d809ae18aa23ce73ce640f3cacee52b07f755e1fb4988422e41cfb86",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_potato_grown.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "f97a1426d31dc787d98ff72e71031ade4f237f71069885bb42de1e4802136e0d",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_potato_mature.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "250008076d8d90d5b24f82b9b7fa37ce5e67f7e895ad1ecf628dcb33c1b5e323",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_potato_young.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "ede206483ce800168dffed4e6b5325be281ddac472193456486c0b85f155d533",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_sprout.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "4d5b6a71ecab22bcdb95b4fdb189e9a9789254f53d6f5c17179c26b41e6250da",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_tomato_grown.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "3269816dafe32aaa08fcde1445e25efdbed449501074058b46b64fbea50facfa",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_tomato_mature.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "0bfe918af5d702e300ffed2530da8d9b545b328e1fc1f90ea63c76b4482f60a8",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_tomato_young.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "8bcedb06239c4e2353916a12f9f22649eb229438451140feed0f869d6794fe87",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_wheat_grown.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "7d05307de4572915dde98410056c2b187149fb9aa9e7a5e3cc1c591020491a58",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_wheat_mature.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "a5861602fb99acedc82a9a4b88e04c951b49a396e4700e116c151ef884df498d",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/crop_wheat_young.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "a5f770e4fdb02bce0d45f6b3925c2f0450fc9b485a193d2bce66ea7b277a1a7b",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/farmer.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "dacf02d2568ac9116a73d829cbd4a6a24211dad79bdfa9e122207aec97fded98",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/farmhouse.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "465e1bf2722e6c218bc54c9d44bb0931d52c55196aad9fa070ab08faf1496205",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/fence.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "81f98f7523c03e20ddce4931cb235318ba4c56349a0d5fd66b6176af1335c1d0",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/hills.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "1d2da22e9991b8c70c37053536bc8b1a3030ff6dce76aaf66da93afc19ec18f1",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/rock.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "b9f6390f06d8424b89cd5917e60d51e10c8154cf92744502990c12b2e478e6af",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/row_cover.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "a938ffe2d0adde4893f1f5c3929e72571fcaad6dc79aa82039eb3be74a650420",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/sarah.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "06c4cf1a7031067b3d8706493ade3a0031a1de027e86db044c17988f9fefbcf8",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/sarah_house.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "6c26005dfd8a3410321c5a7d76ce6bf137c708c3f932f8aad5da808f30b1384d",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/shed.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "9439ac2e1757bde233f72abe6546febaec24c3a349e70e3be88b2d4a5420fb5b",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/tree1.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "54dc853fa4a11477a7de13bf9a5cd2e6b4c381a766768e32db415217e9523b68",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/tree2.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "80688e8d38c1534f652ecb8e94770de4c6e7186a8262fd22d7d269cb19577d32",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/well.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "ee5fd0f1897052d66b340795d6b49296f74457b678d5bcb3b1a17a95dae50c4e",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/windmill_base.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "5b7f6360f9c821380c37983053b55bd77668944b97529471fd26a653dcf5fc65",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/models/windmill_blades.glb": {
+      "source": "Generated in this repository; no third-party mesh, texture or scan input.",
+      "generator": "Blender 5.1.2 running tools/blender/gen_assets.py",
+      "dependency_licences": [
+        {
+          "component": "Blender",
+          "licence": "GPL-3.0-or-later (the tool; its generated output is not GPL-encumbered)",
+          "commercial_use": true,
+          "evidence_url": "https://www.blender.org/about/license/"
+        }
+      ],
+      "evidence_urls": [
+        "repo:tools/blender/gen_assets.py",
+        "https://www.blender.org/about/license/"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "d7093b6967cd048af02540fae3664877c5ce8525cd3d494e10e4cbb1e33352d4",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    },
+    "assets/soil.gdshader": {
+      "source": "Hand-written in this repository.",
+      "generator": "hand-authored; no generator",
+      "dependency_licences": [
+        {
+          "component": "none",
+          "licence": "project-owned, no third-party dependency",
+          "commercial_use": true,
+          "evidence_url": "repo:CLAUDE.md"
+        }
+      ],
+      "evidence_urls": [
+        "repo:assets/soil.gdshader"
+      ],
+      "commercial_status": "cleared",
+      "sha256": "1f6afa35d9e8c4977d6e953b413ac6b85d691c91b379161701ef9063592b583c",
+      "clearance": {
+        "cleared_by": "baseline-import (not an individual human sign-off)",
+        "cleared_on": "2026-08-18",
+        "evidence": "Baseline record created when the commercial-asset gate was introduced. Provenance is derivable from the repository, not from an individual sign-off: this file is produced by an in-repo script with no third-party input, so no external licence attaches to it. Confirm with 'check --strict-baseline' once a human has reviewed it.",
+        "method": "baseline"
+      }
+    }
+  }
+}
