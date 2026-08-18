@@ -1,0 +1,12 @@
+# Godot 4 import cache / editor state
+.godot/
+
+# Godot exports
+export_presets.cfg
+build/
+*.translation
+
+# OS / editor cruft
+.DS_Store
+*~
+*.tmp
