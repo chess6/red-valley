@@ -73,6 +73,12 @@ func has_crop() -> bool:
 func mature() -> bool:
 	return has_crop() and growth >= 1.0
 
+## Grown enough to be worth salvaging, but not ripe -- a real "cut losses
+## now" option (at a penalty) rather than gambling everything on a frost
+## night, distinct from waiting for a full-value harvest.
+func can_harvest_early() -> bool:
+	return has_crop() and growth >= 0.55 and growth < 1.0
+
 # ------------------------------------------------------------------ actions
 
 func plant(id: String) -> bool:
@@ -114,14 +120,17 @@ func apply_mulch() -> void:
 func set_cover(on: bool) -> void:
 	covered = on
 
-## Harvest a mature crop. Returns coins earned (0 if nothing to harvest).
+## Harvest a mature crop for full value, or salvage a grown-but-unripe one
+## early for roughly half of what its current growth is worth. Returns coins
+## earned (0 if nothing worth taking).
 func harvest() -> int:
-	if not mature():
+	if not mature() and not can_harvest_early():
 		return 0
 	var c := crop()
 	var avg_health := _health_integral / maxf(_growth_time, 0.001)
 	var quality := clampf(0.25 + 0.75 * avg_health, 0.0, 1.0)
-	var coins := int(round(float(c["base_yield"]) * quality))
+	var early_penalty := 1.0 if mature() else 0.5
+	var coins := int(round(float(c["base_yield"]) * quality * growth * early_penalty))
 	clear_plot()
 	return coins
 

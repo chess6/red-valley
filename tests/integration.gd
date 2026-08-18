@@ -57,9 +57,23 @@ func plots_by(owner_id: String, crop: String = "") -> Array:
 			out.append(p)
 	return out
 
+## Point the camera rig so its forward ray passes through `point`. The
+## spring-arm camera sits opposite the rig's forward direction at a fixed
+## distance from the rig's (fixed) pivot, so it looks straight through the
+## pivot toward wherever the pivot-to-point direction points -- no iteration
+## needed, this is exact regardless of spring length.
+func aim_at(point: Vector3) -> void:
+	var rig_origin: Vector3 = player.global_position + Vector3(0, 1.55, 0)
+	var dir := (point - rig_origin).normalized()
+	var euler := Basis.looking_at(dir, Vector3.UP).get_euler()
+	player._cam_pitch = clampf(euler.x, -1.1, 0.25)
+	player._cam_yaw = euler.y
+
 func teleport_to(plot: Node3D) -> void:
 	player.global_position = plot.global_position + Vector3(-1.2, 0.1, 0)
-	player._visual.rotation.y = PI / 2   # face +X toward plot
+	for i in 2:
+		await get_tree().physics_frame
+	aim_at(plot.global_position + Vector3(0, 0.45, 0))
 	for i in 6:
 		await get_tree().physics_frame
 
@@ -170,6 +184,19 @@ func run_scenario() -> void:
 	await use_tool_on(any_crop, "hand")
 	check(game.coins > coins0, "harvest earned coins (%d -> %d)" % [coins0, game.coins])
 	check(any_crop.sim.crop_id == "", "plot cleared after harvest")
+
+	print("\n== salvaging a grown-but-unripe crop costs a confirming second press")
+	var growing: Node3D = plots_by("player", "wheat")[0]
+	growing.sim.growth = 0.7
+	growing.sim.dead = false
+	growing.sim.set_cover(false)   # Sarah may have covered it earlier
+	var coins1: int = game.coins
+	await use_tool_on(growing, "hand")
+	check(game.coins == coins1, "first press only arms the salvage, no coins yet")
+	check(growing.sim.crop_id != "", "plot untouched after first press")
+	player._use_tool()   # second press, immediately -- still aimed at the same plot
+	check(game.coins > coins1, "second press confirms the early harvest and pays out")
+	check(growing.sim.crop_id == "", "plot cleared after confirmed salvage")
 
 	print("\n== shop transaction")
 	var covers0: int = game.inventory["cover"]

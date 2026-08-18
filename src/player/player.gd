@@ -6,9 +6,15 @@ extends CharacterBody3D
 const WALK_SPEED := 4.3
 const RUN_SPEED := 7.0
 const MOUSE_SENS := 0.0028
+const AIM_RANGE := 9.0  # camera sits up to spring_length (5.2) behind the player
+## Night blocks ALL field work except covering up (frost protection is the
+## one thing you're allowed to scramble for after dark) and the always-free
+## look-but-don't-touch actions (hand-tool inspect, harvesting what's already
+## ripe, folding away a cover, clearing a dead plant).
+const NIGHT_BLOCKED_TOOLS := ["water", "seeds", "compost", "manure", "mulch"]
 
 const TOOLS := [
-	{"id": "hand", "label": "Hand", "hint": "harvest / clear / uncover"},
+	{"id": "hand", "label": "Hand", "hint": "harvest / clear / uncover / salvage early (press twice)"},
 	{"id": "water", "label": "Watering can", "hint": "water a plot"},
 	{"id": "seeds", "label": "Seeds", "hint": "plant (press again to change crop)"},
 	{"id": "compost", "label": "Compost", "hint": "gentle fertility"},
@@ -21,10 +27,13 @@ const SEED_CYCLE := ["tomato", "cabbage", "potato", "wheat"]
 var tool_index := 0
 var seed_index := 0
 var current_target: Node3D = null      # StaticBody3D with meta
+var _pending_harvest_plot: Plot = null # armed by a first early-harvest press
+var _pending_harvest_timer := 0.0
 var _cam_yaw := 0.0
 var _cam_pitch := -0.35
 var _rig: Node3D
 var _spring: SpringArm3D
+var _cam: Camera3D
 var _visual: Node3D
 var _bob_t := 0.0
 
@@ -49,10 +58,10 @@ func _ready() -> void:
 	_spring.collision_mask = 1
 	_spring.margin = 0.3
 	_rig.add_child(_spring)
-	var cam := Camera3D.new()
-	cam.fov = 65
-	_spring.add_child(cam)
-	cam.current = true
+	_cam = Camera3D.new()
+	_cam.fov = 65
+	_spring.add_child(_cam)
+	_cam.current = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -78,6 +87,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	_rig.rotation = Vector3(_cam_pitch, _cam_yaw, 0)
+	if _pending_harvest_timer > 0.0:
+		_pending_harvest_timer -= delta
+		if _pending_harvest_timer <= 0.0:
+			_pending_harvest_plot = null
 	if not Game.running:
 		return
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
@@ -103,28 +116,16 @@ func _physics_process(delta: float) -> void:
 		_visual.rotation.z = lerp_angle(_visual.rotation.z, 0, 8 * delta)
 	_update_target()
 
-## Nearest aimable body (layer 2) in front of the player.
+## What the camera is actually looking at (layer 2), within reach.
 func _update_target() -> void:
 	var space := get_world_3d().direct_space_state
-	var params := PhysicsShapeQueryParameters3D.new()
-	var sphere := SphereShape3D.new()
-	sphere.radius = 2.4
-	params.shape = sphere
-	var forward := _visual.global_transform.basis * Vector3(0, 0, 1)
-	var aim_point := global_position + Vector3(0, 0.5, 0) + forward * 1.2
-	params.transform = Transform3D(Basis(), aim_point)
+	var from := _cam.global_position
+	var to := from + -_cam.global_transform.basis.z * AIM_RANGE
+	var params := PhysicsRayQueryParameters3D.create(from, to)
 	params.collision_mask = 2
 	params.collide_with_areas = false
-	var hits := space.intersect_shape(params, 8)
-	var best: Node3D = null
-	var best_d := INF
-	for hit in hits:
-		var obj: Node3D = hit["collider"]
-		var d := obj.global_position.distance_to(aim_point)
-		if d < best_d:
-			best_d = d
-			best = obj
-	current_target = best
+	var hit := space.intersect_ray(params)
+	current_target = hit["collider"] if hit else null
 
 func target_plot() -> Plot:
 	if current_target and current_target.has_meta("plot"):
@@ -138,8 +139,10 @@ func target_interact_kind() -> String:
 
 # ------------------------------------------------------------------ actions
 
-func _blocked_by_night() -> bool:
-	if Game.is_night() and Weather.current()["sun"] <= 0.0 and Game.hour() > 21.5:
+func _blocked_by_night(tool_id: String) -> bool:
+	if tool_id not in NIGHT_BLOCKED_TOOLS:
+		return false
+	if Game.is_night() and Weather.current()["sun"] <= 0.0:
 		Game.notify("Too dark for field work. Better get some sleep.")
 		return true
 	return false
@@ -150,6 +153,8 @@ func _use_tool() -> void:
 		return
 	var sim: PlotSim = plot.sim
 	var tool_id: String = TOOLS[tool_index]["id"]
+	if _blocked_by_night(tool_id):
+		return
 	match tool_id:
 		"hand":
 			if sim.covered:
@@ -171,20 +176,18 @@ func _use_tool() -> void:
 				else:
 					Game.earn(coins)
 					Game.notify("Harvested %s -- sold for %d coins." % [crop_name, coins])
+			elif sim.can_harvest_early():
+				_try_harvest_early(plot, sim)
 			elif sim.has_crop():
 				_inspect()
 			else:
 				Game.notify("Bare soil. Plant something, or check it with F.")
 		"water":
-			if _blocked_by_night():
-				return
 			sim.water()
 			Game.spend_action("water")
 			_grant_help_credit(plot, "water")
 			Game.notify("You give the plot a good soaking.")
 		"seeds":
-			if _blocked_by_night():
-				return
 			if sim.has_crop():
 				Game.notify("Something is already growing here.")
 				return
@@ -233,6 +236,26 @@ func _use_tool() -> void:
 			Game.spend_action("cover")
 			_grant_help_credit(plot, "cover")
 			Game.notify("Row cover pinned down tight.")
+
+## Salvaging a not-yet-ripe crop destroys it for half value -- too costly to
+## trigger on a single accidental click. First press arms it (with a toast);
+## a second press on the same plot within a few seconds confirms it.
+func _try_harvest_early(plot: Plot, sim: PlotSim) -> void:
+	if _pending_harvest_plot == plot and _pending_harvest_timer > 0.0:
+		var crop_name: String = sim.crop().get("label", "crop")
+		var coins := sim.harvest()
+		Game.spend_action("harvest")
+		_pending_harvest_plot = null
+		_pending_harvest_timer = 0.0
+		if plot.owner_id == "sarah":
+			_grant_help_credit(plot, "harvest")
+		else:
+			Game.earn(coins)
+		Game.notify("Harvested %s early -- %d coins. It hadn't finished ripening." % [crop_name, coins])
+	else:
+		_pending_harvest_plot = plot
+		_pending_harvest_timer = 3.0
+		Game.notify("Still growing. Hand it again to salvage now at roughly half value.")
 
 func _grant_help_credit(plot: Plot, action: String) -> void:
 	if plot.owner_id == "sarah":

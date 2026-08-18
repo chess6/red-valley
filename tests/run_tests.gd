@@ -13,6 +13,7 @@ var checks := 0
 
 func _initialize() -> void:
 	test_weather_determinism()
+	test_weather_generation_order_independent()
 	test_weather_variety_and_forecast()
 	test_sandy_dries_faster_than_clay()
 	test_clay_waterlogs_in_heavy_rain_sandy_drains()
@@ -120,15 +121,48 @@ func test_weather_variety_and_forecast() -> void:
 		elif f["frost_chance"] < 0.1:
 			lo_total += 1
 			if actual_frost: lo_hits += 1
-	check(hi_total > 0 and float(hi_hits) / hi_total > 0.7, "high frost forecasts mostly freeze (%d/%d)" % [hi_hits, hi_total])
+	check(hi_total > 0 and float(hi_hits) / hi_total > 0.55, "high frost forecasts mostly freeze (%d/%d)" % [hi_hits, hi_total])
+	check(hi_total > 0 and hi_hits < hi_total, "high frost forecasts are not a perfect oracle (%d/%d)" % [hi_hits, hi_total])
 	check(lo_total > 0 and float(lo_hits) / lo_total < 0.1, "low frost forecasts rarely freeze (%d/%d)" % [lo_hits, lo_total])
-	# Uncertainty really exists: some warned nights don't freeze.
+	# Uncertainty really exists: some warned nights don't freeze, and the
+	# number itself must not let the player back out the true outcome --
+	# e.g. a "Frost (60%)" must sometimes not freeze (see README).
 	var warned_no_frost := 0
+	var sixty_pct_no_frost := 0
 	for i in 200:
 		var f2 = m.forecast_for(i)
 		if f2["frost_chance"] >= 0.3 and m.day(i)["t_night"] > 0.0:
 			warned_no_frost += 1
+		if f2["frost_chance"] >= 0.55 and f2["frost_chance"] < 0.65 and m.day(i)["t_night"] > 0.0:
+			sixty_pct_no_frost += 1
 	check(warned_no_frost > 0, "some frost warnings are false alarms (%d)" % warned_no_frost)
+	check(sixty_pct_no_frost > 0, "a ~60%% frost forecast can still not freeze (%d)" % sixty_pct_no_frost)
+
+	# Same guarantee for rain: the overlap band between "likely rain" and
+	# "probably not" must contain both outcomes, not just one.
+	var rain_band_rain := 0; var rain_band_total := 0
+	for i in 200:
+		var fr = m.forecast_for(i)
+		if fr["rain_chance"] >= 0.4 and fr["rain_chance"] < 0.55:
+			rain_band_total += 1
+			if m.day(i + 1)["rain_rate"] > 0.0: rain_band_rain += 1
+	check(rain_band_total > 0 and rain_band_rain > 0 and rain_band_rain < rain_band_total,
+		"mid-band rain forecasts go both ways (%d rain / %d total)" % [rain_band_rain, rain_band_total])
+
+func test_weather_generation_order_independent() -> void:
+	header("weather: forecast/day sequence independent of query granularity")
+	var jump = WeatherModelC.new(99)
+	jump.ensure_generated(30)
+	var incremental = WeatherModelC.new(99)
+	for i in 31:
+		incremental.ensure_generated(i)
+	var same := true
+	for i in 30:
+		if str(jump.day(i)) != str(incremental.day(i)):
+			same = false
+		if str(jump.forecast_for(i)) != str(incremental.forecast_for(i)):
+			same = false
+	check(same, "generating 30 days at once matches generating one day at a time")
 
 func test_sandy_dries_faster_than_clay() -> void:
 	header("soil: sandy dries out first in sun")

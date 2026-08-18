@@ -112,7 +112,7 @@ Dev screenshot harness: `RV_SHOT_FILE=/tmp/x.png RV_SHOT_DAY=5 RV_SHOT_HOUR=6.6 
 buy, sleep; weather visibly changes the world (rain, lingering morning frost,
 day/night, fog, cloud); soils behave differently enough to learn; the frost
 dilemma emerges by itself; Sarah physically works both farms; qualitative
-inspection covers crop + soil state; 66 automated checks pass.
+inspection covers crop + soil state; 75 automated checks pass.
 
 **Rough** —
 - No save/load; a session is one sitting (deliberate cut for the prototype).

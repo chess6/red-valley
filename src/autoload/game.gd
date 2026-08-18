@@ -20,7 +20,10 @@ var day: int = 1
 var minutes: float = WAKE_HOUR * 60.0   # minutes since midnight
 var running: bool = true                # false while menus/dialogue open
 
-var coins: int = 40
+## Deliberately short of the 5 crops already in the ground: covers must be a
+## real choice, not a freebie that trivially blankets the whole starting
+## farm, even before accounting for whatever gets planted afterward.
+var coins: int = 25
 var inventory := {
 	"seed_tomato": 6,
 	"seed_cabbage": 6,
@@ -29,7 +32,7 @@ var inventory := {
 	"compost": 4,
 	"manure": 2,
 	"mulch": 4,
-	"cover": 5,
+	"cover": 3,
 }
 
 const SHOP_PRICES := {

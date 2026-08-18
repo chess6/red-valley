@@ -123,30 +123,40 @@ func _make_forecast(tonight: Dictionary, tomorrow: Dictionary) -> Dictionary:
 			COLD_SNAP: announced = [OVERCAST, CLEAR][rng.randi_range(0, 1)]
 	f["pattern"] = announced
 
+	# Bands deliberately overlap at their boundaries: a forecast number alone
+	# must never let the player back out the true outcome. "Frost (60%)"
+	# sometimes doesn't freeze; a quiet "Frost (35%)" sometimes does.
 	if frost_actual:
-		f["frost_chance"] = rng.randf_range(0.5, 0.85)
+		f["frost_chance"] = rng.randf_range(0.3, 0.85)
 	elif cold_night or tonight["pattern"] == COLD_SNAP:
-		f["frost_chance"] = rng.randf_range(0.2, 0.45)
+		f["frost_chance"] = rng.randf_range(0.15, 0.65)
 	else:
-		f["frost_chance"] = rng.randf_range(0.0, 0.06)
+		f["frost_chance"] = rng.randf_range(0.0, 0.2)
 
 	if rain_actual:
-		f["rain_chance"] = rng.randf_range(0.55, 0.9)
+		f["rain_chance"] = rng.randf_range(0.4, 0.9)
 		f["heavy"] = heavy_actual and rng.randf() < 0.8
 	elif about["cloud"] > 0.5:
-		f["rain_chance"] = rng.randf_range(0.15, 0.4)
+		f["rain_chance"] = rng.randf_range(0.15, 0.55)
 		f["heavy"] = false
 	else:
-		f["rain_chance"] = rng.randf_range(0.0, 0.1)
+		f["rain_chance"] = rng.randf_range(0.0, 0.15)
 		f["heavy"] = false
 	return f
 
+## Days and forecasts are generated in lockstep, one calendar day at a time,
+## so the RNG stream -- and therefore every day/forecast past this point --
+## is identical regardless of whether the caller asks for one day at a time
+## or jumps straight to day_index. Generating days first and forecasts after
+## (in two separate passes) would make the sequence depend on query
+## granularity and break determinism for a given seed.
 func ensure_generated(day_index: int) -> void:
-	while days.size() <= day_index + 2:
-		days.append(_generate_day(days.size()))
-	while forecasts.size() <= day_index:
-		var i := forecasts.size()
-		forecasts.append(_make_forecast(days[i], days[i + 1]))
+	while days.size() <= day_index + 2 or forecasts.size() <= day_index:
+		if forecasts.size() < days.size() - 1 and forecasts.size() <= day_index:
+			var i := forecasts.size()
+			forecasts.append(_make_forecast(days[i], days[i + 1]))
+		else:
+			days.append(_generate_day(days.size()))
 
 func day(day_index: int) -> Dictionary:
 	ensure_generated(day_index)
