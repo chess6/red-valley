@@ -3,7 +3,7 @@ extends Node
 ## Day N's night low is reached around 05:00 of calendar day N+1, which is
 ## exactly what the evening forecast warns about.
 
-var model := WeatherModel.new(1337)
+var model := WeatherModel.new(11361)
 
 func _ready() -> void:
 	# A varied seed per run, unless RED_VALLEY_SEED is set (tests/repro).

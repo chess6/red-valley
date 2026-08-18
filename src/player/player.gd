@@ -241,16 +241,19 @@ func _use_tool() -> void:
 ## trigger on a single accidental click. First press arms it (with a toast);
 ## a second press on the same plot within a few seconds confirms it.
 func _try_harvest_early(plot: Plot, sim: PlotSim) -> void:
+	# Writing off an unripe crop is a loss you may take on your OWN field.
+	# Doing it to Sarah's would destroy her yield -- and, since she credits
+	# any harvest as help, would even pay you in goodwill for the damage.
+	if plot.owner_id != "player":
+		Game.notify("That's Sarah's, and it isn't ready. Not yours to write off.")
+		return
 	if _pending_harvest_plot == plot and _pending_harvest_timer > 0.0:
 		var crop_name: String = sim.crop().get("label", "crop")
 		var coins := sim.harvest()
 		Game.spend_action("harvest")
 		_pending_harvest_plot = null
 		_pending_harvest_timer = 0.0
-		if plot.owner_id == "sarah":
-			_grant_help_credit(plot, "harvest")
-		else:
-			Game.earn(coins)
+		Game.earn(coins)
 		Game.notify("Harvested %s early -- %d coins. It hadn't finished ripening." % [crop_name, coins])
 	else:
 		_pending_harvest_plot = plot

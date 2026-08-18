@@ -106,8 +106,6 @@ func _make_forecast(tonight: Dictionary, tomorrow: Dictionary) -> Dictionary:
 	## daytime. Imperfect: usually right, with honest-but-noisy probabilities.
 	var f := {}
 	var about := tomorrow
-	var frost_actual: bool = tonight["t_night"] <= 0.0
-	var cold_night: bool = tonight["t_night"] < 3.0
 	var rain_actual: bool = about["rain_rate"] > 0.0
 	var heavy_actual: bool = about["pattern"] == HEAVY_RAIN
 
@@ -123,25 +121,33 @@ func _make_forecast(tonight: Dictionary, tomorrow: Dictionary) -> Dictionary:
 			COLD_SNAP: announced = [OVERCAST, CLEAR][rng.randi_range(0, 1)]
 	f["pattern"] = announced
 
-	# Bands deliberately overlap at their boundaries: a forecast number alone
-	# must never let the player back out the true outcome. "Frost (60%)"
-	# sometimes doesn't freeze; a quiet "Frost (35%)" sometimes does.
-	if frost_actual:
-		f["frost_chance"] = rng.randf_range(0.3, 0.85)
-	elif cold_night or tonight["pattern"] == COLD_SNAP:
-		f["frost_chance"] = rng.randf_range(0.15, 0.65)
-	else:
-		f["frost_chance"] = rng.randf_range(0.0, 0.2)
+	# The forecaster reasons from how close tonight's low sits to freezing,
+	# not from ground truth, and then adds honest noise. Crucially it does
+	# NOT emit a number from a band reserved for one outcome: no announced
+	# percentage -- however high or low -- ever guarantees what happens, so
+	# the player has to learn how far to trust the forecaster rather than
+	# inverting the number back into the answer.
+	var low: float = tonight["t_night"]
+	var frost_p := clampf(0.5 - low * 0.15, 0.02, 0.93)
+	frost_p = clampf(frost_p + rng.randf_range(-0.16, 0.16), 0.02, 0.93)
+	# Busted model runs cluster on genuinely marginal nights -- exactly where
+	# the player most wants certainty and is least entitled to it.
+	if absf(low) < 4.5 and rng.randf() < 0.2:
+		frost_p = clampf(1.0 - frost_p, 0.05, 0.9)
+	f["frost_chance"] = frost_p
 
+	# Same shape for rain: a confident-looking number can still be wrong.
+	var rain_p: float
 	if rain_actual:
-		f["rain_chance"] = rng.randf_range(0.4, 0.9)
-		f["heavy"] = heavy_actual and rng.randf() < 0.8
+		rain_p = rng.randf_range(0.45, 0.92)
 	elif about["cloud"] > 0.5:
-		f["rain_chance"] = rng.randf_range(0.15, 0.55)
-		f["heavy"] = false
+		rain_p = rng.randf_range(0.2, 0.6)
 	else:
-		f["rain_chance"] = rng.randf_range(0.0, 0.15)
-		f["heavy"] = false
+		rain_p = rng.randf_range(0.0, 0.2)
+	if rng.randf() < 0.12:
+		rain_p = clampf(1.0 - rain_p, 0.05, 0.9)
+	f["rain_chance"] = rain_p
+	f["heavy"] = rain_actual and heavy_actual and rng.randf() < 0.8
 	return f
 
 ## Days and forecasts are generated in lockstep, one calendar day at a time,

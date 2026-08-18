@@ -13,7 +13,7 @@ script; no downloaded content).
 /opt/Godot4/Godot_v4.7-stable_linux.x86_64 --path .
 ```
 
-Optional: `RED_VALLEY_SEED=1337` gives a nice demo run — three calm days to
+Optional: `RED_VALLEY_SEED=11361` gives a nice demo run — three calm days to
 learn the farm, a **frost night on day 4**, then a rainy stretch that tests
 the clay field. Without the variable each run gets a fresh weather seed.
 
@@ -112,7 +112,7 @@ Dev screenshot harness: `RV_SHOT_FILE=/tmp/x.png RV_SHOT_DAY=5 RV_SHOT_HOUR=6.6 
 buy, sleep; weather visibly changes the world (rain, lingering morning frost,
 day/night, fog, cloud); soils behave differently enough to learn; the frost
 dilemma emerges by itself; Sarah physically works both farms; qualitative
-inspection covers crop + soil state; 75 automated checks pass.
+inspection covers crop + soil state; 80 automated checks pass.
 
 **Rough** —
 - No save/load; a session is one sitting (deliberate cut for the prototype).

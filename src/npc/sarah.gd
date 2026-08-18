@@ -21,6 +21,7 @@ var _visual: Node3D
 var _bob_t := 0.0
 var _idle_timer := 3.0
 var _said_busy := false
+var _helped_today := false        # she has her own farm to run
 
 func _ready() -> void:
 	add_to_group("sarah")
@@ -53,6 +54,7 @@ func _ready() -> void:
 func _on_new_day(_day: int) -> void:
 	earned_today = 0.0
 	_said_busy = false
+	_helped_today = false
 
 # ---------------------------------------------------------------- movement
 
@@ -242,10 +244,16 @@ func her_needs_text() -> String:
 	return "\"Fine day for working the land. My grandmother used to say: know your soil before you blame the sky.\""
 
 ## Player asks for help. kind: "cover" or "water". Returns response line.
+## She is a neighbour with her own farm, not a labour pool: one favour per
+## day, and she brings only a couple of spare fleeces. Without both limits
+## a few minutes spent watering her beds would buy enough free covers to
+## blanket the whole farm, and the frost decision would stop being one.
 func request_help(kind: String) -> String:
 	var cost := 3.0 if kind == "cover" else 2.0
 	if reciprocity < cost:
 		return "\"I'd like to help, truly -- but I've got my hands full with my own field. Lend me a hand sometime and I'll return it.\""
+	if _helped_today:
+		return "\"I've already been over once today, and my own field won't wait. Ask me again tomorrow.\""
 	var targets: Array = []
 	for p in Farm.plots_of("player"):
 		var sim: PlotSim = p.sim
@@ -258,8 +266,9 @@ func request_help(kind: String) -> String:
 					targets.append(p)
 	if targets.is_empty():
 		return "\"Looks like there's nothing over there that needs me right now.\""
-	var take: int = mini(targets.size(), 4 if kind == "cover" else 5)
+	var take: int = mini(targets.size(), 2 if kind == "cover" else 4)
 	reciprocity -= cost
+	_helped_today = true
 	_task_queue.clear()
 	for i in take:
 		_task_queue.append({"plot": targets[i], "action": kind})

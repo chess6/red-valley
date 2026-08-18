@@ -14,6 +14,7 @@ var checks := 0
 func _initialize() -> void:
 	test_weather_determinism()
 	test_weather_generation_order_independent()
+	test_documented_demo_seed()
 	test_weather_variety_and_forecast()
 	test_sandy_dries_faster_than_clay()
 	test_clay_waterlogs_in_heavy_rain_sandy_drains()
@@ -124,19 +125,27 @@ func test_weather_variety_and_forecast() -> void:
 	check(hi_total > 0 and float(hi_hits) / hi_total > 0.55, "high frost forecasts mostly freeze (%d/%d)" % [hi_hits, hi_total])
 	check(hi_total > 0 and hi_hits < hi_total, "high frost forecasts are not a perfect oracle (%d/%d)" % [hi_hits, hi_total])
 	check(lo_total > 0 and float(lo_hits) / lo_total < 0.1, "low frost forecasts rarely freeze (%d/%d)" % [lo_hits, lo_total])
-	# Uncertainty really exists: some warned nights don't freeze, and the
-	# number itself must not let the player back out the true outcome --
-	# e.g. a "Frost (60%)" must sometimes not freeze (see README).
+	# The forecast must never be invertible: over a long run, NO announced
+	# band may be a perfect oracle in either direction. A confident warning
+	# sometimes busts, and a quiet night sometimes bites (both claimed in
+	# the README). Needs a big sample -- individual buckets are thin.
+	var big = WeatherModelC.new(5)
+	big.ensure_generated(3000)
+	var confident_no_frost := 0     # announced >= 70%, didn't freeze
+	var quiet_but_frost := 0        # announced <= 20%, froze anyway
 	var warned_no_frost := 0
-	var sixty_pct_no_frost := 0
-	for i in 200:
-		var f2 = m.forecast_for(i)
-		if f2["frost_chance"] >= 0.3 and m.day(i)["t_night"] > 0.0:
+	for i in 3000:
+		var f2 = big.forecast_for(i)
+		var froze: bool = big.day(i)["t_night"] <= 0.0
+		if f2["frost_chance"] >= 0.7 and not froze:
+			confident_no_frost += 1
+		if f2["frost_chance"] <= 0.2 and froze:
+			quiet_but_frost += 1
+		if f2["frost_chance"] >= 0.3 and not froze:
 			warned_no_frost += 1
-		if f2["frost_chance"] >= 0.55 and f2["frost_chance"] < 0.65 and m.day(i)["t_night"] > 0.0:
-			sixty_pct_no_frost += 1
 	check(warned_no_frost > 0, "some frost warnings are false alarms (%d)" % warned_no_frost)
-	check(sixty_pct_no_frost > 0, "a ~60%% frost forecast can still not freeze (%d)" % sixty_pct_no_frost)
+	check(confident_no_frost > 0, "even a confident (>=70%%) warning can bust (%d)" % confident_no_frost)
+	check(quiet_but_frost > 0, "even a quiet (<=20%%) night can bite (%d)" % quiet_but_frost)
 
 	# Same guarantee for rain: the overlap band between "likely rain" and
 	# "probably not" must contain both outcomes, not just one.
@@ -163,6 +172,30 @@ func test_weather_generation_order_independent() -> void:
 		if str(jump.forecast_for(i)) != str(incremental.forecast_for(i)):
 			same = false
 	check(same, "generating 30 days at once matches generating one day at a time")
+
+## The README advertises RED_VALLEY_SEED as a specific demo arc. Any change
+## to weather/forecast RNG consumption silently reshuffles every seed, so
+## pin the documented experience here rather than trusting it to survive.
+func test_documented_demo_seed() -> void:
+	header("weather: documented demo seed still tells its story")
+	const DEMO_SEED := 11361
+	var m = WeatherModelC.new(DEMO_SEED)
+	m.ensure_generated(8)
+	var calm := true
+	for i in 3:
+		var d = m.day(i)
+		if d["t_night"] <= 2.0 or d["rain_rate"] > 0.0:
+			calm = false
+	check(calm, "days 1-3 are calm and frost-free (learn the farm)")
+	var frost_night: float = m.day(3)["t_night"]
+	check(frost_night <= -2.0, "day 4 night is a hard frost (%.1fC)" % frost_night)
+	var warned: float = m.forecast_for(3)["frost_chance"]
+	check(warned >= 0.5, "the day-4 forecast actually warns about it (%d%%)" % int(round(warned * 100)))
+	var wet := 0
+	for i in range(4, 7):
+		if m.day(i)["rain_rate"] > 0.0:
+			wet += 1
+	check(wet >= 2, "a wet stretch follows to test the clay (%d of days 5-7)" % wet)
 
 func test_sandy_dries_faster_than_clay() -> void:
 	header("soil: sandy dries out first in sun")
