@@ -30,3 +30,13 @@ art/character/renders/*.png
 # Blender auto-backups
 *.blend1
 *.blend2
+
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*_rsa
+*_ed25519
+id_*
+.ssh/
