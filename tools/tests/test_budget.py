@@ -216,6 +216,48 @@ class TestFailClosed(BudgetTestCase):
             self.assertEqual(budget.main(["preflight", "--hours", "20", "--dph", "1.19"]), 1)
 
 
+class TestFlagPlacement(BudgetTestCase):
+    """Global flags must work on either side of the subcommand.
+
+    `budget.py assess --json` is the spelling a caller reaches for first, and
+    plain argparse rejects it -- which surfaces as a crash in whatever script
+    is parsing the output.
+    """
+
+    def json_of(self, argv):
+        import contextlib
+        import io
+
+        buffer = io.StringIO()
+        with self.situation(30.00, []), contextlib.redirect_stdout(buffer):
+            budget.main(argv)
+        import json as json_mod
+
+        return json_mod.loads(buffer.getvalue())
+
+    def test_json_after_the_subcommand(self):
+        self.assertIn("balance", self.json_of(["assess", "--json"]))
+
+    def test_json_before_the_subcommand(self):
+        self.assertIn("balance", self.json_of(["--json", "assess"]))
+
+    def test_json_works_on_preflight_either_side(self):
+        self.assertIn(
+            "balance", self.json_of(["preflight", "--hours", "1", "--dph", "1.0", "--json"])
+        )
+        self.assertIn(
+            "balance", self.json_of(["--json", "preflight", "--hours", "1", "--dph", "1.0"])
+        )
+
+    def test_min_hold_hours_after_the_subcommand(self):
+        # 300 GB parked at $0.10/h against $13 holds ~70h: a violation at the
+        # 72h default, acceptable if the caller lowers the bar to 24h.
+        with self.situation(13.00, [stopped(storage=0.10)]):
+            self.assertEqual(budget.main(["assess", "--min-hold-hours", "72"]), 1)
+        with self.situation(13.00, [stopped(storage=0.10)]):
+            self.assertEqual(budget.main(["assess", "--min-hold-hours", "24"]), 0)
+
+
 class TestInstanceAccounting(unittest.TestCase):
     def test_stopped_instance_still_bills_storage(self):
         self.assertEqual(budget.live_dph(stopped(storage=0.10)), 0.10)
