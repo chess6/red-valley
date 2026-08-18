@@ -1,0 +1,4 @@
+# Godot must not scan or import anything in this directory.
+# Contents are AI-pipeline EVALUATION OUTPUT and are not cleared for shipping
+# (NVIDIA nvdiffrast/nvdiffrec: research-or-evaluation use only).
+# See EVALUATION_ONLY.md, and tools/asset_gate.py which fails if this file is missing.
