@@ -91,6 +91,16 @@ that was wrong last week? The morning after answers you.
 Writes all 30 GLBs (buildings, trees, characters, crop growth stages, row
 cover, hills ring) into `assets/models/`.
 
+## Design scope
+
+- **[docs/GAMEPLAY_VISION.md](docs/GAMEPLAY_VISION.md)** — premise, loops,
+  farming/weather/economy systems, Sarah and reciprocity, and the intended
+  player experience. Separates what is implemented from what is confirmed
+  design and what is still an open question.
+- **[docs/ANIMATION_REQUIREMENTS.md](docs/ANIMATION_REQUIREMENTS.md)** — every
+  confirmed character action mapped to actor, prop, loop/one-shot, root
+  motion, contact needs, reuse and priority.
+
 ## Project layout
 
 ```
