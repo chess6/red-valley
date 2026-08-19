@@ -18,7 +18,7 @@ exists and has no mechanic at all.
 | No jump action exists in the input map | **No jump / fall / land clips** |
 | Third-person orbit camera ~5.2 m back | Hands and silhouette carry everything; facial detail is never seen in play |
 | Actions are instantaneous in code; only the *clock* advances | Clips are cosmetic — **gameplay must never wait on clip length** |
-| Plots are a fixed 0.22 m soil bed on flat ground | A fixed crouch-and-reach lands correctly **without hand IK** |
+| Plots are a fixed 0.22 m soil bed on flat ground | A fixed crouch-and-reach lands correctly **without hand IK — but only if the alignment contract below holds.** Flat ground alone does not guarantee spout or hand placement |
 | Tool switching costs no game time | **No tool-swap / holster clips** |
 
 ---
@@ -51,6 +51,58 @@ exists and has no mechanic at all.
 
 ---
 
+## Interaction alignment contract (blocking, P0)
+
+Flat terrain does not by itself put the watering-can spout over the soil or a
+hand on the crop. Before any of `water_can`, `harvest_pick`, `cover_place` or
+`inspect_crouch` plays, the actor is **snapped and turned to a standardized
+plot anchor**.
+
+| Item | Definition |
+|---|---|
+| Anchor position | Per plot, on the bed edge nearest the actor: `plot.global_position + edge_offset`, where `edge_offset` is a fixed radial distance of `PLOT_SIZE/2 + reach` |
+| Anchor facing | Yaw toward the plot centre |
+| Snap | Actor root eased to the anchor over ~0.15 s; the clip starts only once inside tolerance |
+| Tolerance | **±5 cm position, ±5° yaw** |
+| Applies to | Player **and** Sarah — she currently uses an ad-hoc `+Vector3(1.1, 0, 0)` offset (`sarah.gd::_go_do`) which this contract replaces |
+
+**"No hand IK" is conditional on this contract holding.** If the pilot shows
+spout or hand placement outside tolerance once retargeted, hand/end-effector
+IK becomes a P0 requirement, not an optimisation. This is the specific thing
+the `water_can` pilot clip exists to falsify.
+
+---
+
+## One-shot behaviour contract (blocking, P0)
+
+Gameplay results are instantaneous in code — the sim and clock update the
+moment the input is accepted. Clips are cosmetic. But visual events still need
+defined synchronisation, or the world will contradict the animation.
+
+| Question | Rule |
+|---|---|
+| **Does movement cancel an action?** | The gameplay result has **already committed** at t=0, so movement never "cancels" the effect. Movement input **interrupts the clip** and blends back to locomotion. No input is lost and no result is undone |
+| **Can farm actions overlap?** | **No.** A new action interrupts the current clip immediately. There is no queue and no blocking — the player is never locked out of input |
+| **When does sim state change?** | **t=0**, on input. Never deferred to a clip event |
+| **When do visuals change?** | At a named **sync point** inside the clip, so the world does not visibly change before the motion that explains it |
+
+### Sync points
+
+| Clip | Sync point | Visual event |
+|---|---|---|
+| `water_can` | ~0.45 s (spout over soil) | soil darkens to its new wetness; pour effect starts |
+| `scatter_hand` | ~0.40 s (hand sweep low) | amendment/seed visual applied |
+| `harvest_pick` | ~0.50 s (hand contact) | crop mesh removed, coin toast |
+| `cover_place` | ~1.20 s (~60% through) | plot cover prop becomes visible |
+| `uncover_gather` | ~0.60 s | cover prop hidden |
+| `clear_pull` | ~0.60 s | dead-plant mesh removed |
+
+If a clip is interrupted **before** its sync point, the visual change is
+applied immediately on interrupt — the world must never be left showing stale
+state because an animation was cut short.
+
+---
+
 ## 2. Minimum set required by confirmed gameplay
 
 **12 clips, 8 at P0**, plus one rig requirement. This covers every action the
@@ -63,6 +115,15 @@ game can currently perform — not a wish list.
 | **One shared production skeleton** for player and Sarah | Defined by us, **not** dictated by ARDY |
 | **Right-hand prop socket** | Watering can at P0; must generalise to other tools later |
 | Character scale ~1.90 m | Matches the validated Rodin master |
+| **A provenance-cleared watering-can mesh** | **None exists today.** Without it the pilot cannot judge grip or spout alignment at all — `water_can` would be evaluated against empty hands. See "Watering-can prerequisite" below |
+
+### Watering-can prerequisite (blocking the pilot)
+
+`assets/models/` contains no watering can. The tool is currently an inventory
+counter only. Because `water_can` is the pilot's stress test *specifically for
+grip and spout alignment*, the mesh must exist before the pilot runs, with its
+origin, grip point and spout tip defined so alignment can be measured rather
+than eyeballed.
 
 ### Player clips
 
@@ -89,7 +150,7 @@ hand socket exists from P0 precisely so that split costs nothing structural.
 
 ### Sarah
 
-Shares the skeleton; **no unique clips**, but her WORK state now resolves
+Shares the skeleton; **no unique P0 clips**, but her WORK state now resolves
 per task rather than playing one generic loop:
 
 | Sarah state | Clip |
@@ -120,16 +181,28 @@ NVIDIA ARDY generates **motion data only** (joint transforms, NPZ) on NVIDIA's
 | Skeleton mismatch | Core/G1 → Red Valley rig: bone mapping, rest-pose alignment, scale normalisation to 1.90 m |
 | Locomotion | ARDY motion will carry world displacement — must be **converted to in-place** |
 | **Pilot scope** | **Exactly two clips: one locomotion (`walk_fwd`) and one farming interaction (`water_can`)**, evaluated before any expansion |
+| **ARDY is not object-aware** | NVIDIA states this explicitly. Text prompting alone will **not** preserve a convincing grip or pour, because the generator has no knowledge of the can. `water_can` must be driven by **hand / end-effector kinematic constraints**, not prompt wording |
 
-### Licence gate — check before generating
+### Licence position — audit, not a blocker
 
-ARDY is NVIDIA-licensed. This project has already lost a full pipeline to
-exactly this: the Pixal3D/TRELLIS pilot was abandoned after `nvdiffrast` was
-found in the *geometry* path under the Nvidia Source Code License, whose
-commercial permission runs one way — to NVIDIA. **ARDY's licence and its
-checkpoints' terms must be read and recorded before a single clip is
-generated**, and the result written into the provenance record the same way
-SPAR3D's `commercial_under_1m` status was.
+An earlier draft of this document framed ARDY as a possible repeat of the
+`nvdiffrast` problem. **That framing was wrong and is corrected here.**
+
+| Component | Position |
+|---|---|
+| ARDY code | **Apache-2.0** |
+| Core checkpoint | Model card states it is **ready for commercial use**, including game animation |
+| NVIDIA Open Model Agreement | **Permits commercial use** and **disclaims NVIDIA ownership of generated output** |
+
+This is materially unlike `nvdiffrast`, whose Nvidia Source Code License grants
+commercial rights one way — to NVIDIA — and which sat in the geometry path.
+ARDY does not block on licence.
+
+**Still required, as ordinary diligence rather than a gate:** pin and audit the
+checkpoint revision, the **Llama text encoder**, the **motion-correction code**
+and the dependency tree, and record the result in provenance the way SPAR3D's
+`commercial_under_1m` status was. Sub-components can carry terms the top-level
+licence does not.
 
 ---
 

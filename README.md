@@ -99,7 +99,11 @@ cover, hills ring) into `assets/models/`.
   design and what is still an open question.
 - **[docs/ANIMATION_REQUIREMENTS.md](docs/ANIMATION_REQUIREMENTS.md)** — every
   confirmed character action mapped to actor, prop, loop/one-shot, root
-  motion, contact needs, reuse and priority.
+  motion, contact needs, reuse and priority, plus the interaction-alignment
+  and one-shot behaviour contracts.
+- **[docs/SKELETON_SPEC.md](docs/SKELETON_SPEC.md)** — the shared production
+  skeleton both characters use and the target every generated clip is
+  retargeted onto.
 
 ## Project layout
 

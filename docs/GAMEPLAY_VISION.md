@@ -146,24 +146,29 @@ Stated as intent in the repo, not yet implemented.
   only through inspection text.
 - **Audio** — absent.
 
+### Character presentation (confirmed for the animation work)
+- **Tools are visibly held.** Visible props are part of the intended
+  presentation; tools must not be architected as permanently abstract. P0 adds
+  a hand socket and a real watering can. Row-cover work manipulates the
+  existing plot cover prop. Seeds and amendments temporarily share one
+  hand-scatter motion.
+- **Sarah shares the player's skeleton**, with per-task work motions rather
+  than one generic bent-over loop.
+- **ARDY is NVIDIA ARDY** — a text- and constraint-driven human *motion*
+  generator (NPZ joint transforms on NVIDIA Core/G1 skeletons). It supplies
+  motion only, never rigs or meshes, and must not dictate the game's
+  production skeleton. Its code is Apache-2.0 and the Core checkpoint is
+  stated as commercial-ready.
+- **Interaction alignment is a contract, not an assumption** — actors snap and
+  turn to a standardized plot anchor before plot-directed actions. See
+  `docs/ANIMATION_REQUIREMENTS.md`.
+
 ---
 
 ## 3. Unconfirmed / open questions
 
-Do not build on any of these until answered. See the batch of questions raised
-alongside this document.
+Do not build on any of these until answered.
 
-- **CONFIRMED — tools are visibly held.** Visible props are part of the
-  intended presentation; tools must not be architected as permanently
-  abstract. P0 adds hand sockets and a real watering can; row-cover work
-  manipulates the existing plot cover prop. Seeds and amendments temporarily
-  share one hand-scatter motion.
-- **CONFIRMED — Sarah shares the player's skeleton**, with per-task work
-  motions rather than one generic bent-over loop.
-- **CONFIRMED — ARDY is NVIDIA ARDY**, a text- and constraint-driven human
-  *motion* generator (NPZ joint transforms on NVIDIA Core/G1 skeletons). It
-  supplies motion only — no rig, no mesh — and must not dictate the game's
-  production skeleton.
 - **OPEN — does the player ever carry anything?** Harvest auto-sells and there
   is no carried-item state. Deferred: build assuming no carrying, revisit if
   hauling is added.
