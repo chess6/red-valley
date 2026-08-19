@@ -102,7 +102,27 @@ class TestAssess(BudgetTestCase):
         with self.situation(50.00, [running(1), running(2)]):
             result = budget.assess()
         self.assertFalse(result.safe)
-        self.assertTrue(any("running at once" in v for v in result.violations))
+        self.assertTrue(any("active at once" in v for v in result.violations))
+
+    def test_loading_instance_bills_at_full_rate(self):
+        """A loading instance is charged like a running one. Treating it as
+        merely 'stopped' understated burn and hid a second concurrent
+        instance -- which is exactly how an orphan went unnoticed."""
+        inst = running(1, dph=1.20)
+        inst["actual_status"] = "loading"
+        with self.situation(50.00, [inst]):
+            result = budget.assess()
+        self.assertEqual(result.burn, 1.20)
+        self.assertEqual(len(result.running), 1)
+
+    def test_running_plus_loading_is_a_concurrency_violation(self):
+        loading = running(2, dph=1.10)
+        loading["actual_status"] = "loading"
+        with self.situation(50.00, [running(1, dph=1.12), loading]):
+            result = budget.assess()
+        self.assertFalse(result.safe)
+        self.assertTrue(any("active at once" in v for v in result.violations))
+        self.assertAlmostEqual(result.burn, 2.22, places=2)
 
     def test_idle_account_is_safe(self):
         with self.situation(6.50, []):

@@ -126,8 +126,23 @@ def fetch_instances() -> list[dict]:
 # assessment
 
 
+# States that bill at the full hourly rate. "loading" is included on purpose:
+# an instance pulling its image is charged like a running one, and treating it
+# as merely "stopped" understates burn and hides a second concurrent instance.
+ACTIVE_STATES = {"running", "loading", "created", "starting"}
+
+
+def _state(inst: dict) -> str:
+    return (inst.get("actual_status") or inst.get("cur_state") or "").lower()
+
+
 def is_running(inst: dict) -> bool:
-    return (inst.get("actual_status") or inst.get("cur_state") or "").lower() == "running"
+    return _state(inst) == "running"
+
+
+def is_active(inst: dict) -> bool:
+    """Billing at the hourly rate right now, running or still coming up."""
+    return _state(inst) in ACTIVE_STATES
 
 
 def storage_dph(inst: dict) -> float:
@@ -137,7 +152,7 @@ def storage_dph(inst: dict) -> float:
 
 def live_dph(inst: dict) -> float:
     """What this instance bills right now, in its current state."""
-    if is_running(inst):
+    if is_active(inst):
         return float(inst.get("dph_total") or 0.0)
     return storage_dph(inst)
 
@@ -191,7 +206,7 @@ def assess(min_hold_hours: float = DEFAULT_MIN_HOLD_HOURS) -> Assessment:
     instances = fetch_instances()
     result = Assessment(balance=balance, stop_line=stop_line())
     for inst in instances:
-        (result.running if is_running(inst) else result.stopped).append(inst)
+        (result.running if is_active(inst) else result.stopped).append(inst)
 
     if balance <= result.stop_line:
         result.breaches.append(
@@ -207,8 +222,8 @@ def assess(min_hold_hours: float = DEFAULT_MIN_HOLD_HOURS) -> Assessment:
 
     if len(result.running) > 1:
         result.violations.append(
-            f"{len(result.running)} instances running at once — the projection "
-            "assumes one, so cost cannot be bounded"
+            f"{len(result.running)} instances active at once (running or loading) "
+            "— the projection assumes one, so cost cannot be bounded"
         )
 
     if len(result.stopped) > 1:
