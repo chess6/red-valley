@@ -64,3 +64,14 @@ tools/assetgen/cache/
 art/character/ai_generated/**
 !art/character/ai_generated/.gdignore
 !art/character/ai_generated/EVALUATION_ONLY.md
+
+# SPAR3D local evaluation (env + clone; never shipped)
+tools/spar3d_eval/*
+!tools/spar3d_eval/*.py
+
+# TripoSR local evaluation (env + clone; never shipped)
+tools/triposr_eval/*
+!tools/triposr_eval/*.py
+
+# Playwright MCP session artifacts (snapshots, console logs)
+.playwright-mcp/
