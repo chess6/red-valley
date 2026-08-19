@@ -77,7 +77,9 @@ class VastCLI:
     def create(self, offer: str, image: str, disk: int) -> dict:
         out = subprocess.run(
             [str(VAST), "create", "instance", str(offer), "--image", image,
-             "--disk", str(disk), "--ssh", "--direct", "--raw"],
+             "--disk", str(disk), "--ssh", "--direct",
+             "--env", "-e HF_HOME=/workspace/hf -e TORCH_HOME=/workspace/torch",
+             "--onstart-cmd", "touch /workspace/.rv_booted", "--raw"],
             capture_output=True, text=True, timeout=300)
         try:
             return json.loads(out.stdout or "{}")
@@ -266,6 +268,9 @@ def main(argv=None) -> int:
         print(f"PROVISION FAILED: {exc}", file=sys.stderr)
         return 1
     print(f"adopted instance {result.instance_id}")
+    (STATE / "started_at").write_text(str(int(time.time())))
+    (STATE / "budget_hours").write_text(str(args.hours))
+    print(f"INSTANCE_ID={result.instance_id}")
     return 0
 
 
