@@ -1,0 +1,11 @@
+{
+  "clip": "water_can",
+  "frames": 40,
+  "fps": 20,
+  "duration_s": 1.95,
+  "src_height": 1.6519,
+  "scale_to_rig": 1.1505,
+  "root_displacement_m": 0.0231,
+  "forward_speed_m_s": 0.0118,
+  "mapped_bones": 18
+}
