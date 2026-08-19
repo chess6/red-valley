@@ -15,6 +15,15 @@
 # the retry in progress. So failure is only declared when the marker's mtime
 # is NEWER than this watcher's start time AND no build process is still
 # active under /tmp/ext (the extension build workdir).
+#
+# A prior run of this script spent ~9h silently polling a dead instance
+# after it was deleted out from under it (ssh calls failed fast, so no
+# money was wasted, but nothing was ever reported). "instance no longer
+# exists" is now checked explicitly every poll and treated as its own
+# terminal condition instead of falling through to empty/zero values.
+#
+# Also waits for a local Qwen-completion sentinel before running the smoke
+# test, since Qwen and Pixal3D must not run on the GPU at the same time.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -23,9 +32,14 @@ LOG="$LOGDIR/rv310_continuation.log"
 OUTDIR="$ROOT/art/character/ai_generated/player_v01"
 RESULT="$OUTDIR/logs/rv310_result"
 VAST="$ROOT/tools/assetgen/vast.sh"
+QWEN_DONE="$ROOT/tools/assetgen/.state/qwen_done"
 
 log(){ echo "[$(date -u +%FT%TZ)] $*" | tee -a "$LOG"; }
 rssh(){ "$VAST" ssh -- "$@"; }
+instance_alive(){
+  ID=$(cat "$ROOT/tools/assetgen/.state/instance_id" 2>/dev/null)
+  [ -n "$ID" ] && "$ROOT/tools/assetgen/.venv/bin/vastai" show instance "$ID" --raw 2>/dev/null | grep -q '"id"'
+}
 
 log "watcher started pid=$$"
 BASELINE_FAILED_MTIME=$(rssh 'stat -c %Y /workspace/logs/clean_env_failed 2>/dev/null || echo 0' 2>/dev/null | tail -1)
@@ -45,6 +59,13 @@ finish() {
 while true; do
   sleep 60
 
+  if ! instance_alive; then
+    log "instance no longer exists -- stopping (not a build outcome, something external removed it)"
+    mkdir -p "$RESULT"
+    echo "instance vanished at $(date -u +%FT%TZ), watcher had no build result yet" > "$RESULT/instance_vanished.txt"
+    exit 2
+  fi
+
   ACTIVE=$(rssh 'pgrep -af "/tmp/ext" 2>/dev/null | wc -l' 2>/dev/null | tail -1)
   ACTIVE=${ACTIVE:-1}
   DONE=$(rssh '[ -f /workspace/logs/clean_env_done ] && echo 1 || echo 0' 2>/dev/null | tail -1)
@@ -62,6 +83,16 @@ while true; do
     finish "failure" 1
   fi
 done
+
+log "rv310 build done -- waiting for Qwen generation to finish and unload before touching the GPU"
+while [ ! -f "$QWEN_DONE" ]; do
+  sleep 60
+  if ! instance_alive; then
+    log "instance vanished while waiting for Qwen to finish"
+    exit 2
+  fi
+done
+log "Qwen sentinel present ($(cat "$QWEN_DONE"))"
 
 log "verifying imports fresh in rv310 before touching Pixal3D"
 IMPORT_OUT=$(rssh 'source /opt/conda/etc/profile.d/conda.sh && conda activate rv310 && python -c "

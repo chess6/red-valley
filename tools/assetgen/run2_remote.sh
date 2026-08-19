@@ -56,7 +56,7 @@ pip install -q torch==2.6.0 torchvision==0.21.0 --index-url https://download.pyt
 pip install -q -r $W/repos/Pixal3D/requirements.txt >>$LOG 2>&1 || die "pixal reqs"
 pip install -q "huggingface_hub>=0.34,<1.0" >>$LOG 2>&1
 pip install -q "git+https://github.com/EasternJournalist/utils3d.git@9a4eb15e4021b67b12c460c7057d642626897ec8" >>$LOG 2>&1
-pip install -q pymeshlab xatlas pygltflib natten >>$LOG 2>&1
+pip install -q pymeshlab xatlas pygltflib natten einops >>$LOG 2>&1
 
 step "CUDA extensions (Eigen submodule must be populated or o_voxel fails)"
 mkdir -p /tmp/ext && cd /tmp/ext
@@ -79,6 +79,18 @@ for m in ["cumesh","o_voxel","flex_gemm","natten","nvdiffrast.torch","diffusers"
     importlib.import_module(m); print("  ok", m)
 PY
 [ $? -eq 0 ] || die "import verification failed"
+
+# The NAF upsampler is pulled from torch.hub at *pipeline construction* time,
+# so anything it needs goes missing only once inference has started and the
+# GPU is billing. Load it here instead: in the install phase a missing
+# dependency costs nothing. (einops was exactly this failure.)
+step "preloading torch.hub NAF upsampler (catches its deps before inference)"
+python - <<NAFPY 2>&1 | tee -a $LOG
+import torch
+m = torch.hub.load("valeoai/NAF", "naf", pretrained=True, trust_repo=True)
+print("  ok NAF loaded:", type(m).__name__)
+NAFPY
+[ ${PIPESTATUS[0]:-1} -eq 0 ] || die "NAF preload failed - fix before spending inference time"
 
 step "waiting for checkpoint download"
 wait $DL
