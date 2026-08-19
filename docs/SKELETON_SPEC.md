@@ -81,10 +81,34 @@ that drives `forearm`/`hand`, not as new deform bones.
 | Transform | Positioned at the grip centre of the closed right hand, oriented so a prop's local −Z runs along the forearm |
 | Deform | **No** — excluded from skinning |
 
-Props attach by parenting to this socket with identity local transform. A tool
-mesh is therefore authored with **its grip at the origin**, which is what makes
+A tool mesh is authored with **its grip at the origin**, which is what makes
 "swap the mesh, keep the clip" possible when seeds/compost/manure/mulch get
 their own props later.
+
+### Attachment convention (verified)
+
+Parenting with an identity local transform does **not** work: Blender bone
+parenting uses the bone *tail* as the child origin and applies
+`matrix_parent_inverse` in an order that leaves the prop at the armature
+origin. Set the world matrix explicitly, with one corrective rotation:
+
+```python
+sock = rig.matrix_world @ rig.pose.bones["prop_socket.R"].matrix
+prop.matrix_world = sock @ Matrix.Rotation(radians(90), 4, "X")
+```
+
+Blender bones run along their local **+Y**, while props are authored with
+local **−Z** down the forearm. Rotating +90° about X maps prop −Z onto bone +Y.
+
+Verified against the diagnostic proxy: **grip-to-socket distance 0.0000 m**,
+with the can hanging body-down and spout forward.
+
+### Export note
+
+Blender's glTF exporter adds a **`neutral_bone`** to the exported skeleton
+(24 bones out of 23 authored) because `prop_socket.R` is non-deforming. It is
+an exporter artifact, carries no animation, and should be ignored by the
+retarget map rather than treated as a joint.
 
 ---
 

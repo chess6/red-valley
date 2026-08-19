@@ -1,0 +1,29 @@
+{
+  "NOT_FOR_SHIPPING": true,
+  "purpose": "ARDY pilot alignment measurement only",
+  "units": "metres",
+  "contract": {
+    "mesh_origin": "grip point",
+    "prop_local_-Z": "runs along the forearm when parented to prop_socket.R"
+  },
+  "markers": {
+    "grip_origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "spout_tip": [
+      0.0,
+      -0.3,
+      -0.12
+    ]
+  },
+  "spout_tip_offset_from_grip_m": 0.3231,
+  "dimensions_m": {
+    "body_radius": 0.085,
+    "body_height": 0.185,
+    "spout_radius": 0.016,
+    "handle_bar_length": 0.1
+  },
+  "triangles": 340
+}

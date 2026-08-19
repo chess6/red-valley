@@ -75,3 +75,7 @@ tools/triposr_eval/*
 
 # Playwright MCP session artifacts (snapshots, console logs)
 .playwright-mcp/
+
+# ARDY motion pilot (env + clone; never shipped)
+tools/ardy_eval/*
+!tools/ardy_eval/*.py
