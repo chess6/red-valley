@@ -1,0 +1,86 @@
+[06:46:04] smoke test: official example @1024, sdpa
+Traceback (most recent call last):
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 403, in hf_raise_for_status
+    response.raise_for_status()
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/requests/models.py", line 1167, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/briaai/RMBG-2.0/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1121, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1662, in _raise_on_head_call_error
+    raise head_call_error
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+    r = _request_wrapper(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 420, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a8400e0-35c8759713c206d939169f69;93b98d50-0a3b-47c3-82e1-e904748659a4)
+
+Cannot access gated repo for url https://huggingface.co/briaai/RMBG-2.0/resolve/main/config.json.
+Access to model briaai/RMBG-2.0 is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 289, in run_path
+    return _run_module_code(code, init_globals, run_name,
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 96, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "inference.py", line 304, in <module>
+    run_inference(
+  File "inference.py", line 187, in run_inference
+    pipeline = init_pipeline(model_path, low_vram=low_vram)
+  File "inference.py", line 76, in init_pipeline
+    pipeline = Pixal3DImageTo3DPipeline.from_pretrained(model_path)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/pixal3d_image_to_3d.py", line 123, in from_pretrained
+    pipeline.rembg_model = getattr(rembg, args['rembg_model']['name'])(**args['rembg_model']['args'])
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/rembg/BiRefNet.py", line 10, in __init__
+    self.model = AutoModelForImageSegmentation.from_pretrained(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py", line 549, in from_pretrained
+    config, kwargs = AutoConfig.from_pretrained(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1332, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/configuration_utils.py", line 662, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/configuration_utils.py", line 721, in _get_config_dict
+    resolved_config_file = cached_file(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/transformers/utils/hub.py", line 543, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/briaai/RMBG-2.0.
+401 Client Error. (Request ID: Root=1-6a8400e0-35c8759713c206d939169f69;93b98d50-0a3b-47c3-82e1-e904748659a4)
+
+Cannot access gated repo for url https://huggingface.co/briaai/RMBG-2.0/resolve/main/config.json.
+Access to model briaai/RMBG-2.0 is restricted. You must have access to it and be authenticated to access it. Please log in.
+[SPARSE] Conv backend: flex_gemm; Attention backend: sdpa
+[Pipeline] Loading from /workspace/models/trellis2-4b...
+[ATTENTION] Using backend: sdpa
+RESULT ok=False 306.4s
+LOADED: ['_nvdiffrast_c', 'cumesh', 'cumesh._C', 'cumesh._cubvh', 'cumesh._cumesh_xatlas', 'cumesh.bvh', 'cumesh.cumesh', 'cumesh.remeshing', 'cumesh.xatlas', 'flex_gemm', 'flex_gemm.kernels', 'flex_gemm.kernels.cuda', 'flex_gemm.kernels.triton', 'flex_gemm.kernels.triton.grid_sample', 'flex_gemm.kernels.triton.grid_sample.config', 'flex_gemm.kernels.triton.grid_sample.indice_weighed_sum_bwd', 'flex_gemm.kernels.triton.grid_sample.indice_weighed_sum_fwd', 'flex_gemm.kernels.triton.spconv', 'flex_gemm.kernels.triton.spconv.config', 'flex_gemm.kernels.triton.spconv.sparse_conv_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_conv_implicit_gemm_splitk', 'flex_gemm.kernels.triton.spconv.sparse_conv_masked_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_conv_masked_implicit_gemm_splitk', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_bwd_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_bwd_implicit_gemm_splitk', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_bwd_masked_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_bwd_masked_implicit_gemm_splitk', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_fwd_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_fwd_implicit_gemm_splitk', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_fwd_masked_implicit_gemm', 'flex_gemm.kernels.triton.spconv.sparse_submanifold_conv_fwd_masked_implicit_gemm_splitk', 'flex_gemm.kernels.triton.utils', 'flex_gemm.ops', 'flex_gemm.ops.grid_sample', 'flex_gemm.ops.grid_sample.grid_sample', 'flex_gemm.ops.grid_sample.grid_sample_torch', 'flex_gemm.ops.serialize', 'flex_gemm.ops.spconv', 'flex_gemm.ops.spconv.sparse_conv3d', 'flex_gemm.ops.spconv.submanifold_conv3d', 'flex_gemm.ops.utils', 'flex_gemm.utils', 'flex_gemm.utils.autotuner', 'nvdiffrast', 'nvdiffrast.torch', 'nvdiffrast.torch.ops', 'o_voxel', 'o_voxel._C', 'o_voxel.convert', 'o_voxel.convert.flexible_dual_grid', 'o_voxel.convert.volumetic_attr', 'o_voxel.io', 'o_voxel.io.npz', 'o_voxel.io.ply', 'o_voxel.io.vxz', 'o_voxel.postprocess', 'o_voxel.rasterize', 'o_voxel.serialize', 'pixal3d.modules.sparse.conv.conv_flex_gemm']
+total 8
+drwxr-xr-x 2 root root   40 Aug 18 06:51 .
+drwxr-xr-x 1 root root 4096 Aug 18 06:46 ..
+-rw-r--r-- 1 root root 2395 Aug 18 06:51 smoke_modules.json
+[06:51:15] SMOKE DONE

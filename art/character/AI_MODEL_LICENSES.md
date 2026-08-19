@@ -1,5 +1,11 @@
 # AI generation stack — licence and provenance audit
 
+> **PILOT CLOSED — ABANDONED_FOR_PRODUCTION (2026-08-19).** This audit is
+> retained as the licence record of an archived evaluation. The pipeline
+> produced zero assets and its output was commercially unusable regardless,
+> because nvdiffrast is loaded in the geometry path. See
+> `art/character/ai_generated/ABANDONED_FOR_PRODUCTION.md`.
+
 Audited 2026-08-18 for the Red Valley player-character pilot.
 Compute: Vast.ai instance `48000390`, A100 SXM 80 GB PCIe, driver 595.71.05,
 torch 2.5.1+cu124, sm_80.
