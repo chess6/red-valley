@@ -1,0 +1,24 @@
+[05:46:52] == system packages
+[05:47:00] OK apt
+[05:47:00] == python tooling
+[05:47:06] OK hf cli
+[05:47:06] == starting weight downloads in background
+download pids: qwen=2722 trellis=2725 skin=2728
+[05:47:06] == cloning repos at pinned commits
+  Qwen-Image @ 6b5e1f5
+  Pixal3D @ cdbb2bb
+  TRELLIS.2 @ 75fbf01
+  SkinTokens @ 273b691
+[05:48:50] OK repos cloned
+[05:48:50] == recording install requirements for audit
+[05:48:50] == qwen image deps
+[05:49:02] OK qwen deps
+[05:49:02] == trellis2 / pixal3d deps (CUDA extensions — slowest step)
+[05:49:57] OK geometry deps
+[05:49:57] == waiting for downloads
+[05:49:57] OK downloads finished
+54G	/workspace/models/qwen-image-edit-2511
+1.6G	/workspace/models/skintokens
+16G	/workspace/models/trellis2-4b
+[05:49:57] == BOOTSTRAP COMPLETE
+2026-08-18T05:49:57Z

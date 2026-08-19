@@ -1,0 +1,11 @@
+[06:18:31] == creating fresh env rv310 (python 3.10)
+Python 3.10.20
+[06:18:57] == torch 2.6.0 + torchvision 0.21.0 (cu124) FIRST — one ABI for all builds
+  torch 2.6.0+cu124 cuda 12.4 arch ['sm_50', 'sm_60', 'sm_70']
+[06:19:57] == runtime deps (no flash-attn; sdpa backend instead)
+[06:21:09] == fetching extension sources
+[06:21:18] == building CuMesh
+  VERIFIED CuMesh
+[06:24:12] == building O-Voxel
+[06:26:24] == O-Voxel BUILD FAILED — capturing traceback
+[06:26:24] STOP: O-Voxel failed to build (traceback in /workspace/logs/first_traceback.txt)

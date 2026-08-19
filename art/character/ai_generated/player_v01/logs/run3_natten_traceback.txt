@@ -1,0 +1,30 @@
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/torch/hub/valeoai_NAF_main/src/model/naf.py", line 115, in forward
+    out = self.upsampler(queries, keys, values, image)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/torch/hub/valeoai_NAF_main/src/layers/attentions.py", line 72, in forward
+    out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/natten/functional.py", line 929, in na2d
+    return neighborhood_attention_generic(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/natten/functional.py", line 487, in neighborhood_attention_generic
+    output, lse = cutlass_fna_generic(
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/natten/backends/fna.py", line 245, in cutlass_fna_generic
+    assert can_run_cutlass_fna(query, key, value, raise_error=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/natten/backends/configs/checks.py", line 520, in can_run_cutlass_fna
+    target_fn("Can't run CUTLASS FNA; NATTEN was not built with libnatten.")
+  File "/opt/conda/lib/python3.11/site-packages/natten/utils/checks.py", line 44, in log_or_raise_error
+    raise exception(msg)
+RuntimeError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
+natten: 0.21.7 at /opt/conda/lib/python3.11/site-packages/natten/__init__.py
+libnatten import: ImportError cannot import name 'has_bfloat16' from 'natten' (/opt/conda/lib/python3.11/site-packages/natten/__init__.py)

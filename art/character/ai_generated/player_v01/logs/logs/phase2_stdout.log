@@ -1,0 +1,19 @@
+[05:52:08] == Pixal3D requirements
+OK pixal reqs
+[05:52:43] == TRELLIS.2 setup.sh (basic, flash-attn, cumesh, o-voxel, flexgemm)
+FAIL trellis core
+[05:58:32] == nvdiffrast + nvdiffrec (texturing path only; NON-COMMERCIAL licence)
+OK nvdiffr
+[05:58:49] == import check
+  ok torch
+  ok diffusers
+  ok transformers
+  ok trimesh
+  ok kornia
+  MISSING timm RuntimeError operator torchvision::nms does not exist
+  ok plyfile
+  MISSING flash_attn ModuleNotFoundError No module named 'flash_attn'
+  MISSING nvdiffrast.torch ModuleNotFoundError No module named 'nvdiffrast'
+  ok moge
+  cuda True NVIDIA A100 80GB PCIe
+[05:58:54] == PHASE2 DONE

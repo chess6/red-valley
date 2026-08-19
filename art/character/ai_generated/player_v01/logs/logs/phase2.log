@@ -1,0 +1,888 @@
+[05:52:08] == Pixal3D requirements
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+rembg 2.0.80 requires numpy<3.0.0,>=2.3.0, but you have numpy 2.2.6 which is incompatible.
+rembg 2.0.80 requires pillow<13.0.0,>=12.1.0, but you have pillow 12.0.0 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+OK pixal reqs
+[05:52:43] == TRELLIS.2 setup.sh (basic, flash-attn, cumesh, o-voxel, flexgemm)
+Requirement already satisfied: imageio in /opt/conda/lib/python3.11/site-packages (2.37.2)
+Requirement already satisfied: imageio-ffmpeg in /opt/conda/lib/python3.11/site-packages (0.6.0)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (4.67.1)
+Requirement already satisfied: easydict in /opt/conda/lib/python3.11/site-packages (1.13)
+Requirement already satisfied: opencv-python-headless in /opt/conda/lib/python3.11/site-packages (4.12.0.88)
+Requirement already satisfied: ninja in /opt/conda/lib/python3.11/site-packages (1.11.1.1)
+Requirement already satisfied: trimesh in /opt/conda/lib/python3.11/site-packages (4.10.1)
+Requirement already satisfied: transformers in /opt/conda/lib/python3.11/site-packages (4.57.3)
+Collecting gradio==6.0.1
+  Downloading gradio-6.0.1-py3-none-any.whl.metadata (16 kB)
+Collecting tensorboard
+  Downloading tensorboard-2.21.0-py3-none-any.whl.metadata (1.8 kB)
+Requirement already satisfied: pandas in /opt/conda/lib/python3.11/site-packages (3.0.5)
+Collecting lpips
+  Downloading lpips-0.1.4-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: zstandard in /opt/conda/lib/python3.11/site-packages (0.25.0)
+Collecting aiofiles<25.0,>=22.0 (from gradio==6.0.1)
+  Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: anyio<5.0,>=3.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (4.14.2)
+Requirement already satisfied: brotli>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (1.1.0)
+Requirement already satisfied: fastapi<1.0,>=0.115.2 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.141.1)
+Collecting ffmpy (from gradio==6.0.1)
+  Downloading ffmpy-1.0.0-py3-none-any.whl.metadata (3.0 kB)
+Collecting gradio-client==2.0.0 (from gradio==6.0.1)
+  Downloading gradio_client-2.0.0-py3-none-any.whl.metadata (7.1 kB)
+Requirement already satisfied: groovy~=0.1 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.1.2)
+Requirement already satisfied: httpx<1.0,>=0.24.1 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.28.1)
+Requirement already satisfied: huggingface-hub<2.0,>=0.33.5 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.36.2)
+Requirement already satisfied: jinja2<4.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (3.1.4)
+Requirement already satisfied: markupsafe<4.0,>=2.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (3.0.2)
+Requirement already satisfied: numpy<3.0,>=1.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (2.2.6)
+Requirement already satisfied: orjson~=3.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (3.12.0)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (24.1)
+Collecting pandas
+  Downloading pandas-2.3.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+Requirement already satisfied: pillow<13.0,>=8.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (12.0.0)
+Collecting pydantic<=2.12.4,>=2.11.10 (from gradio==6.0.1)
+  Downloading pydantic-2.12.4-py3-none-any.whl.metadata (89 kB)
+Requirement already satisfied: pydub in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.25.1)
+Requirement already satisfied: python-multipart>=0.0.18 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.0.32)
+Requirement already satisfied: pyyaml<7.0,>=5.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (6.0.2)
+Requirement already satisfied: safehttpx<0.2.0,>=0.1.7 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.1.7)
+Requirement already satisfied: semantic-version~=2.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (2.10.0)
+Collecting starlette<1.0,>=0.40.0 (from gradio==6.0.1)
+  Downloading starlette-0.52.1-py3-none-any.whl.metadata (6.3 kB)
+Collecting tomlkit<0.14.0,>=0.12.0 (from gradio==6.0.1)
+  Downloading tomlkit-0.13.3-py3-none-any.whl.metadata (2.8 kB)
+Requirement already satisfied: typer<1.0,>=0.12 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.27.1)
+Requirement already satisfied: typing-extensions~=4.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (4.16.0)
+Requirement already satisfied: uvicorn>=0.14.0 in /opt/conda/lib/python3.11/site-packages (from gradio==6.0.1) (0.52.3)
+Requirement already satisfied: fsspec in /opt/conda/lib/python3.11/site-packages (from gradio-client==2.0.0->gradio==6.0.1) (2024.10.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /opt/conda/lib/python3.11/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /opt/conda/lib/python3.11/site-packages (from pandas) (2024.2)
+Collecting tzdata>=2022.7 (from pandas)
+  Downloading tzdata-2026.3-py2.py3-none-any.whl.metadata (1.4 kB)
+Requirement already satisfied: idna>=2.8 in /opt/conda/lib/python3.11/site-packages (from anyio<5.0,>=3.0->gradio==6.0.1) (3.10)
+Requirement already satisfied: typing-inspection>=0.4.2 in /opt/conda/lib/python3.11/site-packages (from fastapi<1.0,>=0.115.2->gradio==6.0.1) (0.4.4)
+Requirement already satisfied: annotated-doc>=0.0.2 in /opt/conda/lib/python3.11/site-packages (from fastapi<1.0,>=0.115.2->gradio==6.0.1) (0.0.5)
+Requirement already satisfied: certifi in /opt/conda/lib/python3.11/site-packages (from httpx<1.0,>=0.24.1->gradio==6.0.1) (2024.8.30)
+Requirement already satisfied: httpcore==1.* in /opt/conda/lib/python3.11/site-packages (from httpx<1.0,>=0.24.1->gradio==6.0.1) (1.0.9)
+Requirement already satisfied: h11>=0.16 in /opt/conda/lib/python3.11/site-packages (from httpcore==1.*->httpx<1.0,>=0.24.1->gradio==6.0.1) (0.16.0)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from huggingface-hub<2.0,>=0.33.5->gradio==6.0.1) (3.16.1)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /opt/conda/lib/python3.11/site-packages (from huggingface-hub<2.0,>=0.33.5->gradio==6.0.1) (1.6.0)
+Requirement already satisfied: requests in /opt/conda/lib/python3.11/site-packages (from huggingface-hub<2.0,>=0.33.5->gradio==6.0.1) (2.32.3)
+Requirement already satisfied: annotated-types>=0.6.0 in /opt/conda/lib/python3.11/site-packages (from pydantic<=2.12.4,>=2.11.10->gradio==6.0.1) (0.8.0)
+Collecting pydantic-core==2.41.5 (from pydantic<=2.12.4,>=2.11.10->gradio==6.0.1)
+  Downloading pydantic_core-2.41.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Requirement already satisfied: shellingham>=1.3.0 in /opt/conda/lib/python3.11/site-packages (from typer<1.0,>=0.12->gradio==6.0.1) (1.5.4)
+Requirement already satisfied: rich>=13.8.0 in /opt/conda/lib/python3.11/site-packages (from typer<1.0,>=0.12->gradio==6.0.1) (15.0.0)
+Requirement already satisfied: regex!=2019.12.17 in /opt/conda/lib/python3.11/site-packages (from transformers) (2026.7.19)
+Requirement already satisfied: tokenizers<=0.23.0,>=0.22.0 in /opt/conda/lib/python3.11/site-packages (from transformers) (0.22.2)
+Requirement already satisfied: safetensors>=0.4.3 in /opt/conda/lib/python3.11/site-packages (from transformers) (0.8.0)
+Collecting absl-py>=0.4 (from tensorboard)
+  Downloading absl_py-2.5.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting grpcio<2.0,>=1.74.0 (from tensorboard)
+  Downloading grpcio-1.83.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.7 kB)
+Collecting markdown>=2.6.8 (from tensorboard)
+  Downloading markdown-3.10.3-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: protobuf<8.0.0,>=6.31.1 in /opt/conda/lib/python3.11/site-packages (from tensorboard) (7.35.1)
+Requirement already satisfied: setuptools>=41.0.0 in /opt/conda/lib/python3.11/site-packages (from tensorboard) (84.0.0)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard)
+  Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
+Requirement already satisfied: werkzeug>=1.0.1 in /opt/conda/lib/python3.11/site-packages (from tensorboard) (3.1.8)
+Requirement already satisfied: torch>=0.4.0 in /opt/conda/lib/python3.11/site-packages (from lpips) (2.5.1+cu124)
+Requirement already satisfied: torchvision>=0.2.1 in /opt/conda/lib/python3.11/site-packages (from lpips) (0.20.1+cu124)
+Requirement already satisfied: scipy>=1.0.1 in /opt/conda/lib/python3.11/site-packages (from lpips) (1.17.1)
+Requirement already satisfied: six>=1.5 in /opt/conda/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas) (1.16.0)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/conda/lib/python3.11/site-packages (from rich>=13.8.0->typer<1.0,>=0.12->gradio==6.0.1) (4.2.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/conda/lib/python3.11/site-packages (from rich>=13.8.0->typer<1.0,>=0.12->gradio==6.0.1) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in /opt/conda/lib/python3.11/site-packages (from markdown-it-py>=2.2.0->rich>=13.8.0->typer<1.0,>=0.12->gradio==6.0.1) (0.1.2)
+Requirement already satisfied: networkx in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (3.4.2)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.3.1.170)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (12.4.127)
+Requirement already satisfied: triton==3.1.0 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (3.1.0)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/lib/python3.11/site-packages (from torch>=0.4.0->lpips) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy==1.13.1->torch>=0.4.0->lpips) (1.3.0)
+Requirement already satisfied: click>=7.0 in /opt/conda/lib/python3.11/site-packages (from uvicorn>=0.14.0->gradio==6.0.1) (8.4.2)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface-hub<2.0,>=0.33.5->gradio==6.0.1) (3.4.0)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface-hub<2.0,>=0.33.5->gradio==6.0.1) (2.2.3)
+Downloading gradio-6.0.1-py3-none-any.whl (21.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 21.6/21.6 MB 160.3 MB/s  0:00:00
+Downloading gradio_client-2.0.0-py3-none-any.whl (315 kB)
+Downloading pandas-2.3.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 233.7 MB/s  0:00:00
+Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+Downloading pydantic-2.12.4-py3-none-any.whl (463 kB)
+Downloading pydantic_core-2.41.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 248.8 MB/s  0:00:00
+Downloading starlette-0.52.1-py3-none-any.whl (74 kB)
+Downloading tomlkit-0.13.3-py3-none-any.whl (38 kB)
+Downloading tensorboard-2.21.0-py3-none-any.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 213.0 MB/s  0:00:00
+Downloading grpcio-1.83.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 240.5 MB/s  0:00:00
+Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 256.0 MB/s  0:00:00
+Downloading lpips-0.1.4-py3-none-any.whl (53 kB)
+Downloading absl_py-2.5.0-py3-none-any.whl (137 kB)
+Downloading markdown-3.10.3-py3-none-any.whl (110 kB)
+Downloading tzdata-2026.3-py2.py3-none-any.whl (348 kB)
+Downloading ffmpy-1.0.0-py3-none-any.whl (5.6 kB)
+Installing collected packages: tzdata, tomlkit, tensorboard-data-server, pydantic-core, markdown, grpcio, ffmpy, aiofiles, absl-py, tensorboard, starlette, pydantic, pandas, gradio-client, gradio, lpips
+  Attempting uninstall: tomlkit
+    Found existing installation: tomlkit 0.14.0
+    Uninstalling tomlkit-0.14.0:
+      Successfully uninstalled tomlkit-0.14.0
+  Attempting uninstall: pydantic-core
+    Found existing installation: pydantic_core 2.46.4
+    Uninstalling pydantic_core-2.46.4:
+      Successfully uninstalled pydantic_core-2.46.4
+  Attempting uninstall: starlette
+    Found existing installation: starlette 1.6.0
+    Uninstalling starlette-1.6.0:
+      Successfully uninstalled starlette-1.6.0
+  Attempting uninstall: pydantic
+    Found existing installation: pydantic 2.13.4
+    Uninstalling pydantic-2.13.4:
+      Successfully uninstalled pydantic-2.13.4
+  Attempting uninstall: pandas
+    Found existing installation: pandas 3.0.5
+    Uninstalling pandas-3.0.5:
+      Successfully uninstalled pandas-3.0.5
+  Attempting uninstall: gradio-client
+    Found existing installation: gradio_client 2.5.0
+    Uninstalling gradio_client-2.5.0:
+      Successfully uninstalled gradio_client-2.5.0
+  Attempting uninstall: gradio
+    Found existing installation: gradio 6.17.3
+    Uninstalling gradio-6.17.3:
+      Successfully uninstalled gradio-6.17.3
+
+Successfully installed absl-py-2.5.0 aiofiles-24.1.0 ffmpy-1.0.0 gradio-6.0.1 gradio-client-2.0.0 grpcio-1.83.0 lpips-0.1.4 markdown-3.10.3 pandas-2.3.3 pydantic-2.12.4 pydantic-core-2.41.5 starlette-0.52.1 tensorboard-2.21.0 tensorboard-data-server-0.7.2 tomlkit-0.13.3 tzdata-2026.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Collecting git+https://github.com/EasternJournalist/utils3d.git@9a4eb15e4021b67b12c460c7057d642626897ec8
+  Cloning https://github.com/EasternJournalist/utils3d.git (to revision 9a4eb15e4021b67b12c460c7057d642626897ec8) to /tmp/pip-req-build-v8nthvmh
+  Running command git clone --filter=blob:none --quiet https://github.com/EasternJournalist/utils3d.git /tmp/pip-req-build-v8nthvmh
+  Running command git rev-parse -q --verify '9a4eb15e4021b67b12c460c7057d642626897ec8^{commit}'
+  9a4eb15e4021b67b12c460c7057d642626897ec8
+  Running command git checkout -q 9a4eb15e4021b67b12c460c7057d642626897ec8
+  Resolved https://github.com/EasternJournalist/utils3d.git to commit 9a4eb15e4021b67b12c460c7057d642626897ec8
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: moderngl in /opt/conda/lib/python3.11/site-packages (from utils3d==0.0.2) (5.12.0)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from utils3d==0.0.2) (2.2.6)
+Requirement already satisfied: plyfile in /opt/conda/lib/python3.11/site-packages (from utils3d==0.0.2) (1.1.3)
+Requirement already satisfied: scipy in /opt/conda/lib/python3.11/site-packages (from utils3d==0.0.2) (1.17.1)
+Requirement already satisfied: glcontext>=3.0.0 in /opt/conda/lib/python3.11/site-packages (from moderngl->utils3d==0.0.2) (3.0.0)
+Building wheels for collected packages: utils3d
+  Building wheel for utils3d (pyproject.toml): started
+  Building wheel for utils3d (pyproject.toml): finished with status 'done'
+  Created wheel for utils3d: filename=utils3d-0.0.2-py3-none-any.whl size=88960 sha256=a03ee6b65a629688c7b5c366ea1782a0ddf7542f29465251314d1817fc22c689
+  Stored in directory: /root/.cache/pip/wheels/14/9c/d3/48cd29fa1e0ecfea75b47558f1054b426ece306185162ed228
+Successfully built utils3d
+Installing collected packages: utils3d
+  Attempting uninstall: utils3d
+    Found existing installation: utils3d 1.3
+    Uninstalling utils3d-1.3:
+      Successfully uninstalled utils3d-1.3
+Successfully installed utils3d-0.0.2
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libjpeg-dev is already the newest version (8c-2ubuntu10).
+0 upgraded, 0 newly installed, 0 to remove and 114 not upgraded.
+Collecting pillow-simd
+  Downloading Pillow-SIMD-9.5.0.post2.tar.gz (904 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 904.6/904.6 kB 15.2 MB/s  0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: pillow-simd
+  Building wheel for pillow-simd (pyproject.toml): started
+  Building wheel for pillow-simd (pyproject.toml): finished with status 'done'
+  Created wheel for pillow-simd: filename=pillow_simd-9.5.0.post2-cp311-cp311-linux_x86_64.whl size=515396 sha256=b204d8fe8595bf4bf003444e82e8270adb735fe91909e091d902196cb750e75e
+  Stored in directory: /root/.cache/pip/wheels/22/0d/52/e674d38ad73c28285bb489d28d18f085ff721b52e990d3a75c
+Successfully built pillow-simd
+Installing collected packages: pillow-simd
+Successfully installed pillow-simd-9.5.0.post2
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Requirement already satisfied: kornia in /opt/conda/lib/python3.11/site-packages (0.8.2)
+Requirement already satisfied: timm in /opt/conda/lib/python3.11/site-packages (1.0.22)
+Requirement already satisfied: kornia_rs>=0.1.9 in /opt/conda/lib/python3.11/site-packages (from kornia) (0.1.14)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.11/site-packages (from kornia) (24.1)
+Requirement already satisfied: torch>=2.0.0 in /opt/conda/lib/python3.11/site-packages (from kornia) (2.5.1+cu124)
+Requirement already satisfied: torchvision in /opt/conda/lib/python3.11/site-packages (from timm) (0.20.1+cu124)
+Requirement already satisfied: pyyaml in /opt/conda/lib/python3.11/site-packages (from timm) (6.0.2)
+Requirement already satisfied: huggingface_hub in /opt/conda/lib/python3.11/site-packages (from timm) (0.36.2)
+Requirement already satisfied: safetensors in /opt/conda/lib/python3.11/site-packages (from timm) (0.8.0)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (3.1.4)
+Requirement already satisfied: fsspec in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (2024.10.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.3.1.170)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (12.4.127)
+Requirement already satisfied: triton==3.1.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (3.1.0)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.0.0->kornia) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy==1.13.1->torch>=2.0.0->kornia) (1.3.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /opt/conda/lib/python3.11/site-packages (from huggingface_hub->timm) (1.6.0)
+Requirement already satisfied: requests in /opt/conda/lib/python3.11/site-packages (from huggingface_hub->timm) (2.32.3)
+Requirement already satisfied: tqdm>=4.42.1 in /opt/conda/lib/python3.11/site-packages (from huggingface_hub->timm) (4.67.1)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch>=2.0.0->kornia) (3.0.2)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface_hub->timm) (3.4.0)
+Requirement already satisfied: idna<4,>=2.5 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface_hub->timm) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface_hub->timm) (2.2.3)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/conda/lib/python3.11/site-packages (from requests->huggingface_hub->timm) (2024.8.30)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from torchvision->timm) (2.2.6)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /opt/conda/lib/python3.11/site-packages (from torchvision->timm) (12.0.0)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Collecting flash-attn==2.7.3
+  Downloading flash_attn-2.7.3.tar.gz (3.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 79.9 MB/s  0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [23 lines of output]
+      /tmp/pip-build-env-kkw25hxo/overlay/lib/python3.11/site-packages/setuptools/_vendor/wheel/bdist_wheel.py:4: FutureWarning: The 'wheel' package is no longer the canonical location of the 'bdist_wheel' command, and will be removed in a future release. Please update to setuptools v70.1 or later which contains an integrated version of this command.
+        warn(
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+                 ^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-kkw25hxo/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-kkw25hxo/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-kkw25hxo/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-kkw25hxo/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 22, in <module>
+      ModuleNotFoundError: No module named 'torch'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'flash-attn' when getting requirements to build wheel
+Cloning into '/tmp/extensions/CuMesh'...
+Submodule 'third_party/cubvh' (https://github.com/JeffreyXiang/cubvh.git) registered for path 'third_party/cubvh'
+Cloning into '/tmp/extensions/CuMesh/third_party/cubvh'...
+Submodule path 'third_party/cubvh': checked out 'ce92267a24ef6ad7d2c8ccbc2ae2c021a6597e70'
+Submodule 'third_party/eigen' (https://gitlab.com/libeigen/eigen) registered for path 'third_party/cubvh/third_party/eigen'
+Cloning into '/tmp/extensions/CuMesh/third_party/cubvh/third_party/eigen'...
+warning: redirecting to https://gitlab.com/libeigen/eigen.git/
+Submodule path 'third_party/cubvh/third_party/eigen': checked out 'e63d9f6ccb7f6f29f31241b87c542f3f0ab3112b'
+Processing /tmp/extensions/CuMesh
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/lib/python3.11/site-packages (from cumesh==0.0.1) (2.5.1+cu124)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (from cumesh==0.0.1) (4.67.1)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.1.4)
+Requirement already satisfied: fsspec in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2024.10.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.3.1.170)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: triton==3.1.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.1.0)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy==1.13.1->torch>=2.4.0->cumesh==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch>=2.4.0->cumesh==0.0.1) (3.0.2)
+Building wheels for collected packages: cumesh
+  Building wheel for cumesh (pyproject.toml): started
+  Building wheel for cumesh (pyproject.toml): still running...
+  Building wheel for cumesh (pyproject.toml): still running...
+  Building wheel for cumesh (pyproject.toml): finished with status 'done'
+  Created wheel for cumesh: filename=cumesh-0.0.1-cp311-cp311-linux_x86_64.whl size=1985935 sha256=6ec874b5353d64ba4e4c028ee405983f32d0379c943e4bc4a83efb45fe824d6d
+  Stored in directory: /tmp/pip-ephem-wheel-cache-a83fg8h9/wheels/43/5e/fb/c908e87498be7015f6371ffaffc6436b0fee9657020e88ac4e
+Successfully built cumesh
+Installing collected packages: cumesh
+Successfully installed cumesh-0.0.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Cloning into '/tmp/extensions/FlexGEMM'...
+Processing /tmp/extensions/FlexGEMM
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/lib/python3.11/site-packages (from flex_gemm==1.0.0) (2.5.1+cu124)
+Collecting triton>=3.2.0 (from flex_gemm==1.0.0)
+  Downloading triton-3.7.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (1.7 kB)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from flex_gemm==1.0.0) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.8.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.1.4)
+Requirement already satisfied: fsspec in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2024.10.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.3.1.170)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+INFO: pip is looking at multiple versions of torch to determine which version is compatible with other requirements. This could take a while.
+Collecting torch>=2.4.0 (from flex_gemm==1.0.0)
+  Downloading torch-2.13.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (38 kB)
+Requirement already satisfied: setuptools>=77.0.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (84.0.0)
+Collecting sympy>=1.13.3 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting cuda-toolkit==13.0.3 (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading cuda_toolkit-13.0.3.0-py2.py3-none-any.whl.metadata (17 kB)
+Collecting cuda-bindings<14,>=13.0.3 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading cuda_bindings-13.3.1-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (2.5 kB)
+Collecting nvidia-cudnn-cu13==9.20.0.48 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cudnn_cu13-9.20.0.48-py3-none-manylinux_2_27_x86_64.whl.metadata (1.9 kB)
+Collecting nvidia-cusparselt-cu13==0.8.1 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl.metadata (12 kB)
+Collecting nvidia-nccl-cu13==2.29.7 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_nccl_cu13-2.29.7-py3-none-manylinux_2_18_x86_64.whl.metadata (2.1 kB)
+Collecting nvidia-nvshmem-cu13==3.4.5 (from torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.1 kB)
+Collecting nvidia-cublas==13.1.1.3.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cuda-nvrtc==13.0.88.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cuda-runtime==13.0.96.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cufft==12.0.0.61.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-nvjitlink<14,>=13.0.88 (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_nvjitlink-13.3.33-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cufile==1.15.1.6.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cuda-cupti==13.0.85.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-curand==10.4.0.35.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cusolver==12.0.4.66.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cusparse==12.6.3.3.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-nvtx==13.0.85.* (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl.metadata (1.8 kB)
+Collecting cuda-pathfinder>=1.4.2 (from cuda-bindings<14,>=13.0.3->torch>=2.4.0->flex_gemm==1.0.0)
+  Downloading cuda_pathfinder-1.6.1-py3-none-any.whl.metadata (1.9 kB)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy>=1.13.3->torch>=2.4.0->flex_gemm==1.0.0) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch>=2.4.0->flex_gemm==1.0.0) (3.0.2)
+Downloading torch-2.13.0-cp311-cp311-manylinux_2_28_x86_64.whl (526.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 526.6/526.6 MB 135.3 MB/s  0:00:03
+Downloading cuda_toolkit-13.0.3.0-py2.py3-none-any.whl (2.5 kB)
+Downloading nvidia_cudnn_cu13-9.20.0.48-py3-none-manylinux_2_27_x86_64.whl (366.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 366.2/366.2 MB 220.3 MB/s  0:00:01
+Downloading nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl (170.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.1/170.1 MB 302.7 MB/s  0:00:00
+Downloading nvidia_nccl_cu13-2.29.7-py3-none-manylinux_2_18_x86_64.whl (206.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 206.0/206.0 MB 315.0 MB/s  0:00:00
+Downloading nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (60.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 342.0 MB/s  0:00:00
+Downloading triton-3.7.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (197.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 197.7/197.7 MB 211.0 MB/s  0:00:00
+Downloading cuda_bindings-13.3.1-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (6.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.7/6.7 MB 129.5 MB/s  0:00:00
+Downloading nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl (423.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 423.1/423.1 MB 240.5 MB/s  0:00:01
+Downloading nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl (10.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.7/10.7 MB 333.1 MB/s  0:00:00
+Downloading nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (90.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.2/90.2 MB 313.4 MB/s  0:00:00
+Downloading nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 309.1 MB/s  0:00:00
+Downloading nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (214.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.1/214.1 MB 229.9 MB/s  0:00:00
+Downloading nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 260.4 MB/s  0:00:00
+Downloading nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl (59.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.5/59.5 MB 280.7 MB/s  0:00:00
+Downloading nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl (200.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 200.9/200.9 MB 276.1 MB/s  0:00:00
+Downloading nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (145.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 145.9/145.9 MB 255.9 MB/s  0:00:00
+Downloading nvidia_nvjitlink-13.3.33-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (40.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.7/40.7 MB 201.2 MB/s  0:00:00
+Downloading nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl (148 kB)
+Downloading cuda_pathfinder-1.6.1-py3-none-any.whl (60 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 331.8 MB/s  0:00:00
+Building wheels for collected packages: flex_gemm
+  Building wheel for flex_gemm (pyproject.toml): started
+  Building wheel for flex_gemm (pyproject.toml): finished with status 'done'
+  Created wheel for flex_gemm: filename=flex_gemm-1.0.0-cp311-cp311-linux_x86_64.whl size=283588 sha256=332b3f530428c5f5798135bf20dca84bc58678a0935b94f38e96b18ce11055ff
+  Stored in directory: /tmp/pip-ephem-wheel-cache-poh1j1ik/wheels/2a/c0/0f/d307a7ce421009944d80eacd194b775515dddcd773d76696df
+Successfully built flex_gemm
+Installing collected packages: nvidia-cusparselt-cu13, cuda-toolkit, triton, sympy, nvidia-nvtx, nvidia-nvshmem-cu13, nvidia-nvjitlink, nvidia-nccl-cu13, nvidia-curand, nvidia-cufile, nvidia-cuda-runtime, nvidia-cuda-nvrtc, nvidia-cuda-cupti, cuda-pathfinder, nvidia-cusparse, nvidia-cufft, nvidia-cublas, cuda-bindings, nvidia-cusolver, nvidia-cudnn-cu13, torch, flex_gemm
+  Attempting uninstall: triton
+    Found existing installation: triton 3.1.0
+    Uninstalling triton-3.1.0:
+      Successfully uninstalled triton-3.1.0
+  Attempting uninstall: sympy
+    Found existing installation: sympy 1.13.1
+    Uninstalling sympy-1.13.1:
+      Successfully uninstalled sympy-1.13.1
+  Attempting uninstall: torch
+    Found existing installation: torch 2.5.1+cu124
+    Uninstalling torch-2.5.1+cu124:
+      Successfully uninstalled torch-2.5.1+cu124
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+torchaudio 2.5.1+cu124 requires torch==2.5.1, but you have torch 2.13.0 which is incompatible.
+torchvision 0.20.1+cu124 requires torch==2.5.1, but you have torch 2.13.0 which is incompatible.
+Successfully installed cuda-bindings-13.3.1 cuda-pathfinder-1.6.1 cuda-toolkit-13.0.3.0 flex_gemm-1.0.0 nvidia-cublas-13.1.1.3 nvidia-cuda-cupti-13.0.85 nvidia-cuda-nvrtc-13.0.88 nvidia-cuda-runtime-13.0.96 nvidia-cudnn-cu13-9.20.0.48 nvidia-cufft-12.0.0.61 nvidia-cufile-1.15.1.6 nvidia-curand-10.4.0.35 nvidia-cusolver-12.0.4.66 nvidia-cusparse-12.6.3.3 nvidia-cusparselt-cu13-0.8.1 nvidia-nccl-cu13-2.29.7 nvidia-nvjitlink-13.3.33 nvidia-nvshmem-cu13-3.4.5 nvidia-nvtx-13.0.85 sympy-1.14.0 torch-2.13.0 triton-3.7.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Processing /tmp/extensions/o-voxel
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (2.13.0)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (2.2.6)
+Requirement already satisfied: plyfile in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (1.1.3)
+Requirement already satisfied: trimesh in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (4.10.1)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (4.67.1)
+Requirement already satisfied: zstandard in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (0.25.0)
+Requirement already satisfied: easydict in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (1.13)
+Collecting cumesh @ git+https://github.com/JeffreyXiang/CuMesh.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/CuMesh.git to /tmp/pip-install-x136oezo/cumesh_16697fa219e24990b011e7763ab274e6
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/CuMesh.git /tmp/pip-install-x136oezo/cumesh_16697fa219e24990b011e7763ab274e6
+  Resolved https://github.com/JeffreyXiang/CuMesh.git to commit 12289e1062f0603f2f0d0771b02e1395d247f26f
+  Running command git submodule update --init --recursive -q
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/FlexGEMM.git to /tmp/pip-install-x136oezo/flex-gemm_11073d05b99647ef9caf205ca7bdf687
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/FlexGEMM.git /tmp/pip-install-x136oezo/flex-gemm_11073d05b99647ef9caf205ca7bdf687
+  Resolved https://github.com/JeffreyXiang/FlexGEMM.git to commit 6dd94a859c26ee8246888502eada3dd8ad85532e
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/lib/python3.11/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.7.1)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (84.0.0)
+Requirement already satisfied: sympy>=1.13.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.1.4)
+Requirement already satisfied: fsspec>=0.8.5 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (2024.10.0)
+Requirement already satisfied: cuda-toolkit==13.0.3 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.3.0)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (13.3.1)
+Requirement already satisfied: nvidia-cudnn-cu13==9.20.0.48 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (9.20.0.48)
+Requirement already satisfied: nvidia-cusparselt-cu13==0.8.1 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (0.8.1)
+Requirement already satisfied: nvidia-nccl-cu13==2.29.7 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (2.29.7)
+Requirement already satisfied: nvidia-nvshmem-cu13==3.4.5 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.4.5)
+Requirement already satisfied: nvidia-cublas==13.1.1.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.1.1.3)
+Requirement already satisfied: nvidia-cuda-nvrtc==13.0.88.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.88)
+Requirement already satisfied: nvidia-cuda-runtime==13.0.96.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.96)
+Requirement already satisfied: nvidia-cufft==12.0.0.61.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.0.0.61)
+Requirement already satisfied: nvidia-nvjitlink<14,>=13.0.88 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.3.33)
+Requirement already satisfied: nvidia-cufile==1.15.1.6.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (1.15.1.6)
+Requirement already satisfied: nvidia-cuda-cupti==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.85)
+Requirement already satisfied: nvidia-curand==10.4.0.35.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (10.4.0.35)
+Requirement already satisfied: nvidia-cusolver==12.0.4.66.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.0.4.66)
+Requirement already satisfied: nvidia-cusparse==12.6.3.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.6.3.3)
+Requirement already satisfied: nvidia-nvtx==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.85)
+Requirement already satisfied: cuda-pathfinder>=1.4.2 in /opt/conda/lib/python3.11/site-packages (from cuda-bindings<14,>=13.0.3->torch->o_voxel==0.0.1) (1.6.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy>=1.13.3->torch->o_voxel==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch->o_voxel==0.0.1) (3.0.2)
+Building wheels for collected packages: o_voxel
+  Building wheel for o_voxel (pyproject.toml): started
+  Building wheel for o_voxel (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for o_voxel (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [88 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      running bdist_wheel
+      running build
+      running build_py
+      creating build/lib.linux-x86_64-cpython-311/o_voxel
+      copying o_voxel/__init__.py -> build/lib.linux-x86_64-cpython-311/o_voxel
+      copying o_voxel/postprocess.py -> build/lib.linux-x86_64-cpython-311/o_voxel
+      copying o_voxel/rasterize.py -> build/lib.linux-x86_64-cpython-311/o_voxel
+      copying o_voxel/serialize.py -> build/lib.linux-x86_64-cpython-311/o_voxel
+      creating build/lib.linux-x86_64-cpython-311/o_voxel/convert
+      copying o_voxel/convert/__init__.py -> build/lib.linux-x86_64-cpython-311/o_voxel/convert
+      copying o_voxel/convert/flexible_dual_grid.py -> build/lib.linux-x86_64-cpython-311/o_voxel/convert
+      copying o_voxel/convert/volumetic_attr.py -> build/lib.linux-x86_64-cpython-311/o_voxel/convert
+      creating build/lib.linux-x86_64-cpython-311/o_voxel/io
+      copying o_voxel/io/__init__.py -> build/lib.linux-x86_64-cpython-311/o_voxel/io
+      copying o_voxel/io/npz.py -> build/lib.linux-x86_64-cpython-311/o_voxel/io
+      copying o_voxel/io/ply.py -> build/lib.linux-x86_64-cpython-311/o_voxel/io
+      copying o_voxel/io/vxz.py -> build/lib.linux-x86_64-cpython-311/o_voxel/io
+      running egg_info
+      creating o_voxel.egg-info
+      writing o_voxel.egg-info/PKG-INFO
+      writing dependency_links to o_voxel.egg-info/dependency_links.txt
+      writing requirements to o_voxel.egg-info/requires.txt
+      writing top-level names to o_voxel.egg-info/top_level.txt
+      writing manifest file 'o_voxel.egg-info/SOURCES.txt'
+      reading manifest file 'o_voxel.egg-info/SOURCES.txt'
+      writing manifest file 'o_voxel.egg-info/SOURCES.txt'
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 25, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for o_voxel
+Failed to build o_voxel
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> o_voxel
+FAIL trellis core
+[05:58:32] == nvdiffrast + nvdiffrec (texturing path only; NON-COMMERCIAL licence)
+Cloning into '/tmp/extensions/nvdiffrast'...
+Note: switching to '253ac4fcea7de5f396371124af597e6cc957bfae'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+Processing /tmp/extensions/nvdiffrast
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from nvdiffrast==0.4.0) (2.2.6)
+Building wheels for collected packages: nvdiffrast
+  Building wheel for nvdiffrast (pyproject.toml): started
+  Building wheel for nvdiffrast (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for nvdiffrast (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [90 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      running bdist_wheel
+      running build
+      running build_py
+      creating build/lib.linux-x86_64-cpython-311/nvdiffrast
+      copying nvdiffrast/__init__.py -> build/lib.linux-x86_64-cpython-311/nvdiffrast
+      creating build/lib.linux-x86_64-cpython-311/nvdiffrast/torch
+      copying nvdiffrast/torch/__init__.py -> build/lib.linux-x86_64-cpython-311/nvdiffrast/torch
+      copying nvdiffrast/torch/ops.py -> build/lib.linux-x86_64-cpython-311/nvdiffrast/torch
+      running egg_info
+      creating nvdiffrast.egg-info
+      writing nvdiffrast.egg-info/PKG-INFO
+      writing dependency_links to nvdiffrast.egg-info/dependency_links.txt
+      writing requirements to nvdiffrast.egg-info/requires.txt
+      writing top-level names to nvdiffrast.egg-info/top_level.txt
+      writing manifest file 'nvdiffrast.egg-info/SOURCES.txt'
+      reading manifest file 'nvdiffrast.egg-info/SOURCES.txt'
+      reading manifest template 'MANIFEST.in'
+      warning: no previously-included files matching '*~' found anywhere in distribution
+      warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+      warning: no previously-included files matching '*.so' found anywhere in distribution
+      warning: no previously-included files matching '__pycache__' found anywhere in distribution
+      warning: no previously-included files matching '.git*' found anywhere in distribution
+      warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+      warning: no previously-included files matching '*.egg-info' found anywhere in distribution
+      warning: no previously-included files matching 'build' found anywhere in distribution
+      warning: no previously-included files matching 'dist' found anywhere in distribution
+      adding license file 'LICENSE.txt'
+      writing manifest file 'nvdiffrast.egg-info/SOURCES.txt'
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 25, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for nvdiffrast
+Failed to build nvdiffrast
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> nvdiffrast
+Cloning into '/tmp/extensions/nvdiffrec'...
+Processing /tmp/extensions/nvdiffrec
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: nvdiffrec_render
+  Building wheel for nvdiffrec_render (pyproject.toml): started
+  Building wheel for nvdiffrec_render (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for nvdiffrec_render (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [83 lines of output]
+      running bdist_wheel
+      running build
+      running build_py
+      creating build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/__init__.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/light.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/material.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/mesh.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/mlptexture.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/obj.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/regularizer.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/render.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/texture.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      copying nvdiffrec_render/util.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      creating build/lib.linux-x86_64-cpython-311/nvdiffrec_render/renderutils
+      copying nvdiffrec_render/renderutils/__init__.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render/renderutils
+      copying nvdiffrec_render/renderutils/bsdf.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render/renderutils
+      copying nvdiffrec_render/renderutils/loss.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render/renderutils
+      copying nvdiffrec_render/renderutils/ops.py -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render/renderutils
+      copying nvdiffrec_render/bsdf_256_256.bin -> build/lib.linux-x86_64-cpython-311/nvdiffrec_render
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 20, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for nvdiffrec_render
+Failed to build nvdiffrec_render
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> nvdiffrec_render
+OK nvdiffr
+[05:58:49] == import check
+  ok torch
+  ok diffusers
+  ok transformers
+  ok trimesh
+  ok kornia
+  MISSING timm RuntimeError operator torchvision::nms does not exist
+  ok plyfile
+  MISSING flash_attn ModuleNotFoundError No module named 'flash_attn'
+  MISSING nvdiffrast.torch ModuleNotFoundError No module named 'nvdiffrast'
+  ok moge
+  cuda True NVIDIA A100 80GB PCIe
+[05:58:54] == PHASE2 DONE

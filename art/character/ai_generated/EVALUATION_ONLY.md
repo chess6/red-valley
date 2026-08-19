@@ -1,3 +1,6 @@
+> **PILOT CLOSED — ABANDONED_FOR_PRODUCTION (2026-08-19).** Zero assets
+> were ever generated. See `ABANDONED_FOR_PRODUCTION.md` in this directory.
+
 # EVALUATION ONLY — not cleared for shipping
 
 Everything under `ai_generated/` is **research / evaluation output** and must

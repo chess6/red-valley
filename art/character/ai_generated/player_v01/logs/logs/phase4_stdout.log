@@ -1,0 +1,27 @@
+[06:06:33] == torch state before
+torch 2.13.0+cu130 cuda 13.0
+[06:06:35] == pinning torch 2.6.0+cu124 (setup.sh's version) and purging mismatched builds
+  OK torch pinned
+  now: 2.6.0+cu124 12.4
+[06:07:09] == rebuilding extensions against the pinned torch
+[06:07:09] == setup.sh --cumesh
+  OK --cumesh
+[06:09:59] == setup.sh --o-voxel
+  FAIL --o-voxel
+[06:11:15] == setup.sh --flexgemm
+  OK --flexgemm
+[06:12:14] == setup.sh --nvdiffrast
+  OK --nvdiffrast
+[06:12:41] == setup.sh --nvdiffrec
+  OK --nvdiffrec
+[06:13:06] == setup.sh --flash-attn
+  OK --flash-attn
+[06:13:09] == import check
+  ok       cumesh
+  MISSING  o_voxel [REQUIRED] ModuleNotFoundError: No module named 'o_voxel'
+  MISSING  flexgemm [REQUIRED] ModuleNotFoundError: No module named 'flexgemm'
+  ok       nvdiffrast.torch
+  MISSING  flash_attn [optional] ModuleNotFoundError: No module named 'flash_attn'
+  ok       nvdiffrec_render
+  torch 2.6.0+cu124 cuda True
+[06:13:11] == PHASE4 DONE

@@ -1,0 +1,24 @@
+[06:00:31] == toolchain check
+[06:00:33] == build deps present in the build env
+[06:00:33] == setup.sh --flash-attn
+  OK --flash-attn
+[06:00:36] == setup.sh --cumesh
+  OK --cumesh
+[06:00:41] == setup.sh --o-voxel
+  FAIL --o-voxel
+[06:01:02] == setup.sh --flexgemm
+  OK --flexgemm
+[06:01:08] == setup.sh --nvdiffrast
+  OK --nvdiffrast
+[06:01:13] == setup.sh --nvdiffrec
+  OK --nvdiffrec
+[06:01:18] == import check
+  MISSING flash_attn ModuleNotFoundError No module named 'flash_attn'
+  MISSING cumesh ImportError /opt/conda/lib/python3.11/site-packages/cumesh/_C.cpython-311-x86_64-l
+  MISSING o_voxel ModuleNotFoundError No module named 'o_voxel'
+  MISSING flexgemm ModuleNotFoundError No module named 'flexgemm'
+  MISSING nvdiffrast.torch ModuleNotFoundError No module named 'nvdiffrast'
+  MISSING nvdiffrec_render ModuleNotFoundError No module named 'nvdiffrec_render'
+  ok moge
+  ok diffusers
+[06:01:22] == PHASE3 DONE

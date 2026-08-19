@@ -1,0 +1,10 @@
+[driver] BiRefNet stubbed (gated briaai/RMBG-2.0 avoided)
+[SPARSE] Conv backend: flex_gemm; Attention backend: sdpa
+[ATTENTION] Using backend: sdpa
+[driver] pipeline loaded in 293.7s
+[driver] input RGBA (409, 409)
+Traceback (most recent call last):
+  File "<stdin>", line 28, in <module>
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+TypeError: Pixal3DImageTo3DPipeline.run() got an unexpected keyword argument 'formats'

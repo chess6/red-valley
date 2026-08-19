@@ -1,0 +1,882 @@
+[06:00:31] == toolchain check
+/usr/local/cuda/bin/nvcc
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+CUDA_HOME=/usr/local/cuda
+torch 2.13.0+cu130
+[06:00:33] == build deps present in the build env
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[06:00:33] == setup.sh --flash-attn
+Collecting flash-attn==2.7.3
+  Using cached flash_attn-2.7.3.tar.gz (3.2 MB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [23 lines of output]
+      /tmp/pip-build-env-vb558fp5/overlay/lib/python3.11/site-packages/setuptools/_vendor/wheel/bdist_wheel.py:4: FutureWarning: The 'wheel' package is no longer the canonical location of the 'bdist_wheel' command, and will be removed in a future release. Please update to setuptools v70.1 or later which contains an integrated version of this command.
+        warn(
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+                 ^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-vb558fp5/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-vb558fp5/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-vb558fp5/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-vb558fp5/overlay/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 22, in <module>
+      ModuleNotFoundError: No module named 'torch'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'flash-attn' when getting requirements to build wheel
+  OK --flash-attn
+[06:00:36] == setup.sh --cumesh
+fatal: destination path '/tmp/extensions/CuMesh' already exists and is not an empty directory.
+Processing /tmp/extensions/CuMesh
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/lib/python3.11/site-packages (from cumesh==0.0.1) (2.13.0)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (from cumesh==0.0.1) (4.67.1)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (84.0.0)
+Requirement already satisfied: sympy>=1.13.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.1.4)
+Requirement already satisfied: fsspec>=0.8.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2024.10.0)
+Requirement already satisfied: cuda-toolkit==13.0.3 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.0.3.0)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (13.3.1)
+Requirement already satisfied: nvidia-cudnn-cu13==9.20.0.48 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (9.20.0.48)
+Requirement already satisfied: nvidia-cusparselt-cu13==0.8.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (0.8.1)
+Requirement already satisfied: nvidia-nccl-cu13==2.29.7 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2.29.7)
+Requirement already satisfied: nvidia-nvshmem-cu13==3.4.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.4.5)
+Requirement already satisfied: triton==3.7.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.7.1)
+Requirement already satisfied: nvidia-cublas==13.1.1.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.1.1.3)
+Requirement already satisfied: nvidia-cuda-nvrtc==13.0.88.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.0.88)
+Requirement already satisfied: nvidia-cuda-runtime==13.0.96.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.0.96)
+Requirement already satisfied: nvidia-cufft==12.0.0.61.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (12.0.0.61)
+Requirement already satisfied: nvidia-nvjitlink<14,>=13.0.88 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.3.33)
+Requirement already satisfied: nvidia-cufile==1.15.1.6.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (1.15.1.6)
+Requirement already satisfied: nvidia-cuda-cupti==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.0.85)
+Requirement already satisfied: nvidia-curand==10.4.0.35.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (10.4.0.35)
+Requirement already satisfied: nvidia-cusolver==12.0.4.66.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (12.0.4.66)
+Requirement already satisfied: nvidia-cusparse==12.6.3.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (12.6.3.3)
+Requirement already satisfied: nvidia-nvtx==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->cumesh==0.0.1) (13.0.85)
+Requirement already satisfied: cuda-pathfinder>=1.4.2 in /opt/conda/lib/python3.11/site-packages (from cuda-bindings<14,>=13.0.3->torch>=2.4.0->cumesh==0.0.1) (1.6.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy>=1.13.3->torch>=2.4.0->cumesh==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch>=2.4.0->cumesh==0.0.1) (3.0.2)
+Building wheels for collected packages: cumesh
+  Building wheel for cumesh (pyproject.toml): started
+  Building wheel for cumesh (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for cumesh (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [87 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      /opt/conda/lib/python3.11/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+      !!
+      
+              ********************************************************************************
+              Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+      
+              By 2027-Feb-18, you need to update your project and remove deprecated calls
+              or your builds will no longer be supported.
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        corresp(dist, value, root_dir)
+      running bdist_wheel
+      running build
+      running build_py
+      running egg_info
+      writing cumesh.egg-info/PKG-INFO
+      writing dependency_links to cumesh.egg-info/dependency_links.txt
+      writing requirements to cumesh.egg-info/requires.txt
+      writing top-level names to cumesh.egg-info/top_level.txt
+      reading manifest file 'cumesh.egg-info/SOURCES.txt'
+      adding license file 'LICENSE'
+      writing manifest file 'cumesh.egg-info/SOURCES.txt'
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 147, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for cumesh
+Failed to build cumesh
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> cumesh
+  OK --cumesh
+[06:00:41] == setup.sh --o-voxel
+Processing /tmp/extensions/o-voxel
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (2.13.0)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (2.2.6)
+Requirement already satisfied: plyfile in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (1.1.3)
+Requirement already satisfied: trimesh in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (4.10.1)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (4.67.1)
+Requirement already satisfied: zstandard in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (0.25.0)
+Requirement already satisfied: easydict in /opt/conda/lib/python3.11/site-packages (from o_voxel==0.0.1) (1.13)
+Collecting cumesh @ git+https://github.com/JeffreyXiang/CuMesh.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/CuMesh.git to /tmp/pip-install-x75b4z__/cumesh_9044c17db11e4978b891736063febecd
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/CuMesh.git /tmp/pip-install-x75b4z__/cumesh_9044c17db11e4978b891736063febecd
+  Resolved https://github.com/JeffreyXiang/CuMesh.git to commit 12289e1062f0603f2f0d0771b02e1395d247f26f
+  Running command git submodule update --init --recursive -q
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/FlexGEMM.git to /tmp/pip-install-x75b4z__/flex-gemm_b47f6f5762e34472b5bcb0081f357d57
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/FlexGEMM.git /tmp/pip-install-x75b4z__/flex-gemm_b47f6f5762e34472b5bcb0081f357d57
+  Resolved https://github.com/JeffreyXiang/FlexGEMM.git to commit 6dd94a859c26ee8246888502eada3dd8ad85532e
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/lib/python3.11/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.7.1)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (84.0.0)
+Requirement already satisfied: sympy>=1.13.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.1.4)
+Requirement already satisfied: fsspec>=0.8.5 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (2024.10.0)
+Requirement already satisfied: cuda-toolkit==13.0.3 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.3.0)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (13.3.1)
+Requirement already satisfied: nvidia-cudnn-cu13==9.20.0.48 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (9.20.0.48)
+Requirement already satisfied: nvidia-cusparselt-cu13==0.8.1 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (0.8.1)
+Requirement already satisfied: nvidia-nccl-cu13==2.29.7 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (2.29.7)
+Requirement already satisfied: nvidia-nvshmem-cu13==3.4.5 in /opt/conda/lib/python3.11/site-packages (from torch->o_voxel==0.0.1) (3.4.5)
+Requirement already satisfied: nvidia-cublas==13.1.1.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.1.1.3)
+Requirement already satisfied: nvidia-cuda-nvrtc==13.0.88.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.88)
+Requirement already satisfied: nvidia-cuda-runtime==13.0.96.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.96)
+Requirement already satisfied: nvidia-cufft==12.0.0.61.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.0.0.61)
+Requirement already satisfied: nvidia-nvjitlink<14,>=13.0.88 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.3.33)
+Requirement already satisfied: nvidia-cufile==1.15.1.6.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (1.15.1.6)
+Requirement already satisfied: nvidia-cuda-cupti==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.85)
+Requirement already satisfied: nvidia-curand==10.4.0.35.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (10.4.0.35)
+Requirement already satisfied: nvidia-cusolver==12.0.4.66.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.0.4.66)
+Requirement already satisfied: nvidia-cusparse==12.6.3.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (12.6.3.3)
+Requirement already satisfied: nvidia-nvtx==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch->o_voxel==0.0.1) (13.0.85)
+Requirement already satisfied: cuda-pathfinder>=1.4.2 in /opt/conda/lib/python3.11/site-packages (from cuda-bindings<14,>=13.0.3->torch->o_voxel==0.0.1) (1.6.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy>=1.13.3->torch->o_voxel==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch->o_voxel==0.0.1) (3.0.2)
+Building wheels for collected packages: o_voxel
+  Building wheel for o_voxel (pyproject.toml): started
+  Building wheel for o_voxel (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for o_voxel (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [72 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      running bdist_wheel
+      running build
+      running build_py
+      running egg_info
+      writing o_voxel.egg-info/PKG-INFO
+      writing dependency_links to o_voxel.egg-info/dependency_links.txt
+      writing requirements to o_voxel.egg-info/requires.txt
+      writing top-level names to o_voxel.egg-info/top_level.txt
+      reading manifest file 'o_voxel.egg-info/SOURCES.txt'
+      writing manifest file 'o_voxel.egg-info/SOURCES.txt'
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 25, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for o_voxel
+Failed to build o_voxel
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> o_voxel
+  FAIL --o-voxel
+[06:01:02] == setup.sh --flexgemm
+fatal: destination path '/tmp/extensions/FlexGEMM' already exists and is not an empty directory.
+Processing /tmp/extensions/FlexGEMM
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/lib/python3.11/site-packages (from flex_gemm==1.0.0) (2.13.0)
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/lib/python3.11/site-packages (from flex_gemm==1.0.0) (3.7.1)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from flex_gemm==1.0.0) (3.16.1)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (4.16.0)
+Requirement already satisfied: setuptools>=77.0.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (84.0.0)
+Requirement already satisfied: sympy>=1.13.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.1.4)
+Requirement already satisfied: fsspec>=0.8.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2024.10.0)
+Requirement already satisfied: cuda-toolkit==13.0.3 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.0.3.0)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (13.3.1)
+Requirement already satisfied: nvidia-cudnn-cu13==9.20.0.48 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (9.20.0.48)
+Requirement already satisfied: nvidia-cusparselt-cu13==0.8.1 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (0.8.1)
+Requirement already satisfied: nvidia-nccl-cu13==2.29.7 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2.29.7)
+Requirement already satisfied: nvidia-nvshmem-cu13==3.4.5 in /opt/conda/lib/python3.11/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.4.5)
+Requirement already satisfied: nvidia-cublas==13.1.1.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.1.1.3)
+Requirement already satisfied: nvidia-cuda-nvrtc==13.0.88.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.0.88)
+Requirement already satisfied: nvidia-cuda-runtime==13.0.96.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.0.96)
+Requirement already satisfied: nvidia-cufft==12.0.0.61.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (12.0.0.61)
+Requirement already satisfied: nvidia-nvjitlink<14,>=13.0.88 in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.3.33)
+Requirement already satisfied: nvidia-cufile==1.15.1.6.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (1.15.1.6)
+Requirement already satisfied: nvidia-cuda-cupti==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.0.85)
+Requirement already satisfied: nvidia-curand==10.4.0.35.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (10.4.0.35)
+Requirement already satisfied: nvidia-cusolver==12.0.4.66.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (12.0.4.66)
+Requirement already satisfied: nvidia-cusparse==12.6.3.3.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (12.6.3.3)
+Requirement already satisfied: nvidia-nvtx==13.0.85.* in /opt/conda/lib/python3.11/site-packages (from cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.0.3; platform_system == "Linux"->torch>=2.4.0->flex_gemm==1.0.0) (13.0.85)
+Requirement already satisfied: cuda-pathfinder>=1.4.2 in /opt/conda/lib/python3.11/site-packages (from cuda-bindings<14,>=13.0.3->torch>=2.4.0->flex_gemm==1.0.0) (1.6.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy>=1.13.3->torch>=2.4.0->flex_gemm==1.0.0) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.11/site-packages (from jinja2->torch>=2.4.0->flex_gemm==1.0.0) (3.0.2)
+Building wheels for collected packages: flex_gemm
+  Building wheel for flex_gemm (pyproject.toml): started
+  Building wheel for flex_gemm (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for flex_gemm (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [294 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      /opt/conda/lib/python3.11/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+      !!
+      
+              ********************************************************************************
+              Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+      
+              By 2027-Feb-18, you need to update your project and remove deprecated calls
+              or your builds will no longer be supported.
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        corresp(dist, value, root_dir)
+      /opt/conda/lib/python3.11/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsWarning: `install_requires` overwritten in `pyproject.toml` (dependencies)
+        corresp(dist, value, root_dir)
+      running bdist_wheel
+      running build
+      running build_py
+      running egg_info
+      writing flex_gemm.egg-info/PKG-INFO
+      writing dependency_links to flex_gemm.egg-info/dependency_links.txt
+      writing requirements to flex_gemm.egg-info/requires.txt
+      writing top-level names to flex_gemm.egg-info/top_level.txt
+      reading manifest file 'flex_gemm.egg-info/SOURCES.txt'
+      adding license file 'LICENSE'
+      writing manifest file 'flex_gemm.egg-info/SOURCES.txt'
+      /opt/conda/lib/python3.11/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'flex_gemm.kernels.cuda' is absent from the `packages` configuration.
+      !!
+      
+              ********************************************************************************
+              ############################
+              # Package would be ignored #
+              ############################
+              Python recognizes 'flex_gemm.kernels.cuda' as an importable package[^1],
+              but it is absent from setuptools' `packages` configuration.
+      
+              This leads to an ambiguous overall configuration. If you want to distribute this
+              package, please make sure that 'flex_gemm.kernels.cuda' is explicitly added
+              to the `packages` configuration field.
+      
+              Alternatively, you can also rely on setuptools' discovery methods
+              (for example by using `find_namespace_packages(...)`/`find_namespace:`
+              instead of `find_packages(...)`/`find:`).
+      
+              You can read more about "package discovery" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+      
+              If you don't want 'flex_gemm.kernels.cuda' to be distributed and are
+              already explicitly excluding 'flex_gemm.kernels.cuda' via
+              `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+              you can try to use `exclude_package_data`, or `include-package-data=False` in
+              combination with a more fine grained `package-data` configuration.
+      
+              You can read more about "package data files" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+      
+      
+              [^1]: For Python, any directory (with suitable naming) can be imported,
+                    even if it does not contain any `.py` files.
+                    On the other hand, currently there is no concept of package data
+                    directory, all directories are treated like packages.
+              ********************************************************************************
+      
+      !!
+        check.warn(importable)
+      /opt/conda/lib/python3.11/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'flex_gemm.kernels.cuda.grid_sample' is absent from the `packages` configuration.
+      !!
+      
+              ********************************************************************************
+              ############################
+              # Package would be ignored #
+              ############################
+              Python recognizes 'flex_gemm.kernels.cuda.grid_sample' as an importable package[^1],
+              but it is absent from setuptools' `packages` configuration.
+      
+              This leads to an ambiguous overall configuration. If you want to distribute this
+              package, please make sure that 'flex_gemm.kernels.cuda.grid_sample' is explicitly added
+              to the `packages` configuration field.
+      
+              Alternatively, you can also rely on setuptools' discovery methods
+              (for example by using `find_namespace_packages(...)`/`find_namespace:`
+              instead of `find_packages(...)`/`find:`).
+      
+              You can read more about "package discovery" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+      
+              If you don't want 'flex_gemm.kernels.cuda.grid_sample' to be distributed and are
+              already explicitly excluding 'flex_gemm.kernels.cuda.grid_sample' via
+              `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+              you can try to use `exclude_package_data`, or `include-package-data=False` in
+              combination with a more fine grained `package-data` configuration.
+      
+              You can read more about "package data files" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+      
+      
+              [^1]: For Python, any directory (with suitable naming) can be imported,
+                    even if it does not contain any `.py` files.
+                    On the other hand, currently there is no concept of package data
+                    directory, all directories are treated like packages.
+              ********************************************************************************
+      
+      !!
+        check.warn(importable)
+      /opt/conda/lib/python3.11/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'flex_gemm.kernels.cuda.hash' is absent from the `packages` configuration.
+      !!
+      
+              ********************************************************************************
+              ############################
+              # Package would be ignored #
+              ############################
+              Python recognizes 'flex_gemm.kernels.cuda.hash' as an importable package[^1],
+              but it is absent from setuptools' `packages` configuration.
+      
+              This leads to an ambiguous overall configuration. If you want to distribute this
+              package, please make sure that 'flex_gemm.kernels.cuda.hash' is explicitly added
+              to the `packages` configuration field.
+      
+              Alternatively, you can also rely on setuptools' discovery methods
+              (for example by using `find_namespace_packages(...)`/`find_namespace:`
+              instead of `find_packages(...)`/`find:`).
+      
+              You can read more about "package discovery" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+      
+              If you don't want 'flex_gemm.kernels.cuda.hash' to be distributed and are
+              already explicitly excluding 'flex_gemm.kernels.cuda.hash' via
+              `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+              you can try to use `exclude_package_data`, or `include-package-data=False` in
+              combination with a more fine grained `package-data` configuration.
+      
+              You can read more about "package data files" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+      
+      
+              [^1]: For Python, any directory (with suitable naming) can be imported,
+                    even if it does not contain any `.py` files.
+                    On the other hand, currently there is no concept of package data
+                    directory, all directories are treated like packages.
+              ********************************************************************************
+      
+      !!
+        check.warn(importable)
+      /opt/conda/lib/python3.11/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'flex_gemm.kernels.cuda.serialize' is absent from the `packages` configuration.
+      !!
+      
+              ********************************************************************************
+              ############################
+              # Package would be ignored #
+              ############################
+              Python recognizes 'flex_gemm.kernels.cuda.serialize' as an importable package[^1],
+              but it is absent from setuptools' `packages` configuration.
+      
+              This leads to an ambiguous overall configuration. If you want to distribute this
+              package, please make sure that 'flex_gemm.kernels.cuda.serialize' is explicitly added
+              to the `packages` configuration field.
+      
+              Alternatively, you can also rely on setuptools' discovery methods
+              (for example by using `find_namespace_packages(...)`/`find_namespace:`
+              instead of `find_packages(...)`/`find:`).
+      
+              You can read more about "package discovery" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+      
+              If you don't want 'flex_gemm.kernels.cuda.serialize' to be distributed and are
+              already explicitly excluding 'flex_gemm.kernels.cuda.serialize' via
+              `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+              you can try to use `exclude_package_data`, or `include-package-data=False` in
+              combination with a more fine grained `package-data` configuration.
+      
+              You can read more about "package data files" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+      
+      
+              [^1]: For Python, any directory (with suitable naming) can be imported,
+                    even if it does not contain any `.py` files.
+                    On the other hand, currently there is no concept of package data
+                    directory, all directories are treated like packages.
+              ********************************************************************************
+      
+      !!
+        check.warn(importable)
+      /opt/conda/lib/python3.11/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'flex_gemm.kernels.cuda.spconv' is absent from the `packages` configuration.
+      !!
+      
+              ********************************************************************************
+              ############################
+              # Package would be ignored #
+              ############################
+              Python recognizes 'flex_gemm.kernels.cuda.spconv' as an importable package[^1],
+              but it is absent from setuptools' `packages` configuration.
+      
+              This leads to an ambiguous overall configuration. If you want to distribute this
+              package, please make sure that 'flex_gemm.kernels.cuda.spconv' is explicitly added
+              to the `packages` configuration field.
+      
+              Alternatively, you can also rely on setuptools' discovery methods
+              (for example by using `find_namespace_packages(...)`/`find_namespace:`
+              instead of `find_packages(...)`/`find:`).
+      
+              You can read more about "package discovery" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+      
+              If you don't want 'flex_gemm.kernels.cuda.spconv' to be distributed and are
+              already explicitly excluding 'flex_gemm.kernels.cuda.spconv' via
+              `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+              you can try to use `exclude_package_data`, or `include-package-data=False` in
+              combination with a more fine grained `package-data` configuration.
+      
+              You can read more about "package data files" on setuptools documentation page:
+      
+              - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+      
+      
+              [^1]: For Python, any directory (with suitable naming) can be imported,
+                    even if it does not contain any `.py` files.
+                    On the other hand, currently there is no concept of package data
+                    directory, all directories are treated like packages.
+              ********************************************************************************
+      
+      !!
+        check.warn(importable)
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 41, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for flex_gemm
+Failed to build flex_gemm
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> flex_gemm
+  OK --flexgemm
+[06:01:08] == setup.sh --nvdiffrast
+fatal: destination path '/tmp/extensions/nvdiffrast' already exists and is not an empty directory.
+Processing /tmp/extensions/nvdiffrast
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (from nvdiffrast==0.4.0) (2.2.6)
+Building wheels for collected packages: nvdiffrast
+  Building wheel for nvdiffrast (pyproject.toml): started
+  Building wheel for nvdiffrast (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for nvdiffrast (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [83 lines of output]
+      Could not find an up-to-date installation of `packaging`. License expressions might not be validated. To enforce validation, please install `packaging>=24.2`.
+      running bdist_wheel
+      running build
+      running build_py
+      running egg_info
+      writing nvdiffrast.egg-info/PKG-INFO
+      writing dependency_links to nvdiffrast.egg-info/dependency_links.txt
+      writing requirements to nvdiffrast.egg-info/requires.txt
+      writing top-level names to nvdiffrast.egg-info/top_level.txt
+      reading manifest file 'nvdiffrast.egg-info/SOURCES.txt'
+      reading manifest template 'MANIFEST.in'
+      warning: no previously-included files matching '*~' found anywhere in distribution
+      warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+      warning: no previously-included files matching '*.so' found anywhere in distribution
+      warning: no previously-included files matching '__pycache__' found anywhere in distribution
+      warning: no previously-included files matching '.git*' found anywhere in distribution
+      warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+      warning: no previously-included files matching '*.egg-info' found anywhere in distribution
+      warning: no previously-included files matching 'build' found anywhere in distribution
+      warning: no previously-included files matching 'dist' found anywhere in distribution
+      adding license file 'LICENSE.txt'
+      writing manifest file 'nvdiffrast.egg-info/SOURCES.txt'
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 25, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for nvdiffrast
+Failed to build nvdiffrast
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> nvdiffrast
+  OK --nvdiffrast
+[06:01:13] == setup.sh --nvdiffrec
+fatal: destination path '/tmp/extensions/nvdiffrec' already exists and is not an empty directory.
+Processing /tmp/extensions/nvdiffrec
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: nvdiffrec_render
+  Building wheel for nvdiffrec_render (pyproject.toml): started
+  Building wheel for nvdiffrec_render (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for nvdiffrec_render (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [66 lines of output]
+      running bdist_wheel
+      running build
+      running build_py
+      running build_ext
+      Traceback (most recent call last):
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ^^^^^^^^^^^^^^^^^^^^
+        File "<string>", line 20, in <module>
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+                 ^^^^^^^^^^^^^^^^^^
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/lib/python3.11/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+          _check_cuda_version(compiler_name, compiler_version)
+        File "/opt/conda/lib/python3.11/site-packages/torch/utils/cpp_extension.py", line 646, in _check_cuda_version
+          raise RuntimeError(CUDA_MISMATCH_MESSAGE, cuda_str_version, torch.version.cuda)
+      RuntimeError: ('The detected CUDA version (%s) mismatches the version that was used to compilePyTorch (%s). Please make sure to use the same CUDA versions.', '12.4', '13.0')
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for nvdiffrec_render
+Failed to build nvdiffrec_render
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> nvdiffrec_render
+  OK --nvdiffrec
+[06:01:18] == import check
+  MISSING flash_attn ModuleNotFoundError No module named 'flash_attn'
+  MISSING cumesh ImportError /opt/conda/lib/python3.11/site-packages/cumesh/_C.cpython-311-x86_64-l
+  MISSING o_voxel ModuleNotFoundError No module named 'o_voxel'
+  MISSING flexgemm ModuleNotFoundError No module named 'flexgemm'
+  MISSING nvdiffrast.torch ModuleNotFoundError No module named 'nvdiffrast'
+  MISSING nvdiffrec_render ModuleNotFoundError No module named 'nvdiffrec_render'
+  ok moge
+  ok diffusers
+[06:01:22] == PHASE3 DONE

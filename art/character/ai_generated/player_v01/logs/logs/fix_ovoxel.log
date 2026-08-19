@@ -1,0 +1,134 @@
+[06:30:50] == o-voxel: check submodule state in the ORIGINAL repo
+[06:30:50] == populating submodules in TRELLIS.2 (Eigen lives here)
+Submodule 'o-voxel/third_party/eigen' (https://gitlab.com/libeigen/eigen.git) registered for path 'o-voxel/third_party/eigen'
+Cloning into '/workspace/repos/TRELLIS.2/o-voxel/third_party/eigen'...
+Submodule path 'o-voxel/third_party/eigen': checked out '21e4582d1739107337a03460c81412981130373e'
+.clang-format
+.git
+.git-blame-ignore-revs
+  Eigen/Dense present
+[06:30:56] == rebuilding o_voxel from the populated source
+Processing ./.
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (2.6.0+cu124)
+Requirement already satisfied: numpy in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (2.2.6)
+Requirement already satisfied: plyfile in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (1.1.5)
+Requirement already satisfied: trimesh in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (5.0.0)
+Requirement already satisfied: tqdm in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (4.70.0)
+Requirement already satisfied: zstandard in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (0.25.0)
+Requirement already satisfied: easydict in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (1.13)
+Collecting cumesh @ git+https://github.com/JeffreyXiang/CuMesh.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/CuMesh.git to /tmp/pip-install-12mr11_a/cumesh_f411d0a91cf343358ef249c002a72c5f
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/CuMesh.git /tmp/pip-install-12mr11_a/cumesh_f411d0a91cf343358ef249c002a72c5f
+  Resolved https://github.com/JeffreyXiang/CuMesh.git to commit 12289e1062f0603f2f0d0771b02e1395d247f26f
+  Running command git submodule update --init --recursive -q
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/FlexGEMM.git to /tmp/pip-install-12mr11_a/flex-gemm_da7c195618984b5bb6c80f685d48372c
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/FlexGEMM.git /tmp/pip-install-12mr11_a/flex-gemm_da7c195618984b5bb6c80f685d48372c
+  Resolved https://github.com/JeffreyXiang/FlexGEMM.git to commit 6dd94a859c26ee8246888502eada3dd8ad85532e
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.2.0)
+Requirement already satisfied: filelock in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.32.3)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (3.1.6)
+Requirement already satisfied: fsspec in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (2026.7.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.3.1.170)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.6.2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (0.6.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from sympy==1.13.1->torch->o_voxel==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from jinja2->torch->o_voxel==0.0.1) (3.0.3)
+Building wheels for collected packages: o_voxel, flex_gemm
+  Building wheel for o_voxel (pyproject.toml): started
+  Building wheel for o_voxel (pyproject.toml): finished with status 'done'
+  Created wheel for o_voxel: filename=o_voxel-0.0.1-cp310-cp310-linux_x86_64.whl size=230676 sha256=bfed6225ce9566d247f8ebf12ef40ef4bcc4a73f05f1a7ff274db214756034ed
+  Stored in directory: /tmp/pip-ephem-wheel-cache-a29n_5ke/wheels/62/c1/fd/495ce7e4a4fa1b9da1fed8fb67ae073b13888c3a651b113f33
+  Building wheel for flex_gemm (pyproject.toml): started
+  Building wheel for flex_gemm (pyproject.toml): finished with status 'done'
+  Created wheel for flex_gemm: filename=flex_gemm-1.0.0-cp310-cp310-linux_x86_64.whl size=282278 sha256=312bfa81fa85f3d22080ad2499abb5813ea57f76af0c92c905b8c55103e41165
+  Stored in directory: /tmp/pip-ephem-wheel-cache-a29n_5ke/wheels/a7/2b/c4/61435e68b816d2d3012d1b55bab7c34b7a50b56e505ce9fc97
+Successfully built o_voxel flex_gemm
+Installing collected packages: flex_gemm, o_voxel
+
+Successfully installed flex_gemm-1.0.0 o_voxel-0.0.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  BUILD OK
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/tmp/ext/o-voxel/o_voxel/__init__.py", line 1, in <module>
+    from . import (
+  File "/tmp/ext/o-voxel/o_voxel/convert/__init__.py", line 1, in <module>
+    from .flexible_dual_grid import *
+  File "/tmp/ext/o-voxel/o_voxel/convert/flexible_dual_grid.py", line 4, in <module>
+    from .. import _C
+ImportError: cannot import name '_C' from partially initialized module 'o_voxel' (most likely due to a circular import) (/tmp/ext/o-voxel/o_voxel/__init__.py)
+[06:33:08] == flexgemm + natten
+Processing /tmp/ext/FlexGEMM
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm==1.0.0) (2.6.0+cu124)
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm==1.0.0) (3.2.0)
+Requirement already satisfied: filelock in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm==1.0.0) (3.32.3)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (3.1.6)
+Requirement already satisfied: fsspec in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2026.7.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.3.1.170)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.6.2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (0.6.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (12.4.127)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->flex_gemm==1.0.0) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from sympy==1.13.1->torch>=2.4.0->flex_gemm==1.0.0) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from jinja2->torch>=2.4.0->flex_gemm==1.0.0) (3.0.3)
+Building wheels for collected packages: flex_gemm
+  Building wheel for flex_gemm (pyproject.toml): started
+  Building wheel for flex_gemm (pyproject.toml): finished with status 'done'
+  Created wheel for flex_gemm: filename=flex_gemm-1.0.0-cp310-cp310-linux_x86_64.whl size=282234 sha256=e6d3fb73978d8a187df4fba0f7cb3428912a219bb5eab0b96a0efcfd74209640
+  Stored in directory: /tmp/pip-ephem-wheel-cache-81luhwld/wheels/5a/2a/ab/42b044afbb6a9ecaa39d3cbb9b4654ccc5c2eaf13c6e506f00
+Successfully built flex_gemm
+Installing collected packages: flex_gemm
+  Attempting uninstall: flex_gemm
+    Found existing installation: flex_gemm 1.0.0
+    Uninstalling flex_gemm-1.0.0:
+      Successfully uninstalled flex_gemm-1.0.0
+Successfully installed flex_gemm-1.0.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  VERIFIED flex_gemm (module name)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  VERIFIED natten 0.21.7
+[06:42:45] == FINAL IMPORT MATRIX
+  torch 2.6.0+cu124 cuda 12.4 avail True
+  ok       cumesh
+  MISSING  o_voxel ImportError cannot import name '_C' from partially initialized module 'o
+  MISSING  flexgemm ModuleNotFoundError No module named 'flexgemm'
+  ok       flex_gemm
+  ok       natten
+  ok       diffusers
+  MISSING  transformers ImportError huggingface-hub>=0.34.0,<1.0 is required for a normal functi
+  ok       trimesh
+  ok       moge
+[06:42:50] == FIX DONE

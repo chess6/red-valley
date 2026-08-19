@@ -1,0 +1,32 @@
+[06:30:50] == o-voxel: check submodule state in the ORIGINAL repo
+[06:30:50] == populating submodules in TRELLIS.2 (Eigen lives here)
+.clang-format
+.git
+.git-blame-ignore-revs
+  Eigen/Dense present
+[06:30:56] == rebuilding o_voxel from the populated source
+  BUILD OK
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/tmp/ext/o-voxel/o_voxel/__init__.py", line 1, in <module>
+    from . import (
+  File "/tmp/ext/o-voxel/o_voxel/convert/__init__.py", line 1, in <module>
+    from .flexible_dual_grid import *
+  File "/tmp/ext/o-voxel/o_voxel/convert/flexible_dual_grid.py", line 4, in <module>
+    from .. import _C
+ImportError: cannot import name '_C' from partially initialized module 'o_voxel' (most likely due to a circular import) (/tmp/ext/o-voxel/o_voxel/__init__.py)
+[06:33:08] == flexgemm + natten
+  VERIFIED flex_gemm (module name)
+  VERIFIED natten 0.21.7
+[06:42:45] == FINAL IMPORT MATRIX
+  torch 2.6.0+cu124 cuda 12.4 avail True
+  ok       cumesh
+  MISSING  o_voxel ImportError cannot import name '_C' from partially initialized module 'o
+  MISSING  flexgemm ModuleNotFoundError No module named 'flexgemm'
+  ok       flex_gemm
+  ok       natten
+  ok       diffusers
+  MISSING  transformers ImportError huggingface-hub>=0.34.0,<1.0 is required for a normal functi
+  ok       trimesh
+  ok       moge
+[06:42:50] == FIX DONE

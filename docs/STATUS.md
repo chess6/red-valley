@@ -87,6 +87,27 @@ Reviewed after the fact; three fixes applied:
   hard `deny` to `ask` so they prompt rather than being impossible (a hard
   deny contradicted the recovery step documented in `CLAUDE.md`).
 
+## Character art — AI generation pilot: CLOSED
+
+The Pixal3D / TRELLIS.2 image-to-3D pilot is **ABANDONED_FOR_PRODUCTION** as of
+2026-08-19. Zero assets were generated across three paid runs (~$4.00 total);
+each run cleared one dependency blocker and hit the next. Independently, its
+output could never have shipped: `nvdiffrast` is loaded by the `o_voxel`
+geometry extension, so the non-commercial licence covers geometry, not just
+textures.
+
+Archived evaluation — do not resume, clean up, rig or retopo anything in it:
+`art/character/ai_generated/ABANDONED_FOR_PRODUCTION.md`.
+
+What survives and stays in service is the cost-control tooling, which is
+independent of that pipeline: `tools/assetgen/vast.sh` (spend guard),
+`watchdog.sh` (account-wide killer), and `provision.py` (atomic create — it
+exists because `vastai create` once reported `success:false` while leaving two
+live contracts). 93 regression tests cover it.
+
+The player character remains unsolved. Nothing has replaced the pilot; that
+decision is open.
+
 ## Next task
 
 Decide and implement the day-length fix above (see options in that

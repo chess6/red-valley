@@ -1,0 +1,51 @@
+[03:09:41] == ASSERT image_attn_mode == 'proj' on every flow model
+  OK  slat_flow_img2shape_dit_1_3B_1024_bf16.json             name=ElasticSLatFlowModel image_attn_mode='proj'
+  OK  slat_flow_img2shape_dit_1_3B_512_bf16.json              name=ElasticSLatFlowModel image_attn_mode='proj'
+  OK  slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json          name=ElasticSLatFlowModel image_attn_mode='proj'
+  OK  ss_flow_img_dit_1_3B_64_bf16.json                       name=SparseStructureFlowModel image_attn_mode='proj'
+  ASSERTION PASSED on 4 flow model(s)
+[03:09:41] == ONE 1024 candidate, seed 1
+Downloading: "https://github.com/valeoai/NAF/zipball/main" to /workspace/torch/hub/main.zip
+Traceback (most recent call last):
+  File "<stdin>", line 16, in <module>
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "inference.py", line 304, in <module>
+    run_inference(
+  File "inference.py", line 187, in run_inference
+    pipeline = init_pipeline(model_path, low_vram=low_vram)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "inference.py", line 109, in init_pipeline
+    m._load_naf()
+  File "/workspace/repos/Pixal3D/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 420, in _load_naf
+    self.naf_model = torch.hub.load(
+                     ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/hub.py", line 647, in load
+    model = _load_local(repo_or_dir, model, *args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/hub.py", line 673, in _load_local
+    hub_module = _import_module(MODULE_HUBCONF, hubconf_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/hub.py", line 115, in _import_module
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/workspace/torch/hub/valeoai_NAF_main/hubconf.py", line 5, in <module>
+    from src.model.naf import NAF
+  File "/workspace/torch/hub/valeoai_NAF_main/src/model/__init__.py", line 6, in <module>
+    from .jafar import JAFAR
+  File "/workspace/torch/hub/valeoai_NAF_main/src/model/jafar.py", line 4, in <module>
+    from einops import rearrange
+ModuleNotFoundError: No module named 'einops'
+[SPARSE] Conv backend: flex_gemm; Attention backend: sdpa
+[Pipeline] Loading from /workspace/models/pixal3d...
+[ATTENTION] Using backend: sdpa
+[ImageCond] Building DinoV3ProjFeatureExtractor models...
+[NAF] Pre-loading NAF upsampler model...
+RESULT ok=False 137.8s
+total 8
+drwxr-xr-x 2 root root   39 Aug 19 03:12 .
+drwxr-xr-x 1 root root 4096 Aug 19 03:12 ..
+-rw-r--r-- 1 root root 2398 Aug 19 03:12 run2_modules.json
+[03:12:05] == RUN2 DONE

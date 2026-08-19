@@ -1,0 +1,38 @@
+[03:37:39] == system packages
+[03:37:52] == downloading TencentARC/Pixal3D pinned @ 0b31f9160aa400719af409098bff7936a932f726  (NOT TRELLIS.2-4B)
+[03:37:52] == cloning repos at pinned commits
+[03:42:03] == python env (torch 2.6.0 cu124 first: one ABI for every extension)
+[03:44:49] == CUDA extensions (Eigen submodule must be populated or o_voxel fails)
+[03:44:59] == build CuMesh
+[03:47:56] == build o-voxel
+[03:50:09] == build FlexGEMM
+[03:51:11] == build nvdiffrast
+  ok cumesh
+  ok o_voxel
+  ok flex_gemm
+  ok natten
+  ok nvdiffrast.torch
+  ok diffusers
+  ok trimesh
+[03:51:42] == preloading torch.hub NAF upsampler (catches its deps before inference)
+Downloading: "https://github.com/valeoai/NAF/zipball/main" to /workspace/torch/hub/main.zip
+Downloading: "https://github.com/valeoai/NAF/releases/download/model/naf_release.pth" to /workspace/torch/hub/checkpoints/naf_release.pth
+  0%|          | 0.00/2.54M [00:00<?, ?B/s]100%|██████████| 2.54M/2.54M [00:00<00:00, 39.3MB/s]
+  ok NAF loaded: NAF
+[03:51:50] == waiting for checkpoint download
+23G	/workspace/models/pixal3d
+[03:51:50] == warming caches: full pipeline construction + preflight (network allowed)
+
+=== PREFLIGHT: pip check ===
+torchaudio 2.5.1+cu124 has requirement torch==2.5.1, but you have torch 2.6.0+cu124.
+OK: no unmet dependencies (torchaudio's torch pin is unused and ignored)
+
+=== PREFLIGHT: NAF instantiate and push a real tensor through it ===
+Using cache found in /workspace/torch/hub/valeoai_NAF_main
+NAF forward signature: (image, features, output_size, return_weights=False, *args, **kwargs)
+  naf(feat, img): TypeError: NAF.forward() missing 1 required positional argument: 'output_size'
+  naf(img, feat): TypeError: NAF.forward() missing 1 required positional argument: 'output_size'
+  naf(img): TypeError: NAF.forward() missing 2 required positional arguments: 'features' and 'output_size'
+  naf(feat): TypeError: NAF.forward() missing 2 required positional arguments: 'features' and 'output_size'
+PREFLIGHT FAILED: NAF would not execute any tensor -- it is exercised during inference
+[03:51:54] STOP: cache-warming preflight failed

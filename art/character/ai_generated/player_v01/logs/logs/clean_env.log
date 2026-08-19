@@ -1,0 +1,436 @@
+[06:18:31] == creating fresh env rv310 (python 3.10)
+Channels:
+ - conda-forge
+Platform: linux-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /opt/conda/envs/rv310
+
+  added / updated specs:
+    - python=3.10
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    _openmp_mutex-4.5          |           20_gnu          28 KB  conda-forge
+    bzip2-1.0.8                |      hda65f42_10         252 KB  conda-forge
+    ca-certificates-2026.7.22  |       hbd8a1cb_0         129 KB  conda-forge
+    icu-78.3                   |  py310h44b86e0_2        13.8 MB  conda-forge
+    ld_impl_linux-64-2.46.1    |default_hbd61a6d_102         728 KB  conda-forge
+    libexpat-2.8.1             |       hecca717_1          76 KB  conda-forge
+    libffi-3.7.0               |       h3435931_0          66 KB  conda-forge
+    libgcc-16.1.0              |       ha9f2e26_1         1.0 MB  conda-forge
+    libgomp-16.1.0             |       he0feb66_1         625 KB  conda-forge
+    liblzma-5.8.3              |       hb03c661_1         110 KB  conda-forge
+    libnsl-2.0.1               |       hb9d3cd8_1          33 KB  conda-forge
+    libsqlite-3.53.4           |       hf4e2dac_0         942 KB  conda-forge
+    libstdcxx-16.1.0           |       h934c35e_1         6.3 MB  conda-forge
+    libuuid-2.42.2             |       h5347b49_0          39 KB  conda-forge
+    libxcrypt-4.4.38           |       h280c20c_0         100 KB  conda-forge
+    libzlib-1.3.2              |       h25fd6f3_3          62 KB  conda-forge
+    ncurses-6.6                |       hdb14827_1         890 KB  conda-forge
+    openssl-3.6.3              |       h35e630c_1         3.0 MB  conda-forge
+    packaging-26.3             |     pyhc364b38_0         114 KB  conda-forge
+    pip-26.2.1                 |     pyh8b19718_0         1.1 MB  conda-forge
+    python-3.10.20             |h267e890_1_cpython        24.2 MB  conda-forge
+    readline-8.3               |       h853b02a_0         337 KB  conda-forge
+    setuptools-84.0.0          |     pyh332efcf_0         512 KB  conda-forge
+    tk-8.6.13                  | noxft_hd70dff1_3         3.4 MB  conda-forge
+    tzdata-2026c               |       h151e31d_0         116 KB  conda-forge
+    wheel-0.48.0               |     pyhd8ed1ab_0          34 KB  conda-forge
+    zstd-1.5.7                 |       hb78ec9c_7         587 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:        58.6 MB
+
+The following NEW packages will be INSTALLED:
+
+  _openmp_mutex      conda-forge/linux-64::_openmp_mutex-4.5-20_gnu 
+  bzip2              conda-forge/linux-64::bzip2-1.0.8-hda65f42_10 
+  ca-certificates    conda-forge/noarch::ca-certificates-2026.7.22-hbd8a1cb_0 
+  icu                conda-forge/linux-64::icu-78.3-py310h44b86e0_2 
+  ld_impl_linux-64   conda-forge/linux-64::ld_impl_linux-64-2.46.1-default_hbd61a6d_102 
+  libexpat           conda-forge/linux-64::libexpat-2.8.1-hecca717_1 
+  libffi             conda-forge/linux-64::libffi-3.7.0-h3435931_0 
+  libgcc             conda-forge/linux-64::libgcc-16.1.0-ha9f2e26_1 
+  libgomp            conda-forge/linux-64::libgomp-16.1.0-he0feb66_1 
+  liblzma            conda-forge/linux-64::liblzma-5.8.3-hb03c661_1 
+  libnsl             conda-forge/linux-64::libnsl-2.0.1-hb9d3cd8_1 
+  libsqlite          conda-forge/linux-64::libsqlite-3.53.4-hf4e2dac_0 
+  libstdcxx          conda-forge/linux-64::libstdcxx-16.1.0-h934c35e_1 
+  libuuid            conda-forge/linux-64::libuuid-2.42.2-h5347b49_0 
+  libxcrypt          conda-forge/linux-64::libxcrypt-4.4.38-h280c20c_0 
+  libzlib            conda-forge/linux-64::libzlib-1.3.2-h25fd6f3_3 
+  ncurses            conda-forge/linux-64::ncurses-6.6-hdb14827_1 
+  openssl            conda-forge/linux-64::openssl-3.6.3-h35e630c_1 
+  packaging          conda-forge/noarch::packaging-26.3-pyhc364b38_0 
+  pip                conda-forge/noarch::pip-26.2.1-pyh8b19718_0 
+  python             conda-forge/linux-64::python-3.10.20-h267e890_1_cpython 
+  readline           conda-forge/linux-64::readline-8.3-h853b02a_0 
+  setuptools         conda-forge/noarch::setuptools-84.0.0-pyh332efcf_0 
+  tk                 conda-forge/linux-64::tk-8.6.13-noxft_hd70dff1_3 
+  tzdata             conda-forge/noarch::tzdata-2026c-h151e31d_0 
+  wheel              conda-forge/noarch::wheel-0.48.0-pyhd8ed1ab_0 
+  zstd               conda-forge/linux-64::zstd-1.5.7-hb78ec9c_7 
+
+
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done
+Python 3.10.20
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[06:18:57] == torch 2.6.0 + torchvision 0.21.0 (cu124) FIRST — one ABI for all builds
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  torch 2.6.0+cu124 cuda 12.4 arch ['sm_50', 'sm_60', 'sm_70']
+[06:19:57] == runtime deps (no flash-attn; sdpa backend instead)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+transformers 4.57.3 requires huggingface-hub<1.0,>=0.34.0, but you have huggingface-hub 1.27.0 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[06:21:09] == fetching extension sources
+[06:21:18] == building CuMesh
+Processing ./CuMesh
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch>=2.4.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from cumesh==0.0.1) (2.6.0+cu124)
+Requirement already satisfied: tqdm in /opt/conda/envs/rv310/lib/python3.10/site-packages (from cumesh==0.0.1) (4.70.0)
+Requirement already satisfied: filelock in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.32.3)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.1.6)
+Requirement already satisfied: fsspec in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2026.7.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.3.1.170)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.6.2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (0.6.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (12.4.127)
+Requirement already satisfied: triton==3.2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (3.2.0)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch>=2.4.0->cumesh==0.0.1) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from sympy==1.13.1->torch>=2.4.0->cumesh==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from jinja2->torch>=2.4.0->cumesh==0.0.1) (3.0.3)
+Building wheels for collected packages: cumesh
+  Building wheel for cumesh (pyproject.toml): started
+  Building wheel for cumesh (pyproject.toml): still running...
+  Building wheel for cumesh (pyproject.toml): still running...
+  Building wheel for cumesh (pyproject.toml): finished with status 'done'
+  Created wheel for cumesh: filename=cumesh-0.0.1-cp310-cp310-linux_x86_64.whl size=1989732 sha256=1f65fc2d646f7f7db01b71cee3900dce3411a6b16e0e1bae6fdfa594171e9133
+  Stored in directory: /tmp/pip-ephem-wheel-cache-a66ue13g/wheels/0c/30/3c/e85be7c808350015059c76e43db4858329a2599cd07a784f9c
+Successfully built cumesh
+Installing collected packages: cumesh
+Successfully installed cumesh-0.0.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+  VERIFIED CuMesh
+[06:24:12] == building O-Voxel
+Processing ./o-voxel
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: torch in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (2.6.0+cu124)
+Requirement already satisfied: numpy in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (2.2.6)
+Requirement already satisfied: plyfile in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (1.1.5)
+Requirement already satisfied: trimesh in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (5.0.0)
+Requirement already satisfied: tqdm in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (4.70.0)
+Requirement already satisfied: zstandard in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (0.25.0)
+Requirement already satisfied: easydict in /opt/conda/envs/rv310/lib/python3.10/site-packages (from o_voxel==0.0.1) (1.13)
+Collecting cumesh @ git+https://github.com/JeffreyXiang/CuMesh.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/CuMesh.git to /tmp/pip-install-0hgn1lsn/cumesh_0c7c4751cb5248349af5c8fbf217d2b2
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/CuMesh.git /tmp/pip-install-0hgn1lsn/cumesh_0c7c4751cb5248349af5c8fbf217d2b2
+  Resolved https://github.com/JeffreyXiang/CuMesh.git to commit 12289e1062f0603f2f0d0771b02e1395d247f26f
+  Running command git submodule update --init --recursive -q
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git (from o_voxel==0.0.1)
+  Cloning https://github.com/JeffreyXiang/FlexGEMM.git to /tmp/pip-install-0hgn1lsn/flex-gemm_9255066e4e8144459df0a89e347edac4
+  Running command git clone --filter=blob:none --quiet https://github.com/JeffreyXiang/FlexGEMM.git /tmp/pip-install-0hgn1lsn/flex-gemm_9255066e4e8144459df0a89e347edac4
+  Resolved https://github.com/JeffreyXiang/FlexGEMM.git to commit 6dd94a859c26ee8246888502eada3dd8ad85532e
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: triton>=3.2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.2.0)
+Requirement already satisfied: filelock in /opt/conda/envs/rv310/lib/python3.10/site-packages (from flex_gemm @ git+https://github.com/JeffreyXiang/FlexGEMM.git->o_voxel==0.0.1) (3.32.3)
+Requirement already satisfied: typing-extensions>=4.10.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (4.16.0)
+Requirement already satisfied: networkx in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (3.1.6)
+Requirement already satisfied: fsspec in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (2026.7.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.3.1.170)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.6.2 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (0.6.2)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (12.4.127)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from torch->o_voxel==0.0.1) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from sympy==1.13.1->torch->o_voxel==0.0.1) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/envs/rv310/lib/python3.10/site-packages (from jinja2->torch->o_voxel==0.0.1) (3.0.3)
+Building wheels for collected packages: o_voxel, flex_gemm
+  Building wheel for o_voxel (pyproject.toml): started
+  Building wheel for o_voxel (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for o_voxel (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [231 lines of output]
+      running bdist_wheel
+      running build
+      running build_py
+      creating build/lib.linux-x86_64-cpython-310/o_voxel
+      copying o_voxel/__init__.py -> build/lib.linux-x86_64-cpython-310/o_voxel
+      copying o_voxel/postprocess.py -> build/lib.linux-x86_64-cpython-310/o_voxel
+      copying o_voxel/rasterize.py -> build/lib.linux-x86_64-cpython-310/o_voxel
+      copying o_voxel/serialize.py -> build/lib.linux-x86_64-cpython-310/o_voxel
+      creating build/lib.linux-x86_64-cpython-310/o_voxel/convert
+      copying o_voxel/convert/__init__.py -> build/lib.linux-x86_64-cpython-310/o_voxel/convert
+      copying o_voxel/convert/flexible_dual_grid.py -> build/lib.linux-x86_64-cpython-310/o_voxel/convert
+      copying o_voxel/convert/volumetic_attr.py -> build/lib.linux-x86_64-cpython-310/o_voxel/convert
+      creating build/lib.linux-x86_64-cpython-310/o_voxel/io
+      copying o_voxel/io/__init__.py -> build/lib.linux-x86_64-cpython-310/o_voxel/io
+      copying o_voxel/io/npz.py -> build/lib.linux-x86_64-cpython-310/o_voxel/io
+      copying o_voxel/io/ply.py -> build/lib.linux-x86_64-cpython-310/o_voxel/io
+      copying o_voxel/io/vxz.py -> build/lib.linux-x86_64-cpython-310/o_voxel/io
+      running egg_info
+      creating o_voxel.egg-info
+      writing o_voxel.egg-info/PKG-INFO
+      writing dependency_links to o_voxel.egg-info/dependency_links.txt
+      writing requirements to o_voxel.egg-info/requires.txt
+      writing top-level names to o_voxel.egg-info/top_level.txt
+      writing manifest file 'o_voxel.egg-info/SOURCES.txt'
+      reading manifest file 'o_voxel.egg-info/SOURCES.txt'
+      writing manifest file 'o_voxel.egg-info/SOURCES.txt'
+      running build_ext
+      /opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py:458: UserWarning: There are no g++ version bounds defined for CUDA version 12.4
+        warnings.warn(f'There are no {compiler_name} version bounds defined for CUDA version {cuda_str_version}')
+      building 'o_voxel._C' extension
+      Emitting ninja build file /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/build.ninja...
+      Compiling objects...
+      Using envvar MAX_JOBS (32) as the number of workers...
+      [1/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/flexible_dual_grid.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/convert/flexible_dual_grid.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/flexible_dual_grid.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      FAILED: [code=1] /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/flexible_dual_grid.o
+      c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/flexible_dual_grid.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/convert/flexible_dual_grid.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/flexible_dual_grid.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      /tmp/ext/o-voxel/src/convert/flexible_dual_grid.cpp:1:10: fatal error: Eigen/Dense: No such file or directory
+          1 | #include <Eigen/Dense>
+            |          ^~~~~~~~~~~~~
+      compilation terminated.
+      [2/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/volumetic_attr.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/convert/volumetic_attr.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/volumetic_attr.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      FAILED: [code=1] /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/volumetic_attr.o
+      c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/volumetic_attr.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/convert/volumetic_attr.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/convert/volumetic_attr.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      /tmp/ext/o-voxel/src/convert/volumetic_attr.cpp:6:10: fatal error: Eigen/Dense: No such file or directory
+          6 | #include <Eigen/Dense>
+            |          ^~~~~~~~~~~~~
+      compilation terminated.
+      [3/11] /usr/local/cuda/bin/nvcc --generate-dependencies-with-compile --dependency-output /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/z_order.o.d -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/serialize/z_order.cu -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/z_order.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_80,code=sm_80
+      [4/11] /usr/local/cuda/bin/nvcc --generate-dependencies-with-compile --dependency-output /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/hilbert.o.d -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/serialize/hilbert.cu -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/hilbert.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_80,code=sm_80
+      [5/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/filter_parent.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/io/filter_parent.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/filter_parent.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp: In function ‘at::Tensor encode_sparse_voxel_octree_attr_parent_cpu(const at::Tensor&, uint32_t, const at::Tensor&)’:
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:83:41: warning: narrowing conversion of ‘N_leaf’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+         83 |     torch::Tensor delta = torch::zeros({N_leaf, C}, torch::kUInt8);
+            |                                         ^~~~~~
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:83:41: warning: narrowing conversion of ‘N_leaf’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:83:49: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+         83 |     torch::Tensor delta = torch::zeros({N_leaf, C}, torch::kUInt8);
+            |                                                 ^
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:83:49: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:78:12: warning: unused variable ‘N_node’ [-Wunused-variable]
+         78 |     size_t N_node = octree.size(0);
+            |            ^~~~~~
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp: In function ‘at::Tensor decode_sparse_voxel_octree_attr_parent_cpu(const at::Tensor&, uint32_t, const at::Tensor&)’:
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:154:40: warning: narrowing conversion of ‘N_leaf’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+        154 |     torch::Tensor attr = torch::zeros({N_leaf, C}, torch::kUInt8);
+            |                                        ^~~~~~
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:154:40: warning: narrowing conversion of ‘N_leaf’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:154:48: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+        154 |     torch::Tensor attr = torch::zeros({N_leaf, C}, torch::kUInt8);
+            |                                                ^
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:154:48: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_parent.cpp:148:12: warning: unused variable ‘N_node’ [-Wunused-variable]
+        148 |     size_t N_node = octree.size(0);
+            |            ^~~~~~
+      [6/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/svo.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/io/svo.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/svo.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      /tmp/ext/o-voxel/src/io/svo.cpp: In function ‘at::Tensor encode_sparse_voxel_octree_cpu(const at::Tensor&, uint32_t)’:
+      /tmp/ext/o-voxel/src/io/svo.cpp:35:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         35 |     for (int i = 0; i < N_leaf; i++) {
+            |                     ~~^~~~~~~~
+      /tmp/ext/o-voxel/src/io/svo.cpp:74:70: warning: narrowing conversion of ‘svo.std::vector<unsigned char, std::allocator<unsigned char> >::size()’ from ‘std::vector<unsigned char, std::allocator<unsigned char> >::size_type’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+         74 |     torch::Tensor svo_tensor = torch::from_blob(svo.data(), {svo.size()}, torch::kUInt8).clone();
+            |                                                              ~~~~~~~~^~
+      /tmp/ext/o-voxel/src/io/svo.cpp:74:70: warning: narrowing conversion of ‘svo.std::vector<unsigned char, std::allocator<unsigned char> >::size()’ from ‘std::vector<unsigned char, std::allocator<unsigned char> >::size_type’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/svo.cpp: In function ‘at::Tensor decode_sparse_voxel_octree_cpu(const at::Tensor&, uint32_t)’:
+      /tmp/ext/o-voxel/src/io/svo.cpp:136:76: warning: narrowing conversion of ‘codes.std::vector<unsigned int>::size()’ from ‘std::vector<unsigned int>::size_type’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+        136 |     torch::Tensor codes_tensor = torch::from_blob(codes.data(), {codes.size()}, torch::kInt32).clone();
+            |                                                                  ~~~~~~~~~~^~
+      /tmp/ext/o-voxel/src/io/svo.cpp:136:76: warning: narrowing conversion of ‘codes.std::vector<unsigned int>::size()’ from ‘std::vector<unsigned int>::size_type’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      [7/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/filter_neighbor.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/io/filter_neighbor.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/io/filter_neighbor.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp: In function ‘at::Tensor encode_sparse_voxel_octree_attr_neighbor_cpu(const at::Tensor&, uint32_t, const at::Tensor&)’:
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:30:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         30 |     for (int i = 0; i < N; i++) {
+            |                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:36:27: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         36 |         for (int c = 0; c < C; c++) {
+            |                         ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:71:39: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         71 |                     for (int c = 0; c < C; c++) {
+            |                                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:80:41: warning: narrowing conversion of ‘N’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+         80 |     torch::Tensor delta = torch::zeros({N, C}, torch::dtype(torch::kUInt8));
+            |                                         ^
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:80:41: warning: narrowing conversion of ‘N’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:80:44: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+         80 |     torch::Tensor delta = torch::zeros({N, C}, torch::dtype(torch::kUInt8));
+            |                                            ^
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:80:44: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:82:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         82 |     for (int i = 0; i < N; i++) {
+            |                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:87:27: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+         87 |         for (int c = 0; c < C; c++) {
+            |                         ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp: In function ‘at::Tensor decode_sparse_voxel_octree_attr_neighbor_cpu(const at::Tensor&, uint32_t, const at::Tensor&)’:
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:116:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+        116 |     for (int i = 0; i < N; i++) {
+            |                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:122:27: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+        122 |         for (int c = 0; c < C; c++) {
+            |                         ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:128:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘const uint32_t’ {aka ‘const unsigned int’} [-Wsign-compare]
+        128 |     for (int z = 0; z < res; z++) {
+            |                     ~~^~~~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:129:27: warning: comparison of integer expressions of different signedness: ‘int’ and ‘const uint32_t’ {aka ‘const unsigned int’} [-Wsign-compare]
+        129 |         for (int y = 0; y < res; y++) {
+            |                         ~~^~~~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:130:31: warning: comparison of integer expressions of different signedness: ‘int’ and ‘const uint32_t’ {aka ‘const unsigned int’} [-Wsign-compare]
+        130 |             for (int x = 0; x < res; x++) {
+            |                             ~~^~~~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:157:39: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+        157 |                     for (int c = 0; c < C; c++) {
+            |                                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:166:40: warning: narrowing conversion of ‘N’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+        166 |     torch::Tensor attr = torch::zeros({N, C}, torch::dtype(torch::kUInt8));
+            |                                        ^
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:166:40: warning: narrowing conversion of ‘N’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:166:43: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+        166 |     torch::Tensor attr = torch::zeros({N, C}, torch::dtype(torch::kUInt8));
+            |                                           ^
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:166:43: warning: narrowing conversion of ‘C’ from ‘size_t’ {aka ‘long unsigned int’} to ‘long int’ [-Wnarrowing]
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:168:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+        168 |     for (int i = 0; i < N; i++) {
+            |                     ~~^~~
+      /tmp/ext/o-voxel/src/io/filter_neighbor.cpp:173:27: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+        173 |         for (int c = 0; c < C; c++) {
+            |                         ~~^~~
+      [8/11] c++ -MMD -MF /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/ext.o.d -pthread -B /opt/conda/envs/rv310/compiler_compat -Wno-unused-result -Wsign-compare -DNDEBUG -fwrapv -O2 -Wall -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -fno-merge-constants -O2 -isystem /opt/conda/envs/rv310/include -fPIC -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/ext.cpp -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/ext.o -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0
+      [9/11] /usr/local/cuda/bin/nvcc --generate-dependencies-with-compile --dependency-output /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/hash/hash.o.d -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/hash/hash.cu -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/hash/hash.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_80,code=sm_80
+      [10/11] /usr/local/cuda/bin/nvcc --generate-dependencies-with-compile --dependency-output /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/api.o.d -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/serialize/api.cu -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/serialize/api.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_80,code=sm_80
+      [11/11] /usr/local/cuda/bin/nvcc --generate-dependencies-with-compile --dependency-output /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/rasterize/rasterize.o.d -I/tmp/ext/o-voxel/third_party/eigen -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/TH -I/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/include/THC -I/usr/local/cuda/include -I/opt/conda/envs/rv310/include/python3.10 -c -c /tmp/ext/o-voxel/src/rasterize/rasterize.cu -o /tmp/ext/o-voxel/build/temp.linux-x86_64-cpython-310/src/rasterize/rasterize.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -std=c++17 -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=_C -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_80,code=sm_80
+      /tmp/ext/o-voxel/src/rasterize/auxiliary.h(132): warning #177-D: variable "p_proj" was declared but never referenced
+         float3 p_proj = { p_hom.x * p_w, p_hom.y * p_w, p_hom.z * p_w };
+                ^
+      
+      Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+      
+      ninja: build stopped: subcommand failed.
+      Traceback (most recent call last):
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 2209, in _run_ninja_build
+          subprocess.run(
+        File "/opt/conda/envs/rv310/lib/python3.10/subprocess.py", line 526, in run
+          raise CalledProcessError(retcode, process.args,
+      subprocess.CalledProcessError: Command '['ninja', '-v', '-j', '32']' returned non-zero exit status 1.
+      
+      The above exception was the direct cause of the following exception:
+      
+      Traceback (most recent call last):
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+          return _build_backend().build_wheel(
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/build_meta.py", line 441, in build_wheel
+          return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/build_meta.py", line 429, in _build
+          return self._build_with_temp_dir(
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/build_meta.py", line 410, in _build_with_temp_dir
+          self.run_setup()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+        File "<string>", line 25, in <module>
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 168, in setup
+          return run_commands(dist)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 184, in run_commands
+          dist.run_commands()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1028, in run_commands
+          self.run_command(cmd)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/command/bdist_wheel.py", line 385, in run
+          self.run_command("build")
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/command/build.py", line 137, in run
+          self.run_command(cmd_name)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/cmd.py", line 342, in run_command
+          self.distribution.run_command(command)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/dist.py", line 1106, in run_command
+          super().run_command(command)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1047, in run_command
+          cmd_obj.run()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/command/build_ext.py", line 95, in run
+          _build_ext.run(self)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/command/build_ext.py", line 382, in run
+          self.build_extensions()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 900, in build_extensions
+          build_ext.build_extensions(self)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/command/build_ext.py", line 498, in build_extensions
+          self._build_extensions_serial()
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/command/build_ext.py", line 524, in _build_extensions_serial
+          self.build_extension(ext)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/command/build_ext.py", line 260, in build_extension
+          _build_ext.build_extension(self, ext)
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/setuptools/_distutils/command/build_ext.py", line 585, in build_extension
+          objects = self.compiler.compile(
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 713, in unix_wrap_ninja_compile
+          _write_ninja_file_and_compile_objects(
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 1869, in _write_ninja_file_and_compile_objects
+          _run_ninja_build(
+        File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 2225, in _run_ninja_build
+          raise RuntimeError(message) from e
+      RuntimeError: Error compiling objects for extension
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for o_voxel
+  Building wheel for flex_gemm (pyproject.toml): started
+  Building wheel for flex_gemm (pyproject.toml): finished with status 'done'
+  Created wheel for flex_gemm: filename=flex_gemm-1.0.0-cp310-cp310-linux_x86_64.whl size=282280 sha256=fe754a2617bef15a446ec3d7dd245fb5a6d4b124f454f5454530cb978434df6f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-s9uh6lu2/wheels/a7/2b/c4/61435e68b816d2d3012d1b55bab7c34b7a50b56e505ce9fc97
+Successfully built flex_gemm
+Failed to build o_voxel
+error: failed-wheel-build-for-install
+
+× Failed to build installable wheels for some pyproject.toml based projects
+╰─> o_voxel
+[06:26:24] == O-Voxel BUILD FAILED — capturing traceback
+[06:26:24] STOP: O-Voxel failed to build (traceback in /workspace/logs/first_traceback.txt)

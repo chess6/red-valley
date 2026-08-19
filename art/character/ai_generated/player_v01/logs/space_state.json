@@ -1,0 +1,907 @@
+{
+ "render_paths": {
+  "normal": [
+   {
+    "path": "/home/user/app/tmp/render_normal_0_1787104875689.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_1_1787104875692.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_2_1787104875696.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_3_1787104875699.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_4_1787104875702.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_5_1787104875705.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_6_1787104875709.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_normal_7_1787104875712.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "mask": [
+   {
+    "path": "/home/user/app/tmp/render_mask_0_1787104875715.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_1_1787104875728.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_2_1787104875742.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_3_1787104875756.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_4_1787104875770.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_5_1787104875784.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_6_1787104875797.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_mask_7_1787104875811.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "base_color": [
+   {
+    "path": "/home/user/app/tmp/render_base_color_0_1787104875825.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_1_1787104875829.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_2_1787104875832.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_3_1787104875835.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_4_1787104875838.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_5_1787104875841.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_6_1787104875845.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_base_color_7_1787104875847.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "metallic": [
+   {
+    "path": "/home/user/app/tmp/render_metallic_0_1787104875850.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_1_1787104875865.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_2_1787104875884.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_3_1787104875898.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_4_1787104875912.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_5_1787104875925.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_6_1787104875939.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_metallic_7_1787104875953.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "roughness": [
+   {
+    "path": "/home/user/app/tmp/render_roughness_0_1787104875966.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_1_1787104875980.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_2_1787104875993.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_3_1787104876006.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_4_1787104876019.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_5_1787104876032.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_6_1787104876045.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_roughness_7_1787104876058.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "alpha": [
+   {
+    "path": "/home/user/app/tmp/render_alpha_0_1787104876071.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_1_1787104876085.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_2_1787104876098.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_3_1787104876111.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_4_1787104876125.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_5_1787104876138.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_6_1787104876151.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_alpha_7_1787104876164.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "clay": [
+   {
+    "path": "/home/user/app/tmp/render_clay_0_1787104876177.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_1_1787104876190.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_2_1787104876204.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_3_1787104876217.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_4_1787104876230.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_5_1787104876243.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_6_1787104876257.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_clay_7_1787104876270.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "shaded_forest": [
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_0_1787104876283.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_1_1787104876286.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_2_1787104876289.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_3_1787104876292.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_4_1787104876295.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_5_1787104876298.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_6_1787104876301.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_forest_7_1787104876303.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "shaded_sunset": [
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_0_1787104876306.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_1_1787104876309.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_2_1787104876312.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_3_1787104876315.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_4_1787104876318.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_5_1787104876321.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_6_1787104876323.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_sunset_7_1787104876326.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ],
+  "shaded_courtyard": [
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_0_1787104876329.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_1_1787104876332.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_2_1787104876335.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_3_1787104876338.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_4_1787104876341.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_5_1787104876344.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_6_1787104876346.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   },
+   {
+    "path": "/home/user/app/tmp/render_shaded_courtyard_7_1787104876349.jpg",
+    "url": null,
+    "size": null,
+    "orig_name": null,
+    "mime_type": null,
+    "is_stream": false,
+    "meta": {
+     "_type": "gradio.FileData"
+    }
+   }
+  ]
+ },
+ "state_path": "/home/user/app/tmp/state_1787104869924_8492.npz",
+ "camera_angle_x": 0.6159137813277019,
+ "distance": 1.5719501972198486
+}

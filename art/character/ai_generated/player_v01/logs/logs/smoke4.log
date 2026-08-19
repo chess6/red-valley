@@ -1,0 +1,69 @@
+Using cache found in /root/.cache/torch/hub/valeoai_NAF_main
+Using cache found in /root/.cache/torch/hub/valeoai_NAF_main
+Using cache found in /root/.cache/torch/hub/valeoai_NAF_main
+[driver] gated briaai/RMBG-2.0 stubbed out
+[SPARSE] Conv backend: flex_gemm; Attention backend: sdpa
+[Pipeline] Loading from /workspace/models/trellis2-4b...
+[ATTENTION] Using backend: sdpa
+[ImageCond] Building DinoV3ProjFeatureExtractor models...
+[NAF] Pre-loading NAF upsampler model...
+[Pipeline] Standard mode (all models on GPU).
+[Inference] Processing image: assets/images/1_img.png
+[MoGe-2] Loading model for camera estimation...
+[Inference] Estimating camera parameters...
+  camera_angle_x=0.6058, distance=1.5998
+[Inference] Running 3D generation pipeline...
+[Inference] Using pipeline_type=1536_cascade
+Sampling sparse structure (proj):   0%|          | 0/12 [00:00<?, ?it/s]Sampling sparse structure (proj):   0%|          | 0/12 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "<stdin>", line 21, in <module>
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 289, in run_path
+    return _run_module_code(code, init_globals, run_name,
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 96, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+  File "/opt/conda/envs/rv310/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "inference.py", line 304, in <module>
+    run_inference(
+  File "inference.py", line 246, in run_inference
+    mesh_list, (shape_slat, tex_slat, res) = pipeline.run(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/pixal3d_image_to_3d.py", line 681, in run
+    coords = self.sample_sparse_structure(
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/pixal3d_image_to_3d.py", line 325, in sample_sparse_structure
+    z_s = self.sparse_structure_sampler.sample(
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/flow_euler.py", line 208, in sample
+    return super().sample(model, noise, cond, steps, rescale_t, verbose, neg_cond=neg_cond, guidance_strength=guidance_strength, guidance_interval=guidance_interval, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/flow_euler.py", line 121, in sample
+    out = self.sample_once(model, sample, t, t_prev, cond, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/flow_euler.py", line 79, in sample_once
+    pred_x_0, pred_eps, pred_v = self._get_model_prediction(model, x_t, t, cond, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/flow_euler.py", line 49, in _get_model_prediction
+    pred_v = self._inference_model(model, x_t, t, cond, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/guidance_interval_mixin.py", line 11, in _inference_model
+    return super()._inference_model(model, x_t, t, cond, guidance_strength=guidance_strength, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/classifier_free_guidance_mixin.py", line 15, in _inference_model
+    pred_pos = super()._inference_model(model, x_t, t, cond, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/pipelines/samplers/flow_euler.py", line 46, in _inference_model
+    return model(x_t, t, cond, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/opt/conda/envs/rv310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/workspace/repos/Pixal3D/pixal3d/models/sparse_structure_flow.py", line 288, in forward
+    cond = manual_cast(cond, self.dtype)
+  File "/workspace/repos/Pixal3D/pixal3d/modules/utils.py", line 73, in manual_cast
+    return tensor.type(dtype)
+AttributeError: 'dict' object has no attribute 'type'
+RESULT ok=False 352.9s peak_vram=23.03GB
+total 8
+drwxr-xr-x 2 root root   40 Aug 18 07:18 .
+drwxr-xr-x 1 root root 4096 Aug 18 07:12 ..
+-rw-r--r-- 1 root root 3741 Aug 18 07:18 smoke_modules.json
