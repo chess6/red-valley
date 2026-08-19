@@ -46,7 +46,7 @@ inst_id() { cat "$IDFILE" 2>/dev/null; }
 
 case "${1:-}" in
 up)
-  OFFER="${2:?offer id required}"; HOURS="${3:-6}"
+  OFFER="${2:?offer id required}"; HOURS="${3:-6}"; DISK="${4:-300}"
   # Refuse before spending anything: balance clear of the stop line, nothing
   # already running, no parked storage quietly draining the account.
   if ! python3 "$GUARD" assess; then
@@ -55,21 +55,19 @@ up)
   fi
   # PyTorch+CUDA devel image: compilers present for the CUDA extensions
   IMG="pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel"
-  echo ">> creating instance from offer $OFFER (image $IMG, disk 300G)"
-  OUT=$("$V" create instance "$OFFER" \
-        --image "$IMG" --disk 300 --ssh --direct \
-        --env '-e HF_HOME=/workspace/hf -e TORCH_HOME=/workspace/torch' \
-        --onstart-cmd 'touch /workspace/.rv_booted' --raw 2>&1)
-  echo "$OUT" | head -5
-  ID=$(echo "$OUT" | python3 -c "import sys,json
-try:
-    d=json.load(sys.stdin); print(d.get('new_contract') or d.get('id') or '')
-except Exception: print('')" 2>/dev/null)
-  [ -z "$ID" ] && { echo "!! could not parse instance id — check output above"; exit 1; }
-  echo "$ID" > "$IDFILE"
-  date -u +%s > "$STATE/started_at"
-  echo "$HOURS" > "$STATE/budget_hours"
-  echo ">> instance $ID recorded in $IDFILE"
+  echo ">> provisioning from offer $OFFER (image $IMG, disk ${DISK}G, ${HOURS}h)"
+  # provision.py owns creation: it locks, arms the account watchdog BEFORE the
+  # create, then diffs the account's instance list to find what the create
+  # actually produced. `vastai create` has reported success:false while leaving
+  # a live contract -- and once left two -- so the response is not trusted.
+  if ! python3 "$ROOT/tools/assetgen/provision.py" up "$OFFER" \
+        --image "$IMG" --disk "$DISK" --hours "$HOURS" | tee "$STATE/provision.out"; then
+    echo "!! provisioning failed — see above; nothing adopted" >&2
+    exit 1
+  fi
+  ID=$(sed -n 's/^INSTANCE_ID=//p' "$STATE/provision.out" | tail -1)
+  [ -z "$ID" ] && { echo "!! no instance id adopted"; exit 1; }
+
   # The price is only knowable once the instance exists: this CLI's
   # `search offers 'id=...'` filter returns nothing, so an offer cannot be
   # priced up front. Check the real rate immediately and destroy on failure --
@@ -80,13 +78,20 @@ except Exception: print('')" 2>/dev/null)
     rm -f "$IDFILE"
     exit 1
   fi
-  # detached watchdog: survives this shell, destroys at the deadline or when
-  # the balance approaches the floor, whichever comes first
-  nohup "$ROOT/tools/assetgen/watchdog.sh" "$ID" "$HOURS" \
-        >"$LOGDIR/watchdog.log" 2>&1 &
-  disown || true
-  echo ">> watchdog armed: destroy after ${HOURS}h or on spend-guard breach"
-  echo "   (log: $LOGDIR/watchdog.log)"
+
+  echo ">> waiting for ssh endpoint"
+  for i in $(seq 1 60); do
+    URL=$("$V" ssh-url "$ID" 2>/dev/null)
+    HOST=$(echo "$URL" | sed -nE 's#ssh://[^@]+@([^:]+):([0-9]+)#\1#p')
+    PORT=$(echo "$URL" | sed -nE 's#ssh://[^@]+@([^:]+):([0-9]+)#\2#p')
+    if [ -n "$HOST" ] && [ -n "$PORT" ]; then
+      echo "$HOST" > "$STATE/host"; echo "$PORT" > "$STATE/port"
+      echo ">> ssh $HOST:$PORT"; break
+    fi
+    sleep 10
+  done
+  [ -s "$STATE/host" ] || { echo "!! no ssh endpoint after 10m"; exit 1; }
+  echo ">> instance $ID up; watchdog armed (${HOURS}h or spend-guard breach)"
   ;;
 guard)
   python3 "$GUARD" assess
