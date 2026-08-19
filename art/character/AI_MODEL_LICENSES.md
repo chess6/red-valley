@@ -104,3 +104,34 @@ required by TRELLIS.2; they affect performance, not asset licensing.
 ```bash
 tools/assetgen/audit_licenses.sh     # re-queries GitHub + HF APIs
 ```
+
+---
+
+## Correction: the failed run used the wrong checkpoint
+
+The first pilot ran Pixal3D's **code** against **microsoft/TRELLIS.2-4B**'s
+**checkpoint**. `TencentARC/Pixal3D` weights (~24 GB) were never downloaded.
+
+| Checkpoint | `ckpts/ss_flow_img_dit_1_3B_64_bf16.json` -> `image_attn_mode` |
+|---|---|
+| `TencentARC/Pixal3D` | `"proj"` — accepts the projected conditioning dict |
+| `microsoft/TRELLIS.2-4B` | absent -> `"cross"` — expects a tensor |
+
+That single difference produced `AttributeError: 'dict' object has no attribute
+'type'`. **TRELLIS.2 is the code and dependency base, not a substitute for
+Pixal3D's trained weights.** Future runs must pin `TencentARC/Pixal3D` by model
+revision and use it as the generation checkpoint.
+
+The nvdiffrast finding above is unaffected and still stands: the pipeline
+output remains evaluation-only.
+
+**Confirmed by run 2 (instance 48073234).** With `TencentARC/Pixal3D`'s own
+weights, all four flow models report `image_attn_mode == "proj"`, the
+projection path constructs, and the `'dict' object has no attribute 'type'`
+error does not occur. That run failed later and for an unrelated reason (a
+missing `einops` in a `torch.hub` dependency), so it says nothing about output
+quality — but the checkpoint diagnosis is settled.
+
+Run 2 also reconfirms the nvdiffrast position: `_nvdiffrast_c`, `nvdiffrast`
+and `nvdiffrast.torch` appear in the runtime module dump alongside `o_voxel`
+and `cumesh`. Evidence: `player_v01/out/run2_modules.json`.
