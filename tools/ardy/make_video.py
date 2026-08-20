@@ -98,8 +98,14 @@ for k, jn in enumerate(["LeftFoot", "LeftToeBase", "RightFoot", "RightToeBase"])
     o = bpy.context.active_object; o.name = "c_" + jn
     o.data.materials.append(M_ON); contacts[k] = (o, jn)
 
+# The raw skeleton carries ARDY's world displacement while the retargeted clip
+# is in-place by contract, so it walks out of frame. Remove the HORIZONTAL
+# drift for display only -- height is untouched and the measured speed is
+# reported in the HUD, so nothing is hidden.
+drift0 = cv(J[0, SI["Hips"]])
 for f in range(F):
-    off = mathutils.Vector((SKEL_X, 0, 0))
+    dh = cv(J[f, SI["Hips"]]) - drift0
+    off = mathutils.Vector((SKEL_X - dh.x, -dh.y, 0))
     P = {n: cv(J[f, SI[n]]) + off for n in NAMES}
     for n, o in joints.items():
         o.location = P[n]; o.keyframe_insert("location", frame=f + 1)
@@ -181,6 +187,8 @@ def add_cam(name, loc, lens):
 
 CAMS = {
   "front": add_cam("front", (0, -7.2, 1.05), 40),
+  # true side: straight down +X at the subjects' height, for reading trunk pitch
+  "side": add_cam("side", (8.4, 0.0, 1.05), 40),
   "threequarter": add_cam("tq", (5.6, -5.6, 2.1), 40),
 }
 for tag, cam in CAMS.items():

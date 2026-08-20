@@ -67,6 +67,17 @@ CHAIN = {
 # orients anything attached to prop_socket.R.
 TWIST_REF = {"hand.R": "RightHandThumb1", "hand.L": "LeftHandThumb1"}
 
+# ARDY's walk carries an S-curved trunk: pelvis->chest leans BACK ~11 deg while
+# chest->head leans FORWARD ~11 deg, netting upright but reading as a slouch.
+# Measurement showed the retarget reproduces the source within 0.4 deg, so the
+# posture is the source's, not an artefact. Correct it additively and in equal
+# and opposite amounts, so the head stays level and the legs -- and therefore
+# foot contacts -- are untouched. Capped deliberately: this shapes posture, it
+# does not author motion.
+SPINE_CORR_CAP = 8.0
+SPINE_CORR = {"spine": +6.0, "chest": -6.0}
+assert all(abs(v) <= SPINE_CORR_CAP for v in SPINE_CORR.values())
+
 def depth(name):
     n, dep = rig.pose.bones[name], 0
     while n.parent: n, dep = n.parent, dep + 1
@@ -81,6 +92,15 @@ for pb in rig.pose.bones:
 h_src = float(J[:, SRC_IDX["Head"], 1].max() - J[:, SRC_IDX["RightToeBase"], 1].min())
 h_dst = 1.9005
 scale = h_dst / h_src
+
+def pitch_about_head(pb, degrees):
+    """Additive pitch about the bone's own head. +ve leans forward (character
+    faces -Y, so a positive rotation about +X tips the top toward -Y)."""
+    m = pb.matrix.copy()
+    T = mathutils.Matrix.Translation(m.to_translation())
+    R = mathutils.Matrix.Rotation(math.radians(degrees), 4, "X")
+    pb.matrix = T @ R @ T.inverted() @ m
+    bpy.context.view_layer.update()
 
 def set_frame(pb, y_dir, ref_dir):
     """Set a bone's full orientation from two vectors.
@@ -115,6 +135,7 @@ def aim(pb, direction):
     pb.matrix = T @ R.to_matrix().to_4x4() @ T.inverted() @ m
     bpy.context.view_layer.update()
 
+_used = {"twist": False, "spine": False}
 for f in range(F):
     for pb in rig.pose.bones:
         pb.matrix_basis.identity()
@@ -122,10 +143,20 @@ for f in range(F):
     for bone in ORDER:
         a, b = CHAIN[bone]
         v = mathutils.Vector((J[f, SRC_IDX[b]] - J[f, SRC_IDX[a]]).tolist())
-        aim(rig.pose.bones[bone], C @ v)          # Y-up -> Z-up
+        ref = TWIST_REF.get(bone)
+        if ref and ref in SRC_IDX:
+            t = mathutils.Vector((J[f, SRC_IDX[ref]] - J[f, SRC_IDX[a]]).tolist())
+            set_frame(rig.pose.bones[bone], C @ v, C @ t); _used["twist"] = True
+        else:
+            aim(rig.pose.bones[bone], C @ v)                # Y-up -> Z-up
+        if bone in SPINE_CORR:
+            pitch_about_head(rig.pose.bones[bone], SPINE_CORR[bone]); _used["spine"] = True
     for bone in ORDER:
         rig.pose.bones[bone].keyframe_insert(data_path="rotation_quaternion", frame=f + 1)
 bpy.ops.object.mode_set(mode="OBJECT")
+assert _used["twist"] and _used["spine"], (
+    "retarget wired wrong: twist=%s spine=%s -- helpers defined but not called"
+    % (_used["twist"], _used["spine"]))
 
 if rig.animation_data and rig.animation_data.action:
     rig.animation_data.action.name = CLIP
