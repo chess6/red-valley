@@ -37,3 +37,60 @@ materials come from the master rather than from Mixamo's output.
 4. Shoulder and neck deformation no worse than the current custom rig.
 
 If 1 or 3 fails, stop and report. Do not start another custom repair loop.
+
+## Result of run 1: wrong skeleton LOD — benchmark inconclusive
+
+Downloaded `T-Pose.fbx` (sha256 `68c06741…6ec2c81f`) and `Defeated.fbx`
+(sha256 `edd0ea0d…235946b0`). Both carry the same skeleton.
+
+### Mesh integrity: PASS
+
+| | baseline | returned |
+|---|---|---|
+| vertices | 70,042 | 70,042 |
+| triangles | 49,994 | 49,994 |
+| height | 1.9005 m | 1.9028 m |
+| unweighted verts | — | 0 |
+
+Counts are exact; the 2.3 mm (0.12%) height change is the T-pose re-posing plus
+the FBX round trip. Mixamo did not damage the mesh.
+
+### Finger rigging: FAIL as delivered
+
+33 bones, not 65. This is Mixamo's **No Fingers (25)** skeleton: 25 body bones
+plus one index chain per hand acting as a hand terminator.
+
+    LeftHandIndex1..4, RightHandIndex1..4     -- and nothing else
+
+No thumb, middle, ring or pinky on either hand. A thumb is precisely what the
+custom rig lacked, so this run cannot answer the question the benchmark exists
+to answer.
+
+This is a skeleton-LOD selection, not a Mixamo capability limit — Standard
+Skeleton (65) does provide four joints per digit on both hands. One re-rig with
+that LOD selected would settle it.
+
+### Weight asymmetry worth correcting on any re-run
+
+Vertices dominated by each bone:
+
+| bone | verts | | bone | verts |
+|---|---|---|---|---|
+| LeftHandIndex1 | 896 | | RightHandIndex1 | 226 |
+| LeftHandIndex2 | 544 | | RightHandIndex2 | 520 |
+| LeftHandIndex3 | 400 | | RightHandIndex3 | 226 |
+| LeftHand (palm) | 477 | | RightHand (palm) | 1223 |
+
+The two hands were fitted very differently — the right palm claims 2.6x the
+vertices of the left. That usually means the wrist markers were not placed
+symmetrically. The right hand is the one that has to hold the can.
+
+### Not proceeding to retarget or grip
+
+Without a thumb a closed grip cannot be built, which is the whole object of the
+exercise. Retargeting the walk onto a skeleton we expect to replace would be
+discarded work. Stopped here, per the brief.
+
+`Defeated.fbx` (203 frames @ 30 fps) is on the same 33-bone skeleton so it is
+not usable yet, but it is a good shoulder/spine deformation stress test once a
+usable skeleton exists — a slump exercises exactly the joints under review.
