@@ -133,8 +133,20 @@ than eyeballed.
 | 2 | `walk_fwd` | loop | **in-place** | — | foot plant | Sarah WALK | **P0** |
 | 3 | `run_fwd` | loop | **in-place** | — | foot plant | — | **P0** |
 | 4 | `water_can` | one-shot ~1.2 s | none | **watering can (hand socket)** | can spout toward soil | Sarah water task | **P0** |
+
+> **Pose reference (from a supplied photo):** watering is a **standing posture with
+> a slight forward lean from the waist (~15 deg)**, gaze down at the bed, **one arm
+> extended down and forward holding the can away from the body**, spout angled
+> down, the other arm relaxed at the side, both feet planted. It is **not** a deep
+> fold. The deep bend ARDY produced (hips dropping ~0.30 m, hand reaching to
+> 0.15 m) is the wrong motion for watering but a good match for **harvesting /
+> picking**, and is retained for clip #6 rather than discarded.
 | 5 | `scatter_hand` | one-shot ~1.2 s | none | none (**temporary**) | hand sweep at soil height | **shared by seeds / compost / manure / mulch** | **P0** |
 | 6 | `harvest_pick` | one-shot ~1.2 s | none | none | hands to crop height | Sarah harvest task | **P0** |
+
+> **Candidate exists:** ARDY `bend8_s0` (Core, 8 s, seed 0) - hips drop 0.295 m,
+> right hand reaches 0.153 m, below the 0.22 m soil bed. Generated as a watering
+> attempt; reads as a harvest/pick and is repurposed here.
 | 7 | `cover_place` | one-shot ~2.0 s | none | **existing plot cover prop** | two-handed, wider stance | Sarah cover task | **P0** |
 | 8 | `inspect_crouch` | one-shot + hold | none | — | crouch, look down | — | **P0** |
 | 9 | `clear_pull` | one-shot ~1.2 s | none | — | pulling motion | may reuse #6 | P1 |
