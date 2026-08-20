@@ -1,0 +1,11 @@
+{
+  "clip": "bend8_s0",
+  "frames": 160,
+  "fps": 20,
+  "duration_s": 7.95,
+  "src_height": 1.6658,
+  "scale_to_rig": 1.1409,
+  "root_displacement_m": 0.0118,
+  "forward_speed_m_s": 0.0015,
+  "mapped_bones": 18
+}

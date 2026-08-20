@@ -20,6 +20,7 @@ import os
 import sys
 
 import bpy
+from mathutils import Matrix
 
 OUT_DIR = "/home/thomas/Dev/red-valley/art/animation/ardy_pilot/proxy"
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -33,7 +34,10 @@ os.makedirs(OUT_DIR, exist_ok=True)
 #   body       : hangs below and slightly behind the grip
 #   spout      : leaves the lower body, angles forward and down to the tip
 BODY_R, BODY_H = 0.085, 0.185
-BAR_R, BAR_LEN = 0.012, 0.100
+# The hand measures 0.095 m across the handle axis. A 0.100 m bar with 0.009 m
+# struts leaves a clear span of 0.082 m, so the hand could not fit inside its own
+# handle and the fingers always clashed with the struts. Real cans are ~0.13-0.15.
+BAR_R, BAR_LEN = 0.012, 0.140
 STRUT_R = 0.009
 SPOUT_R = 0.016
 
@@ -111,6 +115,24 @@ def marker(name, loc):
 marker("grip_origin", (0.0, 0.0, 0.0))
 marker("spout_tip", tip)
 
+# grip_anchor: the exact centre AND axis of the handle bar, as a full frame.
+# The bar is a cylinder along local X through the origin, so:
+#   anchor Y -> bar axis          (the bone runs along the handle)
+#   anchor Z -> toward the body   (the way a gripping palm faces)
+#   anchor X -> Y x Z, right-handed
+# Attaching the can as `sock @ anchor_local.inverted()` makes grip_anchor and
+# prop_socket.R exactly coincident, so there is no drift to accumulate.
+GRIP_ANCHOR_BASIS = Matrix(((0.0, 1.0,  0.0, 0.0),
+                            (1.0, 0.0,  0.0, 0.0),
+                            (0.0, 0.0, -1.0, 0.0),
+                            (0.0, 0.0,  0.0, 1.0)))
+ga = bpy.data.objects.new("grip_anchor", None)
+ga.empty_display_type = "ARROWS"
+ga.empty_display_size = 0.04
+bpy.context.collection.objects.link(ga)
+ga.parent = can
+ga.matrix_world = GRIP_ANCHOR_BASIS
+
 glb = os.path.join(OUT_DIR, "watering_can_proxy.glb")
 bpy.ops.export_scene.gltf(filepath=glb, export_format="GLB",
                           use_selection=False, export_apply=True,
@@ -127,7 +149,11 @@ meta = {
     "markers": {
         "grip_origin": [0.0, 0.0, 0.0],
         "spout_tip": [round(v, 5) for v in tip],
+        "grip_anchor": [0.0, 0.0, 0.0],
     },
+    "grip_anchor_basis_rows": [list(r) for r in GRIP_ANCHOR_BASIS],
+    "grip_anchor_contract": ("Y along the handle bar, Z toward the can body; "
+                             "coincide this frame with prop_socket.R"),
     "spout_tip_offset_from_grip_m": round(math.dist((0, 0, 0), tip), 4),
     "dimensions_m": {"body_radius": BODY_R, "body_height": BODY_H,
                      "spout_radius": SPOUT_R, "handle_bar_length": BAR_LEN},

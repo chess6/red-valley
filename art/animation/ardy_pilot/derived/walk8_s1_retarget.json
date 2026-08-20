@@ -1,0 +1,11 @@
+{
+  "clip": "walk8_s1",
+  "frames": 160,
+  "fps": 20,
+  "duration_s": 7.95,
+  "src_height": 1.7059,
+  "scale_to_rig": 1.1141,
+  "root_displacement_m": 9.7609,
+  "forward_speed_m_s": 1.2278,
+  "mapped_bones": 18
+}

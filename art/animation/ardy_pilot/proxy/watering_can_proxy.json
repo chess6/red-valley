@@ -16,14 +16,46 @@
       0.0,
       -0.3,
       -0.12
+    ],
+    "grip_anchor": [
+      0.0,
+      0.0,
+      0.0
     ]
   },
+  "grip_anchor_basis_rows": [
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "grip_anchor_contract": "Y along the handle bar, Z toward the can body; coincide this frame with prop_socket.R",
   "spout_tip_offset_from_grip_m": 0.3231,
   "dimensions_m": {
     "body_radius": 0.085,
     "body_height": 0.185,
     "spout_radius": 0.016,
-    "handle_bar_length": 0.1
+    "handle_bar_length": 0.14
   },
   "triangles": 340
 }
