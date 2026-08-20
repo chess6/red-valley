@@ -64,3 +64,45 @@ crossed knee is not representable, and knee separation is reported.
 built the spout pointing sideways across the body instead of forward-down, and
 left `spout_tip` marking empty air 0.11 m past the geometry. Every earlier
 spout measurement taken from that proxy was meaningless.
+
+## Grip contract (validated)
+
+`grip_anchor` marks the exact centre and axis of the handle bar: Y along the
+bar, Z toward the can body. The can is attached as `sock @ anchor.inverted()`,
+so grip_anchor and `prop_socket.R` are coincident by construction rather than by
+a fudge offset. Measured drift across start/pour/return: **1.5e-08 m, 0.0 deg**.
+
+`prop_socket.R` sat at 58% along the hand -- under the fingertips. It deforms
+nothing (0 weighted vertices), so it was relocated into the palm.
+
+The handle bar was widened 0.100 -> 0.140 m. The hand is 0.095 m across the bar
+axis and the old clear span between the struts was 0.082 m, so the hand could
+not fit inside its own handle.
+
+### The finger wrap is NOT solved
+
+`grip_can` exists (294 vertices, 28 deg curl, zero intersections) but does not
+read as a grip. The bar has to sit 0.0388 m off the palm centroid to clear the
+thumb, which protrudes ~0.025 m on the palm side; at that distance the hand
+reads as open beside the handle. Sitting the bar on the palm surface (0.0258 m)
+intersects in every pose at every curl angle from 0-100 deg.
+
+The zero-intersection metric is satisfied *trivially* here -- by holding the
+handle away from the hand. It is not evidence of a grip. Closing this properly
+needs finger bones in the rig, not a larger shape key: a single hinge curl
+cannot oppose a thumb, and nothing else can hold a handle.
+
+Note also that a procedural finger curl is the kind of organic deformation
+`docs/ASSET_POLICY.md` rules out. It is reversible and confined to the derived
+copy, but it is not the right mechanism.
+
+## Face deformation: measured, was real, now fixed
+
+Not perspective. Before: 55.2% of the 3039 face vertices carried non-`head`
+weight (6.3% of face weight sat on `neck`), and face edges stretched by up to
+**21.2%** (start) and **28.6%** (return).
+
+Face and skull are now rigid on `head`, with neck blending confined to a 0.02 m
+band below the jaw plane (z = 1.7104). After: **0** non-rigid face vertices, max
+edge-length change **0.0074%**. `face_00_rest.png` and `face_start.png` are
+pixel-identical, from one fixed camera.

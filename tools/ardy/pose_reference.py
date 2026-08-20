@@ -43,7 +43,11 @@ obj = max([o for o in bpy.data.objects if o.type == "MESH" and len(o.vertex_grou
 before = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=CAN_GLB)
 can = [o for o in bpy.data.objects if o not in before and o.type == "MESH"][0]
-OFF = {k: Vector(v) for k, v in json.load(open(CAN_GLB.replace(".glb", ".json")))["markers"].items()}
+_META = json.load(open(CAN_GLB.replace(".glb", ".json")))
+OFF = {k: Vector(v) for k, v in _META["markers"].items()}
+GA = Matrix(_META["grip_anchor_basis_rows"])   # grip_anchor frame, can-local
+BAR_R = _META["dimensions_m"]["spout_radius"] * 0.0 + 0.012   # handle bar radius
+BAR_LEN = _META["dimensions_m"]["handle_bar_length"]
 can.parent = rig; can.parent_type = "BONE"; can.parent_bone = "prop_socket.R"
 BFP = Matrix.Rotation(math.radians(90), 4, "X")
 
@@ -111,8 +115,18 @@ def ccd(chain, effector, target, iters=25):
     return (wpos(effector) - Vector(target)).length
 
 def place_can():
+    """grip_anchor is made coincident with prop_socket.R, so there is no offset
+    left over to drift. The old BFP quarter-turn was an arbitrary fudge."""
     sock = rig.matrix_world @ PB["prop_socket.R"].matrix
-    can.matrix_world = sock @ BFP; upd()
+    can.matrix_world = sock @ GA.inverted(); upd()
+
+def grip_drift():
+    """Positional and rotational error between grip_anchor and the socket."""
+    sock = rig.matrix_world @ PB["prop_socket.R"].matrix
+    ga = can.matrix_world @ GA
+    dp = (ga.to_translation() - sock.to_translation()).length
+    dq = ga.to_quaternion().rotation_difference(sock.to_quaternion()).angle
+    return round(dp, 9), round(math.degrees(dq), 7)
 
 def spout(): return can.matrix_world @ OFF["spout_tip"]
 def grip():  return can.matrix_world @ OFF["grip_origin"]
@@ -221,7 +235,7 @@ def orient_can(target_z, mode="pour", reuse=None):
         upd(); place_can()
     if reuse is not None:                 # start and return share one carry hold
         apply(*reuse)
-        if body_can_intersections() == 0:
+        if body_can_intersections() == 0 and hand_can_intersections() == 0:
             print("  carry orientation reused: roll=%d pitch=%d tilt=%.1f deg"
                   % (reuse[0], reuse[1], can_tilt_deg()))
             return (0.0, reuse[0], reuse[1])
@@ -250,7 +264,9 @@ def orient_can(target_z, mode="pour", reuse=None):
     cands.sort()
     for err, roll, pdeg in cands[:80]:
         apply(roll, pdeg)
-        if body_can_intersections() == 0:
+        # body_can_intersections deliberately ignores the gripping hand, so it
+        # cannot see the can cutting into the fingers. Check both.
+        if body_can_intersections() == 0 and hand_can_intersections() == 0:
             print("  can roll=%d pitch=%d tilt=%.1f deg err=%.3f (collision-free)"
                   % (roll, pdeg, can_tilt_deg(), err))
             return (err, roll, pdeg)
@@ -290,6 +306,150 @@ def body_can_intersections():
     cev.to_mesh_clear()
     return n
 
+
+# ---------------------------------------------------------------- rig prep --
+def palm_frame():
+    """Measure the palm: centre, finger axis, bar axis across it, and normal."""
+    gi = {g.name: g.index for g in obj.vertex_groups}
+    def wt(v, n):
+        i = gi.get(n)
+        return next((g.weight for g in v.groups if g.group == i), 0.0) if i is not None else 0.0
+    hand = [v for v in obj.data.vertices if wt(v, "hand.R") > 0.5]
+    co = [obj.matrix_world @ v.co for v in hand]
+    hm = rig.matrix_world @ PB["hand.R"].matrix
+    fing = (hm.to_3x3() @ Vector((0, 1, 0))).normalized()
+    o = hm.to_translation()
+    t = [(c - o).dot(fing) for c in co]
+    lo, hi = min(t), max(t); span = hi - lo
+    palm = [c for c, tt in zip(co, t) if lo + 0.20 * span <= tt <= lo + 0.55 * span]
+    pc = sum(palm, Vector()) / len(palm)
+    u = Vector((0, 0, 1)).cross(fing)
+    if u.length < 1e-6: u = Vector((1, 0, 0)).cross(fing)
+    u.normalize(); v = fing.cross(u).normalized()
+    sxx = syy = sxy = 0.0
+    for c in palm:
+        d = c - pc; a, b = d.dot(u), d.dot(v)
+        sxx += a * a; syy += b * b; sxy += a * b
+    th = 0.5 * math.atan2(2 * sxy, sxx - syy)      # closed-form 2x2 eigenvector
+    e1 = (u * math.cos(th) + v * math.sin(th)).normalized()
+    e2 = fing.cross(e1).normalized()
+    v1 = sum(((c - pc).dot(e1)) ** 2 for c in palm)
+    v2 = sum(((c - pc).dot(e2)) ** 2 for c in palm)
+    bar, nrm = (e1, e2) if v1 > v2 else (e2, e1)   # wide = across palm, thin = normal
+    if nrm.dot(Vector((0, -1, 0))) < 0: nrm = -nrm
+    # The centroid is the middle of the hand's FLESH. A handle rests on the palm
+    # SURFACE, so lift it clear by the palm half-depth plus the bar radius --
+    # otherwise the bar is buried inside the hand and nothing can be non-intersecting.
+    # KNOWN LIMITATION. This clears the thumb (which protrudes ~0.025 m on the
+    # palm side) and is the only lift for which every pose is intersection-free.
+    # It also holds the bar ~0.013 m off the palm, so the hand reads as open
+    # beside the handle rather than gripping it. Sitting the bar on the palm
+    # instead (0.0258 m) collides in every pose at every curl angle. Closing this
+    # needs finger bones, not a wider shape key -- see README.
+    surf = max((c - pc).dot(nrm) for c in palm)
+    lift = surf + BAR_R + 0.0015
+    print("palm half-depth %.4f m, bar radius %.4f -> lifting anchor %.4f m"
+          % (surf, BAR_R, lift))
+    return pc + nrm * lift, fing, bar, nrm, o, lo, hi
+
+def move_socket(pc, bar, nrm):
+    """Put prop_socket.R in the palm. It sat at 58% along the hand -- under the
+    fingertips -- so the handle was pinched rather than held. The bone deforms
+    nothing (0 weighted vertices), so relocating it is free."""
+    before = wpos("prop_socket.R")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.mode_set(mode="EDIT")
+    inv = rig.matrix_world.inverted()
+    eb = rig.data.edit_bones["prop_socket.R"]
+    eb.head = inv @ pc
+    eb.tail = inv @ (pc + bar * 0.06)
+    eb.align_roll(inv.to_3x3() @ nrm)
+    bpy.ops.object.mode_set(mode="POSE")
+    upd()
+    print("socket moved %.4f m into the palm" % (wpos("prop_socket.R") - before).length)
+
+def rigid_face(band=0.02):
+    """Face and skull ride the head bone rigidly; neck blending stops at the jaw."""
+    gi = {g.name: g.index for g in obj.vertex_groups}
+    hg = obj.vertex_groups["head"]
+    jaw = wpos("head").z
+    changed = 0
+    for v in obj.data.vertices:
+        wh = next((g.weight for g in v.groups if g.group == gi["head"]), 0.0)
+        wn = next((g.weight for g in v.groups if g.group == gi.get("neck", -1)), 0.0)
+        if wh <= 0.0 and wn <= 0.0: continue
+        z = (obj.matrix_world @ v.co).z
+        if z >= jaw: f = 1.0
+        elif z >= jaw - band: f = (z - (jaw - band)) / band
+        else: continue
+        new_h = wh + (1.0 - wh) * f
+        if abs(new_h - wh) < 1e-6: continue
+        scale = 0.0 if wh >= 1.0 else (1.0 - new_h) / (1.0 - wh)
+        for g in list(v.groups):
+            if g.group == gi["head"]: continue
+            name = next(k for k, i in gi.items() if i == g.group)
+            obj.vertex_groups[name].add([v.index], g.weight * scale, "REPLACE")
+        hg.add([v.index], new_h, "REPLACE")
+        changed += 1
+    print("face/skull made rigid on head: %d vertices rebalanced (jaw z=%.4f)"
+          % (changed, jaw))
+    return jaw
+
+def build_grip_key(fing, bar, o, lo, hi):
+    """One reversible shape key that curls the right fingers round the handle.
+
+    The rig has no finger bones, so the curl is a progressive rotation about a
+    hinge line through the knuckles, along the same axis as the handle bar.
+    """
+    gi = {g.name: g.index for g in obj.vertex_groups}
+    def wt(v, n):
+        i = gi.get(n)
+        return next((g.weight for g in v.groups if g.group == i), 0.0) if i is not None else 0.0
+    span = hi - lo
+    t_knuck = lo + 0.55 * span
+    rigid = [(v, (obj.matrix_world @ v.co - o).dot(fing))
+             for v in obj.data.vertices if wt(v, "hand.R") >= 0.85]
+    fingers = [(v, t) for v, t in rigid if t > t_knuck]
+    hinge = o + fing * t_knuck
+    if not obj.data.shape_keys:
+        obj.shape_key_add(name="Basis", from_mix=False)
+    sk = obj.shape_key_add(name="grip_can", from_mix=False)
+    sk.value = 1.0
+    w2l = obj.matrix_world.inverted()
+    def apply(curl_deg):
+        for v, t in fingers:
+            frac = (t - t_knuck) / max(1e-9, hi - t_knuck)
+            R = Matrix.Rotation(math.radians(curl_deg) * frac, 4, bar)
+            c = obj.matrix_world @ v.co
+            sk.data[v.index].co = w2l @ (hinge + R @ (c - hinge))
+        upd()
+    def conform(sock_p):
+        """Push any finger vertex that would enter the handle bar out onto its
+        surface, so the fingers wrap the bar instead of stopping short of it."""
+        moved = 0
+        for v, t in rigid:
+            c = obj.matrix_world @ Vector(sk.data[v.index].co)
+            d = c - sock_p
+            along = max(-BAR_LEN / 2, min(BAR_LEN / 2, d.dot(bar)))
+            radial = d - bar * along
+            r = radial.length
+            if r < BAR_R + 0.0015 and r > 1e-6:
+                sk.data[v.index].co = w2l @ (sock_p + bar * along
+                                             + radial.normalized() * (BAR_R + 0.0015))
+                moved += 1
+        upd()
+        return moved
+    sock_p = wpos("prop_socket.R")
+    curl = 0.0
+    for c in range(0, 104, 4):          # largest curl the fingers can take
+        apply(c); conform(sock_p)
+        if hand_can_intersections() == 0: curl = c
+        elif curl: break
+    apply(curl); moved = conform(sock_p)
+    print("grip_can shape key: %d finger verts, curl %.0f deg, %d conformed to bar, "
+          "%d intersections" % (len(fingers), curl, moved, hand_can_intersections()))
+    return curl
+
 # Which local axis of the head bone points out of the face? Measure it rather
 # than assume -- the glTF import orientation is not guaranteed.
 for pb in PB: pb.matrix_basis.identity()
@@ -298,6 +458,35 @@ _hm = (rig.matrix_world @ PB["head"].matrix).to_3x3()
 FACE = max([Vector(a) for a in ((1,0,0),(-1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1))],
            key=lambda a: (_hm @ a).normalized().dot(Vector((0, -1, 0))))
 print("head face axis (local): %s" % (tuple(FACE),))
+
+def hand_can_intersections():
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = obj.evaluated_get(dg); m = ev.to_mesh()
+    co = [obj.matrix_world @ v.co for v in m.vertices]
+    bt = BVHTree.FromPolygons(co, HAND_TRIS, all_triangles=True)
+    cev = can.evaluated_get(dg); cm = cev.to_mesh()
+    cm.calc_loop_triangles()
+    ct = BVHTree.FromPolygons([can.matrix_world @ v.co for v in cm.vertices],
+                              [tuple(t.vertices) for t in cm.loop_triangles],
+                              all_triangles=True)
+    n = len(ct.overlap(bt))
+    ev.to_mesh_clear(); cev.to_mesh_clear()
+    return n
+
+_gi = {g.name: g.index for g in obj.vertex_groups}
+def _dom(vi):
+    v = obj.data.vertices[vi]
+    if not v.groups: return None
+    top = max(v.groups, key=lambda g: g.weight).group
+    return next((k for k, i in _gi.items() if i == top), None)
+HAND_TRIS = [tuple(t.vertices) for t in obj.data.loop_triangles
+             if any(_dom(i) == "hand.R" for i in t.vertices)]
+
+PALM_C, FING, BAR, NRM, HAND_O, HAND_LO, HAND_HI = palm_frame()
+move_socket(PALM_C, BAR, NRM)
+place_can()
+JAW_Z = rigid_face()
+GRIP_CURL = build_grip_key(FING, BAR, HAND_O, HAND_LO, HAND_HI)
 
 report = {}
 CARRY_HOLD = None
@@ -431,6 +620,8 @@ for name, spec in POSES.items():
         "ankle_gap_m": round(wpos("foot.L").x - wpos("foot.R").x, 4),
         "ik_error_m": round(err, 5) if err is not None else None,
         "body_can_intersections": body_can_intersections(),
+        "hand_can_intersections": hand_can_intersections(),
+        "grip_drift_m_deg": grip_drift(),
     }
     print(name, json.dumps(report[name]))
     # keyframe so the pose can be re-rendered / exported

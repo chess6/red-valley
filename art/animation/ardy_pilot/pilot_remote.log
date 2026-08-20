@@ -1,0 +1,129 @@
+[23:38:04] == system packages
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package libuv1:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 20935 files and directories currently installed.)
+Preparing to unpack .../0-libuv1_1.43.0-1ubuntu0.1_amd64.deb ...
+Unpacking libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+Selecting previously unselected package libarchive13:amd64.
+Preparing to unpack .../1-libarchive13_3.6.0-1ubuntu1.8_amd64.deb ...
+Unpacking libarchive13:amd64 (3.6.0-1ubuntu1.8) ...
+Selecting previously unselected package libjsoncpp25:amd64.
+Preparing to unpack .../2-libjsoncpp25_1.9.5-3_amd64.deb ...
+Unpacking libjsoncpp25:amd64 (1.9.5-3) ...
+Selecting previously unselected package librhash0:amd64.
+Preparing to unpack .../3-librhash0_1.4.2-1ubuntu1_amd64.deb ...
+Unpacking librhash0:amd64 (1.4.2-1ubuntu1) ...
+Selecting previously unselected package dh-elpa-helper.
+Preparing to unpack .../4-dh-elpa-helper_2.0.9ubuntu1_all.deb ...
+Unpacking dh-elpa-helper (2.0.9ubuntu1) ...
+Selecting previously unselected package emacsen-common.
+Preparing to unpack .../5-emacsen-common_3.0.4_all.deb ...
+Unpacking emacsen-common (3.0.4) ...
+Selecting previously unselected package cmake-data.
+Preparing to unpack .../6-cmake-data_3.22.1-1ubuntu1.22.04.2_all.deb ...
+Unpacking cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+Selecting previously unselected package cmake.
+Preparing to unpack .../7-cmake_3.22.1-1ubuntu1.22.04.2_amd64.deb ...
+Unpacking cmake (3.22.1-1ubuntu1.22.04.2) ...
+Setting up libarchive13:amd64 (3.6.0-1ubuntu1.8) ...
+Setting up libuv1:amd64 (1.43.0-1ubuntu0.1) ...
+Setting up emacsen-common (3.0.4) ...
+Setting up dh-elpa-helper (2.0.9ubuntu1) ...
+Setting up libjsoncpp25:amd64 (1.9.5-3) ...
+Setting up librhash0:amd64 (1.4.2-1ubuntu1) ...
+Setting up cmake-data (3.22.1-1ubuntu1.22.04.2) ...
+Setting up cmake (3.22.1-1ubuntu1.22.04.2) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.6) ...
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[23:38:12] == torch cu124
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+torch 2.5.1+cu124 NVIDIA GeForce RTX 3090
+[23:38:15] == ardy @ 693f74d13b3d04a0a22ce127ee79c929dd89756b
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+ardy ok
+[23:39:09] == hugging face auth
+Note: Environment variable`HF_TOKEN` is set and is the current active token independently from the token you've just configured.
+logged in
+[23:39:09] == pre-fetching checkpoints (ARDY pinned, Llama, LLM2Vec adapters)
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:   8%|▊         | 1/12 [00:00<00:05,  2.17it/s]Fetching 12 files:  17%|█▋        | 2/12 [00:00<00:02,  4.01it/s]Fetching 12 files:  42%|████▏     | 5/12 [00:01<00:01,  4.88it/s]Fetching 12 files:  67%|██████▋   | 8/12 [00:02<00:01,  2.64it/s]Fetching 12 files:  83%|████████▎ | 10/12 [00:02<00:00,  3.61it/s]Fetching 12 files:  92%|█████████▏| 11/12 [00:03<00:00,  3.28it/s]Fetching 12 files: 100%|██████████| 12/12 [00:03<00:00,  2.83it/s]Fetching 12 files: 100%|██████████| 12/12 [00:03<00:00,  3.11it/s]
+ardy ckpt: /workspace/hf/hub/models--nvidia--ARDY-Core-RP-20FPS-Horizon40/snapshots/abe6c43beb28c867c950acb824b9c4ef3d63fb76
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:   8%|▊         | 1/12 [00:00<00:03,  3.10it/s]Fetching 12 files:  42%|████▏     | 5/12 [00:00<00:00,  8.05it/s]Fetching 12 files:  58%|█████▊    | 7/12 [00:01<00:00,  6.69it/s]Fetching 12 files:  67%|██████▋   | 8/12 [00:10<00:08,  2.04s/it]Fetching 12 files:  75%|███████▌  | 9/12 [00:18<00:10,  3.56s/it]Fetching 12 files:  83%|████████▎ | 10/12 [00:32<00:12,  6.21s/it]Fetching 12 files:  92%|█████████▏| 11/12 [00:33<00:04,  4.87s/it]Fetching 12 files: 100%|██████████| 12/12 [00:40<00:00,  5.34s/it]Fetching 12 files: 100%|██████████| 12/12 [00:40<00:00,  3.38s/it]
+meta-llama/Meta-Llama-3-8B-Instruct -> /workspace/hf/hub/models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2
+Fetching 8 files:   0%|          | 0/8 [00:00<?, ?it/s]Fetching 8 files:  12%|█▎        | 1/8 [00:00<00:03,  2.02it/s]Fetching 8 files:  88%|████████▊ | 7/8 [00:01<00:00,  7.81it/s]Fetching 8 files: 100%|██████████| 8/8 [00:01<00:00,  3.81it/s]Fetching 8 files: 100%|██████████| 8/8 [00:01<00:00,  4.21it/s]
+McGill-NLP/LLM2Vec-Meta-Llama-3-8B-Instruct-mntp -> /workspace/hf/hub/models--McGill-NLP--LLM2Vec-Meta-Llama-3-8B-Instruct-mntp/snapshots/31474e395ada192e8ed1586db6be79fb3b70c9c0
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  1.90it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.02s/it]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.06it/s]
+McGill-NLP/LLM2Vec-Meta-Llama-3-8B-Instruct-mntp-supervised -> /workspace/hf/hub/models--McGill-NLP--LLM2Vec-Meta-Llama-3-8B-Instruct-mntp-supervised/snapshots/baa8ebf04a1c2500e61288e7dad65e8ae42601a7
+[23:39:59] == CLIP 1/2: walk_fwd (locomotion, text-driven)
+Using device: cuda:0
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 1767.88it/s]
+Setting up text encoder (mode=auto); first run may take a while...
+Text encoder service is unreachable, falling back to local LLM2Vec encoder. (InstantiationException: Error in call to target 'ardy.model.text_encoder_api.TextEncoderAPI':
+ConnectError('[Errno 111] Connection refused'))
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 932.17it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 12177.24it/s]
+[transformers] [1mLlamaBiModel LOAD REPORT[0m from: meta-llama/Meta-Llama-3-8B-Instruct
+Key            | Status     |  | 
+---------------+------------+--+-
+lm_head.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/448 [00:00<?, ?it/s]Loading weights: 100%|██████████| 448/448 [00:00<00:00, 4558.24it/s]
+/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:305: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+/workspace/ardy/ardy/skeleton/base.py:72: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  neutral_joints = torch.load(pfolder / "joints.p").squeeze()
+/workspace/ardy/ardy/model/llm2vec/llm2vec_wrapper.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  encoded_text = torch.tensor(encoded_text).to(self._device)
+sparsify_token_seq: False
+Loaded model: ARDY-Core-RP-20FPS-Horizon40
+Will generate 'A person walks forward at a steady, even pace.' with 40 frames (2.0s at 20 fps)
+Using 10 denoising steps
+Using 160 history frames per autoregressive step
+  0%|          | 0/10 [00:00<?, ?it/s] 30%|███       | 3/10 [00:00<00:00, 29.26it/s]100%|██████████| 10/10 [00:00<00:00, 58.35it/s]
+Saving the npz output to /workspace/out/walk_fwd.npz
+[23:44:57] == CLIP 2/2: water_can (farming interaction, text pass)
+Using device: cuda:0
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 1681.31it/s]
+Setting up text encoder (mode=auto); first run may take a while...
+Text encoder service is unreachable, falling back to local LLM2Vec encoder. (InstantiationException: Error in call to target 'ardy.model.text_encoder_api.TextEncoderAPI':
+ConnectError('[Errno 111] Connection refused'))
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 650.68it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5410.20it/s]
+[transformers] [1mLlamaBiModel LOAD REPORT[0m from: meta-llama/Meta-Llama-3-8B-Instruct
+Key            | Status     |  | 
+---------------+------------+--+-
+lm_head.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/448 [00:00<?, ?it/s]Loading weights: 100%|██████████| 448/448 [00:00<00:00, 4612.47it/s]
+/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:305: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+/workspace/ardy/ardy/skeleton/base.py:72: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  neutral_joints = torch.load(pfolder / "joints.p").squeeze()
+/workspace/ardy/ardy/model/llm2vec/llm2vec_wrapper.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  encoded_text = torch.tensor(encoded_text).to(self._device)
+sparsify_token_seq: False
+Loaded model: ARDY-Core-RP-20FPS-Horizon40
+Will generate 'A person holds a watering can in the right hand, bends down and pours water onto the ground in front, then stands up.' with 40 frames (2.0s at 20 fps)
+Using 10 denoising steps
+Using 160 history frames per autoregressive step
+  0%|          | 0/10 [00:00<?, ?it/s] 60%|██████    | 6/10 [00:00<00:00, 55.14it/s]100%|██████████| 10/10 [00:00<00:00, 68.73it/s]
+Saving the npz output to /workspace/out/water_can.npz
+[23:49:23] == outputs
+total 192
+drwxr-xr-x 2 root root    59 Aug 19 23:49 .
+drwxr-xr-x 1 root root   177 Aug 19 23:39 ..
+-rw-r--r-- 1 root root 94680 Aug 19 23:44 walk_fwd.npz
+-rw-r--r-- 1 root root 94964 Aug 19 23:49 water_can.npz
+6742ba9d238bd000e76ed067128cf373285373b8bd6d14355023bd500ea1c2f6  walk_fwd.npz
+d30730119d34a5fb8719a951d6c2c10ccbf1676dfdef81d7a9a1cd81e9cf5498  water_can.npz
+[23:49:23] == PILOT DONE
