@@ -14,6 +14,9 @@ import numpy as np
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 RIG_GLB, CAN_GLB, NPZ, MAP_JSON, OUT = argv[:5]
+# The can is attached only for the bend/reach clip: per the diagnostic plan the
+# prop goes on AFTER the motion exists, so locomotion is judged bare-handed.
+ATTACH_CAN = (len(argv) < 6) or (argv[5].lower() not in ("0", "false", "no"))
 os.makedirs(OUT, exist_ok=True)
 
 d = np.load(NPZ, allow_pickle=True)
@@ -125,21 +128,24 @@ rig = [o for o in bpy.data.objects if o not in before and o.type == "ARMATURE"][
 rig.location.x = CHAR_X
 for o in bpy.data.objects:
     if o.type == "MESH" and o.parent == rig: pass
-before = set(bpy.data.objects)
-bpy.ops.import_scene.gltf(filepath=CAN_GLB)
-can = [o for o in bpy.data.objects if o not in before and o.type == "MESH"][0]
-OFF = {k: mathutils.Vector(v) for k, v in
-       json.load(open(CAN_GLB.replace(".glb", ".json")))["markers"].items()}
-can.parent = rig; can.parent_type = "BONE"; can.parent_bone = "prop_socket.R"
-BFP = mathutils.Matrix.Rotation(math.radians(90), 4, "X")
-for f in range(1, F + 1):
-    sc.frame_set(f)
-    dg = bpy.context.evaluated_depsgraph_get()
-    sock = rig.matrix_world @ rig.evaluated_get(dg).pose.bones["prop_socket.R"].matrix
-    can.matrix_world = sock @ BFP
-    can.keyframe_insert("location", frame=f)
-    can.rotation_mode = "QUATERNION"
-    can.keyframe_insert("rotation_quaternion", frame=f)
+can = None
+if ATTACH_CAN:
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=CAN_GLB)
+    can = [o for o in bpy.data.objects if o not in before and o.type == "MESH"][0]
+if can is not None:
+    OFF = {k: mathutils.Vector(v) for k, v in
+           json.load(open(CAN_GLB.replace(".glb", ".json")))["markers"].items()}
+    can.parent = rig; can.parent_type = "BONE"; can.parent_bone = "prop_socket.R"
+    BFP = mathutils.Matrix.Rotation(math.radians(90), 4, "X")
+    for f in range(1, F + 1):
+        sc.frame_set(f)
+        dg = bpy.context.evaluated_depsgraph_get()
+        sock = rig.matrix_world @ rig.evaluated_get(dg).pose.bones["prop_socket.R"].matrix
+        can.matrix_world = sock @ BFP
+        can.keyframe_insert("location", frame=f)
+        can.rotation_mode = "QUATERNION"
+        can.keyframe_insert("rotation_quaternion", frame=f)
 
 # --- lights + cameras
 key = bpy.data.objects.new("key", bpy.data.lights.new("key", "AREA"))

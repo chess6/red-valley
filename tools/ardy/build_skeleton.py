@@ -185,6 +185,26 @@ if frac < 0.02:
     obj.parent = rig
 print("bind: %s -> %.1f%% of vertices weighted" % (bind, 100*weighted(obj)))
 
+# ---- handedness assertion (permanent) -------------------------------------
+# A mirrored rig silently produces arms that cross the torso and a prop socket
+# on the wrong hand, and it survives every other check. Assert the convention
+# instead of trusting inspection: the character faces -Y, so anatomical right
+# is at -X, and hand.R must sit on the opposite side of the midline from hand.L.
+hr = rig.data.bones["hand.R"].head_local
+hl = rig.data.bones["hand.L"].head_local
+assert hr.x < 0.0 < hl.x, (
+    "HANDEDNESS: hand.R must be at negative X (character faces -Y, so its right "
+    "is -X) and hand.L at positive X. Got hand.R.x=%.4f hand.L.x=%.4f -- the rig "
+    "is mirrored and every .R/.L mapping will be wrong." % (hr.x, hl.x))
+fr = rig.data.bones["foot.R"].head_local
+fl = rig.data.bones["foot.L"].head_local
+assert fr.x < 0.0 < fl.x, (
+    "HANDEDNESS: foot.R/foot.L mirrored (foot.R.x=%.4f foot.L.x=%.4f)" % (fr.x, fl.x))
+sock = rig.data.bones["prop_socket.R"].head_local
+assert sock.x < 0.0, (
+    "HANDEDNESS: prop_socket.R at x=%.4f is on the character's LEFT hand" % sock.x)
+print("handedness OK: hand.R.x=%.3f  hand.L.x=%.3f  socket.x=%.3f" % (hr.x, hl.x, sock.x))
+
 deform = [b.name for b in rig.data.bones if b.use_deform]
 rest = {b.name: {"head": list(b.head_local), "tail": list(b.tail_local),
                  "parent": b.parent.name if b.parent else None,
