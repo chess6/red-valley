@@ -116,3 +116,9 @@ art/animation/ardy_pilot/derived/*.png
 # --- Evaluation output ----------------------------------------------------
 art/character/renders/
 art/character/ai_generated/**/logs/
+
+# Milestone review sheets and superseded character sources.
+# Descriptions and SHA-256 checksums live in docs/REVIEW_SHEETS.md; the images
+# and .blend files are preserved locally and in the private asset store.
+art/**/*.png
+art/character/Player_HiFi_*.blend
