@@ -94,3 +94,39 @@ discarded work. Stopped here, per the brief.
 `Defeated.fbx` (203 frames @ 30 fps) is on the same 33-bone skeleton so it is
 not usable yet, but it is a good shoulder/spine deformation stress test once a
 usable skeleton exists — a slump exercises exactly the joints under review.
+
+## Why only index chains — geometry ruled out
+
+Checked the two documented causes of Mixamo dropping finger bones, on the exact
+mesh that was uploaded:
+
+| suspected cause | measured | verdict |
+|---|---|---|
+| fused / mitten digits | 7 gaps >2.5 mm across the fingertip band, max 8.0 mm | ruled out |
+| hands crowding the body | min hand->body distance 0.1468 m; 0 verts within 10 mm | ruled out |
+| mesh damaged on return | 70,042 verts / 49,994 tris returned exactly | ruled out |
+
+`handcheck/upload_hand_*.png` show five properly separated digits, thumb
+included. The source geometry is not the problem.
+
+The result is also *symmetric and exact*: both hands received precisely an
+Index1..4 chain and nothing else. A geometry-segmentation failure would be
+expected to fail unevenly between hands — and this rig is already known to have
+fitted the two hands unevenly (right palm claims 2.6x the left's vertices), so
+the fitter clearly did treat them differently. Finger bones nevertheless came
+out identical on both sides. That pattern points at a skeleton LOD applied after
+fitting, not at a failure to find the fingers.
+
+Since 25 + 8 = 33 exactly, what came back is the No-Fingers skeleton plus a
+single index chain per hand as a terminator.
+
+### Recommendation
+
+One more auto-rig, with the Skeleton LOD dropdown confirmed to read "Standard
+Skeleton (65)" at the moment the rigger finishes, and the finger count checked
+in Mixamo's own preview before downloading. If it returns 33 bones again with
+the LOD visibly set to 65, Mixamo is not going to rig this mesh's fingers and
+the benchmark closes as negative.
+
+Do not straighten the fingers to help the fitter: posing fingers requires finger
+bones, which is the thing being sought.
