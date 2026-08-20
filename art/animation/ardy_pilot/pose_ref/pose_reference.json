@@ -1,0 +1,47 @@
+{
+  "01_start": {
+    "trunk_lean_visible_deg": 2.0,
+    "trunk_lean_spine_chain_deg": 2.89,
+    "hip_drop_m": 0.0,
+    "hand_height_m": 0.8807,
+    "hand_lateral_from_hip_m": 0.2095,
+    "hand_forward_of_hips_m": 0.0944,
+    "spout_height_m": 0.7724,
+    "spout_above_soil_m": 0.5524,
+    "spout_points_down": -0.192,
+    "foot_R_z": 0.0855,
+    "foot_L_z": 0.0855,
+    "ik_error_m": 0.00074,
+    "body_can_intersections": 0
+  },
+  "02_pour": {
+    "trunk_lean_visible_deg": 12.51,
+    "trunk_lean_spine_chain_deg": 18.05,
+    "hip_drop_m": 0.095,
+    "hand_height_m": 0.7911,
+    "hand_lateral_from_hip_m": 0.1796,
+    "hand_forward_of_hips_m": 0.3226,
+    "spout_height_m": 0.4584,
+    "spout_above_soil_m": 0.2384,
+    "spout_points_down": -0.931,
+    "foot_R_z": 0.0851,
+    "foot_L_z": 0.0851,
+    "ik_error_m": 0.00114,
+    "body_can_intersections": 0
+  },
+  "03_return": {
+    "trunk_lean_visible_deg": 4.0,
+    "trunk_lean_spine_chain_deg": 5.78,
+    "hip_drop_m": 0.01,
+    "hand_height_m": 0.8709,
+    "hand_lateral_from_hip_m": 0.2022,
+    "hand_forward_of_hips_m": 0.1347,
+    "spout_height_m": 0.7496,
+    "spout_above_soil_m": 0.5296,
+    "spout_points_down": -0.231,
+    "foot_R_z": 0.0779,
+    "foot_L_z": 0.0779,
+    "ik_error_m": 0.00089,
+    "body_can_intersections": 0
+  }
+}
