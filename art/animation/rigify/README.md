@@ -89,3 +89,71 @@ This is recorded as a finding about the accepted rig. Nothing was modified.
 
 Item 1 must be resolved before alignment; placing a chain that spans two digits
 would repeat exactly the failure that ended the custom rig.
+
+## Iteration 1 COMPLETE (2026-08-20)
+
+### Digit identification — resolved geometrically
+
+The axial plate (`hand_axial_depth_grid.png`), looking straight down the finger
+axis, separates all five digits into distinct lobes. Identity is read from
+geometry, not assumed and not taken from vertex weights.
+
+| digit | bar (mm) | nrm (mm) | tip fing (mm) |
+|---|---|---|---|
+| pinky | −54 | +7 | +2 |
+| ring | −39 | +16 | +30 |
+| middle | −20 | +22 | +41 |
+| index | +7 | +28 | +40 |
+| thumb | +30 | +36 | ≈ −20 |
+
+Bar spacing is genuinely uneven (15 / 19 / 27 mm) — the index is abducted. The
+monotonic `nrm` rise (+7, +16, +22, +28) independently confirms the ordering.
+
+### Generated rig
+
+403 bones: 71 DEF, 65 ORG, 136 MCH, 131 control. **30 deform finger bones**,
+three per digit, five digits, both hands.
+
+| check | result |
+|---|---|
+| deform finger bones | 30 / 30, L=3 R=3 per digit |
+| handedness (.R at −X) | 0 violations |
+| symmetry | 6 bones >4 mm, worst 5.9 mm |
+| mesh vertices / tris | 70,042 / 49,994 — unchanged |
+| shape keys | all 4 present, unchanged |
+| UV layers / materials | 1 / 1 — unchanged |
+
+### Faults found and fixed during this iteration
+
+- **Face-bone filter deleted both forearms.** `"forearm"` contains `"ear"`, so a
+  keyword filter removed them. Face bones are now defined as the descendants of
+  `spine.006`.
+- **World-space mirroring is wrong for the left hand.** The left hand is not the
+  X-mirror of the right; mirroring put its finger chains outside the mesh. Each
+  hand now gets its own measured frame and the digit table is applied in that
+  frame with `bar` negated.
+- **`hand.L` in the accepted rig has a 0.322 m tail** pointing into empty space.
+  Inheriting it produced a 32 cm "hand" bone protruding from the character. Both
+  hand bones are now derived from their own middle-finger knuckle: 0.0469 m (R)
+  and 0.0494 m (L).
+- **Finger chains overshot the fingertips** by 7–14 mm. Per-digit pullback added.
+
+### Cautions for the next stage
+
+1. **The inside/outside ray-parity test is unreliable on this mesh.** It reports
+   11 of 15 finger-bone heads outside on *both* hands while the overlay plainly
+   shows the chains inside the digits. The mesh is Rodin output and not
+   watertight, so parity counting is meaningless here. Do not use it as a gate;
+   trust the overlays.
+2. **Residual symmetry offset up to 5.9 mm** on `forearm.R`, `hand.R` and the
+   four `palm.*.R` bones. This traces to genuine mesh asymmetry — the right hand
+   carries 1076 vertices against the left's 972 — not to placement.
+3. **Thumb chain is the least certain digit.** Its position is clear but its
+   metacarpal base blends into the palm, so the base station is an estimate.
+4. **`hand.R`'s proxy protrudes through the palm** in the overlay. That is a
+   6 mm visualisation cylinder in a thin palm, not necessarily a misplaced bone,
+   but it should be confirmed during binding.
+
+Recorded for the binding stage: the accepted rig weights much of the thumb and
+thenar mass to `forearm.R` (254 of 549 vertices standing proud of the palm).
+Correct this during welded-proxy binding. It did not block metarig placement.

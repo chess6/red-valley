@@ -189,6 +189,28 @@ cam.matrix_world = (_M.Translation(centre - viewdir * 0.5)
 sc.render.filepath = os.path.join(OUT, "hand_edge_depth.png")
 bpy.ops.render.render(write_still=True)
 print("RENDERED", sc.render.filepath)
+# axial plate: looking straight down the finger axis from the fingertip side.
+# The curl runs along the view direction here, so it stops occluding and each
+# digit reads as its own cross-section.
+dm3 = depth_material(list(fing), list(centre), -0.050, 0.050)
+obj.data.materials.clear(); obj.data.materials.append(dm3)
+ax_view, ax_right, ax_up = -fing, bar, nrm
+R = [ax_right.normalized(), ax_up.normalized(), (-ax_view).normalized()]
+cam.matrix_world = (_M.Translation(centre - ax_view * 0.5)
+                    @ _M((R[0], R[1], R[2])).transposed().to_4x4())
+sc.render.filepath = os.path.join(OUT, "hand_axial_depth.png")
+bpy.ops.render.render(write_still=True)
+print("RENDERED", sc.render.filepath)
+mapping["axial_depth"] = {
+    "centre_world": [round(x, 6) for x in centre],
+    "right": [round(x, 6) for x in bar.normalized()],
+    "up": [round(x, 6) for x in nrm.normalized()],
+    "ortho_scale_m": SCALE, "resolution": RES,
+    "pixel_to_world": "P = centre + right*((px/RES-0.5)*S) + up*((0.5-py/RES)*S)",
+    "encoding": "colour = fing offset from centre; blue=-50mm, green=0, yellow=+50mm",
+    "note": "viewed from the fingertip side, looking along -fing",
+}
+
 mapping["edge_depth"] = dict(mapping["edge"])
 mapping["edge_depth"]["encoding"] = ("colour = bar offset from centre; blue=-45mm, "
                                      "green=0mm, yellow=+45mm, linear")
