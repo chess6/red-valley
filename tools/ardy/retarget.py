@@ -16,6 +16,13 @@ import numpy as np
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 RIG_GLB, NPZ, MAP_JSON, OUT = argv[0], argv[1], argv[2], argv[3]
+# Thumb-based roll is a PROP feature: it pins the hand so a socketed tool has a
+# real orientation. Applied to locomotion it forces the palms into whatever
+# roll ARDY's thumb happens to imply, which reads as flared hands. Off unless
+# the clip actually holds something.
+PROP_CLIP = (len(argv) > 4) and (argv[4].lower() in ("1", "yes", "true", "prop"))
+SPINE_DEG = float(argv[5]) if len(argv) > 5 else 0.0
+NECK_DEG  = float(argv[6]) if len(argv) > 6 else 0.0
 os.makedirs(OUT, exist_ok=True)
 CLIP = os.path.splitext(os.path.basename(NPZ))[0]
 
@@ -38,6 +45,7 @@ bpy.ops.import_scene.gltf(filepath=RIG_GLB)
 rig = [o for o in bpy.data.objects if o.type == "ARMATURE"][0]
 bpy.context.view_layer.objects.active = rig
 bpy.context.scene.render.fps = fps
+bpy.context.scene.render.fps_base = 1.0
 bpy.context.scene.frame_start = 1
 bpy.context.scene.frame_end = F
 
@@ -75,8 +83,15 @@ TWIST_REF = {"hand.R": "RightHandThumb1", "hand.L": "LeftHandThumb1"}
 # foot contacts -- are untouched. Capped deliberately: this shapes posture, it
 # does not author motion.
 SPINE_CORR_CAP = 8.0
-SPINE_CORR = {"spine": +6.0, "chest": -6.0}
-assert all(abs(v) <= SPINE_CORR_CAP for v in SPINE_CORR.values())
+assert abs(SPINE_DEG) <= SPINE_CORR_CAP, "spine correction exceeds the cap"
+# With the rest chain aligned to the mesh, the residual head-forward excess is
+# in ARDY's NECK, not the trunk: the deformed mesh reads ~+31 deg against the
+# mesh's own +18.6 deg baseline. Correcting the neck is smaller and closer to
+# the cause than pitching the whole spine.
+SPINE_CORR = {}
+if SPINE_DEG: SPINE_CORR.update({"spine": +SPINE_DEG, "chest": -SPINE_DEG})
+if NECK_DEG:  SPINE_CORR["neck"] = NECK_DEG
+assert abs(NECK_DEG) <= SPINE_CORR_CAP, "neck correction exceeds the cap"
 
 def depth(name):
     n, dep = rig.pose.bones[name], 0
@@ -143,7 +158,7 @@ for f in range(F):
     for bone in ORDER:
         a, b = CHAIN[bone]
         v = mathutils.Vector((J[f, SRC_IDX[b]] - J[f, SRC_IDX[a]]).tolist())
-        ref = TWIST_REF.get(bone)
+        ref = TWIST_REF.get(bone) if PROP_CLIP else None
         if ref and ref in SRC_IDX:
             t = mathutils.Vector((J[f, SRC_IDX[ref]] - J[f, SRC_IDX[a]]).tolist())
             set_frame(rig.pose.bones[bone], C @ v, C @ t); _used["twist"] = True
@@ -154,9 +169,11 @@ for f in range(F):
     for bone in ORDER:
         rig.pose.bones[bone].keyframe_insert(data_path="rotation_quaternion", frame=f + 1)
 bpy.ops.object.mode_set(mode="OBJECT")
-assert _used["twist"] and _used["spine"], (
-    "retarget wired wrong: twist=%s spine=%s -- helpers defined but not called"
-    % (_used["twist"], _used["spine"]))
+assert _used["twist"] == PROP_CLIP, (
+    "twist wiring wrong: PROP_CLIP=%s but twist used=%s" % (PROP_CLIP, _used["twist"]))
+assert _used["spine"] == bool(SPINE_CORR), (
+    "spine wiring wrong: SPINE_DEG=%s but correction used=%s" % (SPINE_DEG, _used["spine"]))
+print("PROP_CLIP=%s  SPINE_DEG=%s" % (PROP_CLIP, SPINE_DEG))
 
 if rig.animation_data and rig.animation_data.action:
     rig.animation_data.action.name = CLIP
