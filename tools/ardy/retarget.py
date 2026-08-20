@@ -63,6 +63,10 @@ CHAIN = {
  "foot.L": ("LeftFoot", "LeftToeBase"),
 }
 
+# Bones whose ROLL matters: the thumb pins the hand's twist, which is what
+# orients anything attached to prop_socket.R.
+TWIST_REF = {"hand.R": "RightHandThumb1", "hand.L": "LeftHandThumb1"}
+
 def depth(name):
     n, dep = rig.pose.bones[name], 0
     while n.parent: n, dep = n.parent, dep + 1
@@ -77,6 +81,27 @@ for pb in rig.pose.bones:
 h_src = float(J[:, SRC_IDX["Head"], 1].max() - J[:, SRC_IDX["RightToeBase"], 1].min())
 h_dst = 1.9005
 scale = h_dst / h_src
+
+def set_frame(pb, y_dir, ref_dir):
+    """Set a bone's full orientation from two vectors.
+
+    Aiming alone fixes only the bone's direction and leaves roll about that
+    axis undetermined -- which is why the watering can's spout pointed in an
+    arbitrary direction. The hand's twist is pinned here using the thumb joint
+    as a reference, so anything socketed to the hand inherits a real
+    orientation."""
+    y = mathutils.Vector(y_dir).normalized()
+    r = mathutils.Vector(ref_dir)
+    z = r - r.dot(y) * y
+    if y.length < 1e-6 or z.length < 1e-6:
+        return aim(pb, y_dir)
+    z.normalize()
+    x = y.cross(z)
+    m = pb.matrix.copy()
+    M = mathutils.Matrix((x, y, z)).transposed().to_4x4()
+    M.translation = m.to_translation()
+    pb.matrix = M
+    bpy.context.view_layer.update()
 
 def aim(pb, direction):
     """Rotate about the bone's own head so its axis follows a world direction."""

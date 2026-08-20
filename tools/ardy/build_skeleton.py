@@ -50,7 +50,12 @@ def arm_chain(sign):
         out.append((t, float(far[:, 0].mean()), float(far[:, 1].mean())))
     return out
 
-cr, cl = arm_chain(1), arm_chain(-1)
+# The character faces -Y, so its anatomical RIGHT is at -X (right = forward x up
+# = (-Y) x (+Z) = -X). Verified by rendering markers on hand.R/hand.L: with .R at
+# +X the red marker appeared on the viewer's right, i.e. the character's LEFT.
+# ARDY agrees -- its "Right*" joints are also at negative X.
+SR, SL = -1.0, +1.0        # sign of X for .R and .L
+cr, cl = arm_chain(SR), arm_chain(SL)
 def at(chain, t, fb):
     if not chain: return fb
     c = min(chain, key=lambda c: abs(c[0]-t))
@@ -69,18 +74,18 @@ J = {
   "hips": (0.0, 0.0, Z(0.52)), "spine": (0.0, 0.0, Z(0.62)),
   "chest": (0.0, 0.0, Z(0.72)), "neck": (0.0, 0.0, Z(0.845)),
   "head": (0.0, 0.0, Z(0.90)), "head_end": (0.0, 0.0, Z(1.0)),
-  "clavicle.R": (hw*0.30, 0.0, Z(0.80)), "clavicle.L": (-hw*0.30, 0.0, Z(0.80)),
-  "shoulder.R": (hw*0.98, 0.0, Z(SH)),   "shoulder.L": (-hw*0.98, 0.0, Z(SH)),
-  "elbow.R": at(cr, 0.63, (hw*1.15, 0.0, Z(0.63))),
-  "elbow.L": at(cl, 0.63, (-hw*1.15, 0.0, Z(0.63))),
-  "wrist.R": at(cr, 0.47, (hw*1.25, 0.0, Z(0.47))),
-  "wrist.L": at(cl, 0.47, (-hw*1.25, 0.0, Z(0.47))),
+  "clavicle.R": (SR*hw*0.30, 0.0, Z(0.80)), "clavicle.L": (SL*hw*0.30, 0.0, Z(0.80)),
+  "shoulder.R": (SR*hw*0.98, 0.0, Z(SH)),   "shoulder.L": (SL*hw*0.98, 0.0, Z(SH)),
+  "elbow.R": at(cr, 0.63, (SR*hw*1.15, 0.0, Z(0.63))),
+  "elbow.L": at(cl, 0.63, (SL*hw*1.15, 0.0, Z(0.63))),
+  "wrist.R": at(cr, 0.47, (SR*hw*1.25, 0.0, Z(0.47))),
+  "wrist.L": at(cl, 0.47, (SL*hw*1.25, 0.0, Z(0.47))),
   "hand_end.R": None, "hand_end.L": None,
-  "hip.R": (legx*0.55, 0.0, Z(0.50)),  "hip.L": (-legx*0.55, 0.0, Z(0.50)),
-  "knee.R": (legx*0.80, 0.0, Z(0.28)), "knee.L": (-legx*0.80, 0.0, Z(0.28)),
-  "ankle.R": (ankx, 0.0, Z(0.045)),    "ankle.L": (-ankx, 0.0, Z(0.045)),
-  "toe.R": (ankx, -0.09*H, Z(0.012)),  "toe.L": (-ankx, -0.09*H, Z(0.012)),
-  "toe_end.R": (ankx, -0.14*H, Z(0.010)), "toe_end.L": (-ankx, -0.14*H, Z(0.010)),
+  "hip.R": (SR*legx*0.55, 0.0, Z(0.50)),  "hip.L": (SL*legx*0.55, 0.0, Z(0.50)),
+  "knee.R": (SR*legx*0.80, 0.0, Z(0.28)), "knee.L": (SL*legx*0.80, 0.0, Z(0.28)),
+  "ankle.R": (SR*ankx, 0.0, Z(0.045)),    "ankle.L": (SL*ankx, 0.0, Z(0.045)),
+  "toe.R": (SR*ankx, -0.09*H, Z(0.012)),  "toe.L": (SL*ankx, -0.09*H, Z(0.012)),
+  "toe_end.R": (SR*ankx, -0.14*H, Z(0.010)), "toe_end.L": (SL*ankx, -0.14*H, Z(0.010)),
 }
 for s in ("R", "L"):
     w = mathutils.Vector(J["wrist.%s" % s]); e = mathutils.Vector(J["elbow.%s" % s])
