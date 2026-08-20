@@ -69,19 +69,60 @@ def at(chain, t, fb):
     return (c[1], c[2], zmin + c[0]*H)
 
 def Z(r): return zmin + r*H
+
+def _front_mid_y(lo, hi, xlim):
+    """Forward/back midpoint of a height band, with hair excluded.
+
+    Uses only the front 60% in Y: the character has a ponytail, and including
+    it drags a neck-band centroid ~9 cm backwards. Cross-section centroids are
+    NOT valid spine landmarks either -- the bust pushes a chest centroid
+    forward -- so this is used only for the neck/head measurement below.
+    """
+    b = V[(V[:, 2] >= zmin + lo*H) & (V[:, 2] < zmin + hi*H)]
+    b = b[np.abs(b[:, 0]) < xlim]
+    if len(b) < 30:
+        return 0.0, zmin + (lo+hi)/2*H
+    y = b[:, 1]
+    front = y[y <= np.percentile(y, 60)]
+    return float((front.min() + front.max()) / 2), float(b[:, 2].mean())
+
+# The Rodin mesh carries a forward-tilted head in its own bind pose. A vertical
+# neck bone inside a tilted head means the bind pose is wrong before a frame
+# plays, and every animated rotation compounds on it. Measure the tilt and let
+# the neck/head bones follow the mesh. Hips/spine/chest stay on the vertical
+# axis: no reliable spine landmark exists from cross-sections.
+_ny, _nz = _front_mid_y(0.83, 0.86, 0.035*H)
+_hy, _hz = _front_mid_y(0.90, 0.95, 0.055*H)
+NECK_TILT = math.atan2(-(_hy - _ny), (_hz - _nz))
+NECK_TILT = max(-math.radians(30), min(math.radians(30), NECK_TILT))   # capped
+print("mesh neck->head tilt %.2f deg -- neck/head bones follow it"
+      % math.degrees(NECK_TILT))
+
+def _fwd(z_from, z_to):
+    """forward (-Y) offset for a segment rising z_from -> z_to at NECK_TILT"""
+    return -(z_to - z_from) * math.tan(NECK_TILT)
+
+_Z_NECK, _Z_HEAD, _Z_TOP = Z(0.845), Z(0.90), Z(1.0)
+Y_NECK = 0.0
+Y_HEAD = Y_NECK + _fwd(_Z_NECK, _Z_HEAD)
+Y_TOP  = Y_HEAD + _fwd(_Z_HEAD, _Z_TOP)
+
 SH = 0.82
-SHOULDER_INSET = 0.80          # joint sits inboard of the skin surface
+SHOULDER_INSET = 0.80          # shoulder joint sits inboard of the skin surface
 hw = halfwidth(SH - 0.02) or 0.10*H
 leg = band(0.35, 0.40)
 legx = float(np.percentile(np.abs(leg[:, 0]), 60)) if len(leg) else 0.09*H
 ankb = band(0.03, 0.07)
 ankx = float(np.percentile(np.abs(ankb[:, 0]), 60)) if len(ankb) else legx
 
+# The character faces -Y, so its anatomical RIGHT is at -X. Asserted below.
+SR, SL = -1.0, +1.0
+
 J = {
   "root": (0.0, 0.0, zmin),
   "hips": (0.0, 0.0, Z(0.52)), "spine": (0.0, 0.0, Z(0.62)),
-  "chest": (0.0, 0.0, Z(0.72)), "neck": (0.0, 0.0, Z(0.845)),
-  "head": (0.0, 0.0, Z(0.90)), "head_end": (0.0, 0.0, Z(1.0)),
+  "chest": (0.0, 0.0, Z(0.72)), "neck": (0.0, Y_NECK, Z(0.845)),
+  "head": (0.0, Y_HEAD, Z(0.90)), "head_end": (0.0, Y_TOP, Z(1.0)),
   "clavicle.R": (SR*hw*0.22, 0.0, Z(0.80)), "clavicle.L": (SL*hw*0.22, 0.0, Z(0.80)),
   "shoulder.R": (SR*hw*SHOULDER_INSET, 0.0, Z(SH)),   "shoulder.L": (SL*hw*SHOULDER_INSET, 0.0, Z(SH)),
   "elbow.R": at(cr, 0.63, (SR*hw*1.15, 0.0, Z(0.63))),
@@ -191,7 +232,25 @@ if frac < 0.02:
     if not any(m.type == "ARMATURE" for m in obj.modifiers):
         md = obj.modifiers.new("Armature", "ARMATURE"); md.object = rig
     obj.parent = rig
-print("bind: %s -> %.1f%% of vertices weighted" % (bind, 100*weighted(obj)))
+# Any vertex left unweighted becomes dead geometry: Blender's glTF exporter
+# parents it to an invented "neutral_bone" that carries no animation, so it
+# never deforms. 0.7% of this mesh (~411 head vertices) landed there. Give the
+# stragglers their nearest weighted neighbour's weights.
+from mathutils import kdtree as _kdt
+_weighted = [v for v in obj.data.vertices if any(g.weight > 0.001 for g in v.groups)]
+_strays = [v for v in obj.data.vertices if not any(g.weight > 0.001 for g in v.groups)]
+if _strays and _weighted:
+    _kd = _kdt.KDTree(len(_weighted))
+    for _i, _v in enumerate(_weighted): _kd.insert(_v.co, _i)
+    _kd.balance()
+    _gn = {g.index: g.name for g in obj.vertex_groups}
+    for _v in _strays:
+        _, _j, _ = _kd.find(_v.co)
+        for _g in _weighted[_j].groups:
+            obj.vertex_groups[_gn[_g.group]].add([_v.index], _g.weight, "REPLACE")
+    print("filled %d unweighted vertices from nearest neighbours" % len(_strays))
+assert weighted(obj) > 0.999, "unweighted vertices remain: %.3f%%" % (100*(1-weighted(obj)))
+print("bind: %s -> %.2f%% of vertices weighted" % (bind, 100*weighted(obj)))
 
 # ---- handedness assertion (permanent) -------------------------------------
 # A mirrored rig silently produces arms that cross the torso and a prop socket
@@ -211,6 +270,9 @@ assert fr.x < 0.0 < fl.x, (
 sock = rig.data.bones["prop_socket.R"].head_local
 assert sock.x < 0.0, (
     "HANDEDNESS: prop_socket.R at x=%.4f is on the character's LEFT hand" % sock.x)
+for _b in ("spine","chest","neck","head"):
+    _bn = rig.data.bones[_b]; _v = _bn.tail_local - _bn.head_local
+    print("  rest pitch %-6s %+6.2f deg" % (_b, math.degrees(math.atan2(-_v.y, _v.z))))
 print("handedness OK: hand.R.x=%.3f  hand.L.x=%.3f  socket.x=%.3f" % (hr.x, hl.x, sock.x))
 
 deform = [b.name for b in rig.data.bones if b.use_deform]
