@@ -79,3 +79,40 @@ tools/triposr_eval/*
 # ARDY motion pilot (env + clone; never shipped)
 tools/ardy_eval/*
 !tools/ardy_eval/*.py
+
+# --- Generated art/animation output --------------------------------------
+# Everything here is reproducible from tools/ardy/*.py plus the accepted
+# master, and it was dominating the repository: 346 MB of 373 MB tracked
+# binaries. Files stay on disk; they are simply not versioned. Masters and
+# working sources are mirrored to a private store outside Git.
+art/animation/**/*.blend
+art/animation/**/*.blend1
+art/animation/**/*.mp4
+art/animation/**/*.fbx
+art/animation/**/*.log
+art/animation/**/renders/
+art/animation/**/closeups/
+art/animation/**/handcheck/
+art/animation/**/handedness/
+art/animation/**/overlays/
+art/animation/**/deform/
+art/animation/**/hands/
+art/animation/**/fusion/
+art/animation/**/grip/
+art/animation/rigify/*.png
+art/animation/ardy_pilot/retargeted/
+art/animation/ardy_pilot/retargeted8/
+art/animation/ardy_pilot/rig/
+art/animation/ardy_pilot/derived/*.glb
+art/animation/ardy_pilot/derived/*.png
+
+# Kept deliberately: paid ARDY clips, the prop attachment contract, the
+# accepted baseline, and all provenance/docs.
+!art/animation/ardy_pilot/derived/rv_player_proportioned.glb
+!art/animation/**/*.json
+!art/animation/**/*.md
+!art/animation/**/sha256sums
+
+# --- Evaluation output ----------------------------------------------------
+art/character/renders/
+art/character/ai_generated/**/logs/
