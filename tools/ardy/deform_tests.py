@@ -67,12 +67,13 @@ def handfocus():
     return (rig.matrix_world @ PB["DEF-hand.R"].matrix).to_translation()
 
 FING = ["f_index", "f_middle", "f_ring", "f_pinky"]
+# +X curls on the right hand; -X would hyperextend it (see matched_hands.py).
 HAND_TESTS = {
     "hand_rest":       lambda: None,
-    "hand_curl":       lambda: [rot("%s.01_master.R" % f, x=-55) for f in FING],
-    "hand_fist":       lambda: ([rot("%s.01_master.R" % f, x=-85) for f in FING]
-                                + [rot("thumb.01_master.R", x=-40)]),
-    "hand_thumb_opp":  lambda: rot("thumb.01_master.R", x=-55, z=-25),
+    "hand_curl":       lambda: [rot("%s.01_master.R" % f, x=55) for f in FING],
+    "hand_fist":       lambda: ([rot("%s.01_master.R" % f, x=85) for f in FING]
+                                + [rot("thumb.01_master.R", x=40)]),
+    "hand_thumb_opp":  lambda: rot("thumb.01_master.R", x=55, z=-25),
     "hand_wrist_flex": lambda: rot("hand_fk.R", x=-45),
     "hand_wrist_ext":  lambda: rot("hand_fk.R", x=45),
 }

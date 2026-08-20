@@ -40,11 +40,15 @@ def rot(n, **kw):
                                 math.radians(kw.get("y", 0)),
                                 math.radians(kw.get("z", 0)))
 
+# Rigify mirrors the finger controls, so a curl is +X on the right and -X on the
+# left. Using one sign for both hands hyperextends one of them -- every earlier
+# fist and curl render of the RIGHT hand was showing it bent backwards.
+SGN = {"R": +1.0, "L": -1.0}
 POSES = {
     "relaxed": lambda s: None,
-    "curl":    lambda s: [rot("%s.01_master.%s" % (f, s), x=-55) for f in FING],
-    "fist":    lambda s: ([rot("%s.01_master.%s" % (f, s), x=-88) for f in FING]
-                          + [rot("thumb.01_master.%s" % s, x=-45, z=-20)]),
+    "curl":    lambda s: [rot("%s.01_master.%s" % (f, s), x=55 * SGN[s]) for f in FING],
+    "fist":    lambda s: ([rot("%s.01_master.%s" % (f, s), x=88 * SGN[s]) for f in FING]
+                          + [rot("thumb.01_master.%s" % s, x=45 * SGN[s], z=-20 * SGN[s])]),
 }
 for tag, fn in POSES.items():
     for s in ("R", "L"):

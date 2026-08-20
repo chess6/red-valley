@@ -163,3 +163,42 @@ The blocker is the hand geometry, so the remedy is an asset decision, not a
 rigging one. Either the hands are repaired so the five digits are separate
 surfaces, or the character ships with a hand that cannot form a true fist and
 the watering can is held with a simplified grip. That call is the user's.
+
+## CORRECTION: the fingers were being curled backwards (2026-08-20)
+
+Caught by the user. Every deformation render I judged had the **right hand
+hyperextending**, not curling.
+
+Rigify mirrors the finger controls, so a curl is **+X on the right hand and −X
+on the left**. I applied the same sign to both hands, so one of them always bent
+backwards. Measured tip travel along the palm normal:
+
+| master rotation | right | left |
+|---|---|---|
+| x = −88° (what I used) | **−60.5 mm, hyperextends** | +33.0 mm, curls |
+| x = +88° | +17.4 mm, curls | **−49.7 mm, hyperextends** |
+
+That `+nrm` is the palm side is confirmed independently: at rest the fingertips
+sit +24 mm along `nrm` from their own bases (a normal relaxed curl), and the
+thumb mass sits +37 mm on the same side, which is where an opposing thumb
+belongs.
+
+### What this invalidates
+
+Every right-hand curl and fist render before this, including the ones behind
+"one digit stays extended in the fist". That evidence was a backwards hand and
+cannot support any conclusion. `hands/*.png` are re-rendered with per-hand signs
+and the right fist now closes properly.
+
+### What still stands
+
+The pinky weight measurements are pose-independent and unaffected:
+`DEF-f_pinky.*` carries zero weight on both hands, and ring is weak at 83 / 112.
+The topology finding also stands: the region never splits into five components.
+
+### What must be re-examined
+
+The INCONCLUSIVE verdict was reached partly on visual evidence that is now known
+to be wrong. The weight and topology findings still support it, but the visual
+half of the case needs redoing against correctly-curled renders before that
+verdict should be relied on.
