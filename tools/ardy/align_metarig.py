@@ -29,8 +29,8 @@ MAP = json.load(open("art/animation/rigify/hand_ortho_mapping.json"))
 # index is abducted -- and the monotonic nrm rise (+7,+16,+22,+28) confirms the
 # ordering pinky -> ring -> middle -> index.
 DIGITS = {
-    "f_pinky":  dict(base=(-54, -6, -12), tip=(-54,  +7,  +2)),
-    "f_ring":   dict(base=(-41, -4, -11), tip=(-39, +16, +30)),
+    "f_pinky":  dict(base=(-56, -14, -26), tip=(-53, +12,  +4)),
+    "f_ring":   dict(base=(-43, -10, -20), tip=(-39, +16, +30)),
     "f_middle": dict(base=(-22, -2, -10), tip=(-20, +22, +41)),
     "f_index":  dict(base=( +2,  0, -10), tip=( +7, +28, +40)),
     "thumb":    dict(base=(+20, +20, -38), tip=(+34, +42, -14)),
@@ -180,8 +180,10 @@ MIDKNUCKLE = {}
 ORDER = ["f_index", "f_middle", "f_ring", "f_pinky", "thumb"]
 # The tips read a little past the actual fingertips, so the chains overshot the
 # surface by 7-14 mm. Pull each tip back along its own chain.
-PULLBACK = {"thumb": 0.013, "f_pinky": 0.012, "f_ring": 0.010,
-            "f_index": 0.008, "f_middle": 0.007}
+# Fraction of the chord, not an absolute distance. A fixed 12 mm pullback on the
+# pinky's ~19 mm chord left a 7.6 mm chain that owned zero vertices.
+PULLBACK_FRAC = 0.14
+PULLBACK_MAX = 0.010
 for dname in ORDER:
     d = DIGITS[dname]
     cf, cn = ((THUMB_CURL_FING, THUMB_CURL_NRM) if dname == "thumb"
@@ -189,12 +191,16 @@ for dname in ORDER:
     for s in ("R", "L"):
         cen, br, nr, fg = FRAME[s]
         b0, b3 = hp(d["base"], s), hp(d["tip"], s)
-        b3 = b3 - (b3 - b0).normalized() * PULLBACK[dname]
+        chord = (b3 - b0).length
+        b3 = b3 - (b3 - b0).normalized() * min(PULLBACK_MAX, chord * PULLBACK_FRAC)
         ctrl = (b0 + b3) * 0.5 + fg * cf + nr * cn
         pts = [b0 * (1 - t) ** 2 + ctrl * 2 * (1 - t) * t + b3 * t * t
                for t in (0.0, 1 / 3.0, 2 / 3.0, 1.0)]
         for i in range(3):
             place("%s.%02d.%s" % (dname, i + 1, s), pts[i], pts[i + 1])
+        if s == "R":
+            print("  %-9s chain length %.4f m (3 bones)" % (
+                dname, sum((pts[i + 1] - pts[i]).length for i in range(3))))
         pi = {"f_index": "palm.01", "f_middle": "palm.02",
               "f_ring": "palm.03", "f_pinky": "palm.04"}.get(dname)
         if pi:
