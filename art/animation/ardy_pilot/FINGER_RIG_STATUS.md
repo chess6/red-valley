@@ -1,38 +1,61 @@
-# Local finger rig — built, not yet converged
+# Homemade finger rig — ABANDONED (2026-08-19)
 
-`tools/ardy/add_fingers.py` extends the accepted rig into
-`derived/rv_player_fingers.glb`. The master and `rv_player_proportioned.glb`
-are unchanged.
+Three iterations. Stopped permanently by instruction. Do not attempt a fourth.
 
-## What exists
+## Final state
 
-**53 bones** (23 original + 30 new). Symmetric: three deform bones per digit,
-five digits per hand, parented under `hand.R` / `hand.L`. No existing body bone
-was moved, and only weight already sitting on `hand.R` / `hand.L` was
-redistributed, so no non-hand weight changed.
+`tools/ardy/add_fingers.py` builds a symmetric 53-bone rig (23 original + 30
+new): three deform bones per digit, five digits per hand, under `hand.R`/`.L`.
+No body bone was moved and only weight already on `hand.R`/`hand.L` was
+redistributed. The bone *structure* is correct. The *weights* are not.
 
-All 30 digit bones carry weight in the exported file: 670 vertices are dominated
-by a digit bone and 1976 carry some digit weight.
+## Gate results — all four fail
 
-## What has not converged
+| gate | result |
+|---|---|
+| every digit controlled base to tip | FAIL — ownership reaches only the distal tips |
+| rest-hand geometry unchanged | pass — weights do not move rest vertices |
+| left/right weighting symmetric | FAIL — right middle 103 verts vs left middle 30; right thumb 9 vs left thumb 47 |
+| no neighbouring-finger contamination | FAIL — `final_weights_outer.png` shows blended ownership across adjacent digits |
 
-Weight capture reaches only the distal part of each digit. The rest-hand colour
-pass shows the fingertips owned by their chains and the finger bodies still on
-`hand.R`/`hand.L` (729 / 646 vertices). The likely cause is the 0.013 m capture
-radius, which suits the slim distal phalanges but not the thicker proximal ones.
+The grip was not attempted: the gates gate it.
 
-The grip pose was not attempted — the two-iteration limit was spent on the rig.
+## Root cause
 
-## Approaches that failed, so they are not retried
+Reliable automatic digit segmentation is not achievable on this mesh. The
+finger geometry is coarser than the gaps between digits, so every automatic
+method tried produced plausible numbers and wrong geometry:
 
-- **Mesh connectivity segmentation.** The GLB's UV splits fragment the hand;
-  the largest component above the knuckle was 87 of ~500 vertices.
-- **Spatial clustering (DBSCAN).** Finger mesh spacing exceeds the inter-digit
-  gap, so 4 mm eps returns 107 singletons and larger eps merges digits.
-- **Tip-band gap splitting.** Merges pairs — produced 94- and 92-vertex
-  "digits", and a thumb measuring 0.082 m on one hand and 0.0144 m on the other.
-- **Straight knuckle-to-tip chains.** The rest fingers are curled, so a straight
-  chain passes through air and captures only the tips.
+- **Mesh connectivity** — GLB UV splits fragment the hand; largest component
+  above the knuckle was 87 of ~500 vertices.
+- **DBSCAN** — vertex spacing exceeds the inter-digit gap; 4 mm eps returns 107
+  singletons, larger eps merges digits.
+- **Tip-band gap splitting** — merges pairs (94- and 92-vertex "digits"), and
+  gave a thumb of 0.082 m on one hand and 0.0144 m on the other.
+- **Straight knuckle-to-tip chains** — the rest fingers are curled, so a
+  straight chain passes through air and captures only tips.
+- **Tube tracking + adaptive per-cross-section radius** (this iteration) —
+  follows the curl, but seeds from tip clusters that are themselves unreliable,
+  so the right thumb collapsed to 9 vertices.
 
-What currently works is tracking each digit as a tube from its tip, re-centring
-on the local cross-section at each step, which follows the curl.
+Every one of these failed *visually* while producing acceptable-looking counts.
+That pattern is the finding: capture counts cannot validate this work.
+
+## Recommended next step: a human places the bones once
+
+The blocker is automatic segmentation, not rigging. Anything that has a person
+position finger bones once removes it entirely.
+
+1. **Rigify** — free, local, already ships with Blender 5.1. Its human metarig
+   has exactly the needed chains, thumb included. A person aligns the metarig
+   fingers to the mesh once, then generates. Note: Rigify's heat-map binding has
+   already failed on this mesh's UV-split surfaces earlier in this project; the
+   welded-proxy weight-transfer built here is the known workaround. **Best fit:
+   free, offline, no upload, no licence question.**
+2. **Auto-Rig Pro** — paid Blender addon (~$40), local. Smart finger detection
+   and voxel-based binding, materially better than Rigify at this specific task.
+   Requires spend approval.
+3. **AccuRIG** (Reallusion) — free, full 5-digit hands, but a Windows desktop
+   app; needs Windows or Wine.
+
+Mixamo is EVALUATED-NEGATIVE — see `art/animation/mixamo_bench/README.md`.
