@@ -130,3 +130,27 @@ the benchmark closes as negative.
 
 Do not straighten the fingers to help the fitter: posing fingers requires finger
 bones, which is the thing being sought.
+
+## VERDICT: EVALUATED-NEGATIVE (2026-08-19)
+
+Two independent auto-rigs, both returning 33 bones with no thumb:
+
+| run | file | sha256 | bones | thumb |
+|---|---|---|---|---|
+| 1 | T-Pose.fbx | `68c06741…6ec2c81f` | 33 | none |
+| 2 | T-Pose_run2.fbx | `f7d18f5a…8a3dbee9` | 33 | none |
+
+Run 2 returned *identical* finger weighting to run 1 — 1840 index-dominated
+vertices on the left, 972 on the right, in both runs — while the palm asymmetry
+persisted (2.56x, then 2.64x). Mixamo produces this exact skeleton for this mesh
+regardless of marker placement.
+
+`GrabRifle_run2.fbx`, a gripping animation, confirms it from the other side:
+`RightHandIndex1` rotates 23.5 deg over the clip while `Index2` and `Index3`
+move 3.9 and 2.1 deg. There is nothing else to curl.
+
+Geometry was ruled out first: digits separated (gaps to 8.0 mm), hands 0.1468 m
+clear of the body, mesh returned with exact vertex and triangle counts.
+
+**No further Mixamo uploads or re-rigs.** Returned files preserved under
+`rigged/`.
