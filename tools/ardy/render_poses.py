@@ -61,7 +61,9 @@ def look(az_deg, dist=4.0, height=1.05):
     d = (FOCUS - cam.location)
     cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
 
-VIEWS = [("front", 0.0), ("side", 90.0), ("threequarter", 38.0)]
+# The can is in the RIGHT hand, so a side camera at +90 puts the body between
+# the lens and the prop. Shoot the true side from her right.
+VIEWS = [("front", 0.0), ("side", -90.0), ("threequarter", 38.0)]
 POSES = ["01_start", "02_pour", "03_return"]
 for i, pose in enumerate(POSES):
     sc.frame_set(i + 1)
