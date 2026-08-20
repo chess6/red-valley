@@ -106,3 +106,60 @@ surface's own topology separate all five digits, which it already does cleanly
 for the other four.
 
 Not attempted here rather than guessed at, per the standing instruction.
+
+## FINAL: automated Rigify hand binding is INCONCLUSIVE (2026-08-20)
+
+### The geometry-only selection worked
+
+Replacing weight-based selection with geometry alone was the right fix for the
+circularity. A wrist plane perpendicular to the forearm axis, a flood fill
+through mesh adjacency from a palm seed, and a 0.16 m bound used only to reject
+the thigh captured **299 (R) / 322 (L) welded vertices — the complete hand**,
+with no vertex-weight test anywhere.
+
+### But the digits still do not separate
+
+With a correct region, the hand's own topology yields **three to four connected
+components, never five**, at every distance threshold from 10 mm to 46 mm, on
+both hands.
+
+    R: dist>36..42 mm -> 3 comps;  dist>44 mm -> 4 comps [78, 51, 36, 25]
+    L: dist>30..34 mm -> 3 comps;  dist>36..44 mm -> 4 comps [87, 60, 51, 43]
+
+`fusion/fusion_palm.png` shows it directly: four coloured digit components and
+the grey palm. The fifth digit never appears as its own component.
+
+Two things are true of this mesh at once:
+
+1. **The pinky is too short and too curled to separate.** It merges into the
+   palm at every threshold that still separates the other digits.
+2. **One digit pair remains fused** even at the fingertips — four components for
+   five digits at the most distal cut.
+
+This is a property of the character geometry, not of the rigging method. Rodin
+produced a hand whose digits are not five topologically distinct protrusions.
+No automated binder can assign a pinky chain that the surface does not
+distinguish.
+
+**Marked INCONCLUSIVE. No further segmentation method will be attempted.**
+
+### What is nonetheless sound
+
+The body rig and bind are good and should not be discarded:
+
+- 71 deform bones, handedness clean, symmetry within 5.9 mm
+- welded-proxy bind with **max vertex drift 0.000000000 m**
+- geometry, UVs, material, all four shape keys and face rigidity preserved
+- **zero unweighted vertices**
+- thumb corrected: 337 (R) / 319 (L) dominated vertices, against 9 on the
+  abandoned custom rig
+- index, middle and thumb curl correctly; elbow, shoulder, knee and crouch pass
+
+Failing: pinky (zero weight, both hands) and ring (weak at 83 / 112).
+
+### The decision this now needs
+
+The blocker is the hand geometry, so the remedy is an asset decision, not a
+rigging one. Either the hands are repaired so the five digits are separate
+surfaces, or the character ships with a hand that cannot form a true fist and
+the watering can is held with a simplified grip. That call is the user's.
