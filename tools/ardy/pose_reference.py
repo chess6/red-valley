@@ -28,7 +28,7 @@ POSES = {
   # allows meaningful forward reach: at 15 deg lean + 0.10 m drop the shoulder is
   # at 1.439 m and the arm is 0.715 m, so 0.76 m would consume the entire reach
   # vertically and leave the hand directly under the shoulder.
-  "02_pour":   dict(lean=12.5, hip_drop=0.095, hand=Vector((-0.32, -0.45, 0.79))),
+  "02_pour":   dict(lean=12.5, hip_drop=0.060, hand=Vector((-0.32, -0.45, 0.79))),
   "03_return": dict(lean=4.0,  hip_drop=0.01, hand=Vector((-0.29, -0.14, 0.87)),
                     carry=True),
 }
@@ -65,6 +65,33 @@ def aim(pb, target):
     if tgt.length < 1e-6: return
     T = Matrix.Translation(m.to_translation())
     pb.matrix = T @ cur.rotation_difference(tgt).to_matrix().to_4x4() @ T.inverted() @ m; upd()
+
+def solve_two_bone(root, mid, effector, target, pole_dir):
+    """Analytic two-bone IK with an explicit pole direction.
+
+    CCD constrains only the end effector, never the joint swivel, so it settles
+    on whatever rotation the iteration reaches -- which rotated the thighs inward
+    and crossed the legs while every foot-height check still passed. Placing the
+    knee/elbow explicitly makes that impossible.
+    """
+    H = wpos(root)
+    L1 = (wpos(mid) - H).length
+    L2 = (wpos(effector) - wpos(mid)).length
+    A = Vector(target)
+    u = A - H
+    d = u.length
+    if d < 1e-6: return 0.0
+    u = u / d
+    d = min(d, (L1 + L2) * 0.999)
+    a = (L1 * L1 - L2 * L2 + d * d) / (2 * d)
+    h = math.sqrt(max(0.0, L1 * L1 - a * a))
+    pole = Vector(pole_dir)
+    f = pole - u * pole.dot(u)              # pole, projected off the root->target axis
+    if f.length < 1e-6: f = Vector((0, 0, 1)).cross(u)
+    f.normalize()
+    aim(PB[root], H + u * a + f * h)        # knee/elbow lands on the pole side
+    aim(PB[mid], A)
+    return (wpos(effector) - A).length
 
 def ccd(chain, effector, target, iters=25):
     """Cyclic coordinate descent: simple, robust, no analytic edge cases."""
@@ -173,13 +200,22 @@ for name, spec in POSES.items():
     upd()
     hips_rest = wpos("hips")
     ankles = {s: wpos("foot." + s) for s in ("R", "L")}
+    foot_rest = {s: PB["foot." + s].matrix.copy() for s in ("R", "L")}
     if spec["hip_drop"]:
         # Pose-bone .location is in BONE-LOCAL axes and the hips bone points up,
         # so .z moves it sideways. Translate the matrix in world space instead.
         PB["hips"].matrix = Matrix.Translation((0, 0, -spec["hip_drop"])) @ PB["hips"].matrix
         upd()
         for sd in ("R", "L"):
-            ccd(["thigh." + sd, "shin." + sd], "foot." + sd, ankles[sd], iters=40)
+            # Knees forward (the character faces -Y), never swivelled inward.
+            solve_two_bone("thigh." + sd, "shin." + sd, "foot." + sd,
+                           ankles[sd], (0.0, -1.0, 0.0))
+            # Bending the knee tilts the shin, which would tip the sole off the
+            # ground; restore the foot's rest orientation so it stays planted.
+            fm = PB["foot." + sd].matrix
+            PB["foot." + sd].matrix = (Matrix.Translation(fm.to_translation())
+                                       @ foot_rest[sd].to_3x3().to_4x4())
+            upd()
     # `lean` is the VISIBLE trunk angle (hips -> neck), which is what reads on
     # screen. Rotating spine+chest by that amount undershoots it, because the
     # hips segment of the trunk axis does not rotate -- 15 deg applied gives
@@ -199,7 +235,7 @@ for name, spec in POSES.items():
         # Derive a REACHABLE target rather than trusting a hard-coded point:
         # aim down-and-forward from the shoulder at 95% of arm reach.
         sh = wpos("upperarm.R")
-        reach = (PB["upperarm.R"].bone.length + PB["forearm.R"].bone.length) * 0.97
+        reach = (PB["upperarm.R"].bone.length + PB["forearm.R"].bone.length) * 0.99
         # Clamping the whole direction vector trades away HEIGHT, which is the
         # constrained axis. Hold the target height and clamp horizontally instead.
         d = Vector(spec["hand"]) - sh
@@ -213,7 +249,8 @@ for name, spec in POSES.items():
         tgt = sh + Vector((h.x, h.y, dz))
         print("  reach %.3f  shoulder z %.3f  horiz budget %.3f (wanted %.3f)"
               % (reach, sh.z, r_max, Vector((d.x, d.y, 0.0)).length))
-        err = ccd(["upperarm.R", "forearm.R"], "hand.R", tgt, iters=40)
+        err = solve_two_bone("upperarm.R", "forearm.R", "hand.R", tgt,
+                             (-0.3, 1.0, 0.0))
         orient_can(SOIL + 0.24, "carry" if spec.get("carry") else "pour")
     place_can()
     hips = wpos("hips"); hand = wpos("hand.R")
@@ -232,6 +269,8 @@ for name, spec in POSES.items():
         "spout_above_soil_m": round(spout().z - SOIL, 4),
         "spout_points_down": round((spout() - grip()).normalized().z, 3),
         "foot_R_z": round(wpos("foot.R").z, 4), "foot_L_z": round(wpos("foot.L").z, 4),
+        "knee_gap_m": round(wpos("shin.L").x - wpos("shin.R").x, 4),
+        "ankle_gap_m": round(wpos("foot.L").x - wpos("foot.R").x, 4),
         "ik_error_m": round(err, 5) if err is not None else None,
         "body_can_intersections": body_can_intersections(),
     }

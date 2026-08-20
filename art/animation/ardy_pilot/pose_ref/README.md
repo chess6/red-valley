@@ -24,20 +24,30 @@ rotate. The approved 10-15 deg band is applied to the *visible* angle.
 
 | | start | pour | return |
 |---|---|---|---|
-| visible trunk lean | 2.0 | **12.5** | 4.0 |
-| hip drop (m) | 0.00 | **0.095** | 0.01 |
-| hand height (m) | 0.881 | **0.791** | 0.871 |
-| hand lateral of thigh (m) | 0.210 | 0.180 | 0.202 |
-| hand forward of hips (m) | 0.094 | 0.323 | 0.135 |
-| spout above soil (m) | 0.552 | **0.238** | 0.530 |
-| spout downward component | -0.19 | -0.93 | -0.23 |
+| visible trunk lean | 2 | 12.51 | 4 |
+| hip drop (m) | 0 | 0.06 | 0.01 |
+| hand height (m) | 0.88 | 0.79 | 0.87 |
+| hand lateral of thigh (m) | 0.2188 | 0.1508 | 0.2088 |
+| hand forward of hips (m) | 0.1 | 0.2607 | 0.14 |
+| spout above soil (m) | 0.5543 | 0.2722 | 0.5164 |
+| spout downward component | -0.184 | -0.923 | -0.27 |
+| knee gap (m) | 0.2362 | 0.2897 | 0.2904 |
 | body/can intersections | 0 | 0 | 0 |
 
 Carried poses aim the can *upright*; the pour aims it nozzle-down and forward.
 `pose_reference.py` raises if any pose intersects, so a colliding pose cannot
 pass silently.
 
-## Bug fixed while authoring
+Soles measure z = 0.0000 in all three poses.
+
+## Bugs fixed while authoring
+
+The leg solver used CCD, which constrains the end effector but never the joint
+swivel: the thighs rotated inward and the knees crossed, while foot height
+stayed equal and every automated check passed. A human caught it in the render.
+Legs and elbow now use an analytic two-bone solve with an explicit pole, so a
+crossed knee is not representable, and knee separation is reported.
+
 
 `tools/ardy/make_proxy_can.py` added a spurious `+ pi/2` yaw in `tube()`, which
 built the spout pointing sideways across the body instead of forward-down, and

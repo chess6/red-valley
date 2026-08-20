@@ -17,6 +17,14 @@ sc = bpy.context.scene
 sc.render.engine = "BLENDER_EEVEE"   # 5.1 renamed EEVEE_NEXT back to this
 sc.render.resolution_x, sc.render.resolution_y = 900, 1200
 sc.render.film_transparent = False
+# Without ray-traced shadows there is no contact shadow under the boots and a
+# planted foot reads as floating -- the soles are measured at z = 0.0000.
+try:
+    sc.eevee.use_raytracing = True
+    sc.eevee.use_shadows = True
+    sc.eevee.use_shadow_jitter_viewport = True
+except AttributeError:
+    pass
 sc.view_settings.view_transform = "Standard"   # AgX washes these out
 sc.render.image_settings.file_format = "PNG"
 
@@ -31,7 +39,8 @@ bed.data.materials.append(m)
 
 bpy.ops.object.light_add(type="SUN", location=(4, -6, 8))
 key = bpy.context.object; key.data.energy = 4.0
-key.rotation_euler = (math.radians(55), 0, math.radians(35))
+key.rotation_euler = (math.radians(38), 0, math.radians(28))
+key.data.angle = math.radians(2.0)
 bpy.ops.object.light_add(type="AREA", location=(-4, -5, 3))
 fill = bpy.context.object; fill.data.energy = 260; fill.data.size = 6
 fill.rotation_euler = (math.radians(75), 0, math.radians(-40))
