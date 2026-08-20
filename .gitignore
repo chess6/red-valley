@@ -1,8 +1,10 @@
 # Godot 4 import cache / editor state
 .godot/
 
-# Godot exports
-export_presets.cfg
+# Godot exports. Anchored: only the repository's own preset file is ignored
+# (Godot rewrites it with machine-local paths). tools/ci/export_presets.cfg is
+# the committed, code-reviewed preset the release workflow exports with.
+/export_presets.cfg
 build/
 *.translation
 
@@ -10,3 +12,70 @@ build/
 .DS_Store
 *~
 *.tmp
+__pycache__/
+*.pyc
+
+# Claude Code: personal, machine-specific overrides (not shared/team config)
+.claude/settings.local.json
+
+# Vendored third-party tooling: upstream clone of
+# https://projects.blender.org/lab/blender_mcp.git (own .git + .venv, ~86 MB)
+tools/blender_mcp/
+
+# Source asset originals: 665 MB of re-downloadable CC0/CC-BY packs.
+# Provenance (URL + SHA-256 + licence) is recorded in
+# art/character/SOURCE_LICENSES.md, so these need not live in history.
+art/character/source_assets/**/*.zip
+
+# Scratch iteration renders. Curated review sets are kept:
+#   renders/turnaround/  and  renders/v03_review/
+art/character/renders/*.png
+
+# Blender auto-backups
+*.blend1
+*.blend2
+
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*_rsa
+*_ed25519
+id_*
+.ssh/
+
+# assetgen: local venv, GPU-pilot run state and caches stay out of git.
+# .state/ holds live vast.ai instance ids and watchdog logs -- machine-local
+# and per-run, never shared.
+tools/assetgen/.venv/
+tools/assetgen/.state/
+tools/assetgen/cache/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# AI pipeline evaluation OUTPUT. Research/evaluation licence only (see
+# art/character/ai_generated/EVALUATION_ONLY.md), so it must not enter this
+# repository's history. The directory's own markers -- .gdignore and
+# EVALUATION_ONLY.md -- are tracked deliberately and must stay tracked:
+# tools/asset_gate.py fails if either goes missing.
+art/character/ai_generated/**
+!art/character/ai_generated/.gdignore
+!art/character/ai_generated/EVALUATION_ONLY.md
+
+# SPAR3D local evaluation (env + clone; never shipped)
+tools/spar3d_eval/*
+!tools/spar3d_eval/*.py
+
+# TripoSR local evaluation (env + clone; never shipped)
+tools/triposr_eval/*
+!tools/triposr_eval/*.py
+
+# Playwright MCP session artifacts (snapshots, console logs)
+.playwright-mcp/
+
+# ARDY motion pilot (env + clone; never shipped)
+tools/ardy_eval/*
+!tools/ardy_eval/*.py

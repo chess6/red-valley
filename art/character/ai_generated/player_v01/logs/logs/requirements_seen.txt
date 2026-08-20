@@ -1,0 +1,51 @@
+--- Pixal3D ---
+LICENSE
+NOTICE
+README.md
+app.py
+assets
+configs
+data_toolkit
+index.html
+inference.py
+pixal3d
+requirements-hfdemo.txt
+requirements.txt
+train.py
+  has requirements.txt
+--- TRELLIS.2 ---
+LICENSE
+README.md
+SECURITY.md
+app.py
+app_texturing.py
+assets
+configs
+data_toolkit
+example.py
+example_texturing.py
+o-voxel
+setup.sh
+train.py
+trellis2
+  has setup.sh
+--- SkinTokens ---
+LICENSE
+README.md
+assets
+bpy_server.py
+configs
+demo.py
+download.py
+examples
+requirements.txt
+src
+  has requirements.txt
+--- Qwen-Image ---
+LICENSE
+Qwen-Image-Edit-2509.md
+Qwen-Image-Edit.md
+Qwen-Image.md
+README.md
+assets
+src

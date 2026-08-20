@@ -1,0 +1,44 @@
+{
+  "purpose": "Mixamo autorig benchmark upload (evaluation only)",
+  "NOT_FOR_SHIPPING": true,
+  "source_asset": "art/animation/ardy_pilot/derived/rv_player_proportioned.glb",
+  "source_sha256": "05340d9c95781e9f69d0084e99e6f29ffbf8b3daba5491ba5e24620b14152aba",
+  "output": "art/animation/mixamo_bench/upload/rv_player_neutral.fbx",
+  "output_sha256": "6df24eeca4fb5eba0664a77ccec406c310cda4e00ceb9fd227f4ff723e564428",
+  "output_bytes": 10370124,
+  "blender": "5.1.2",
+  "stripped_objects": [
+    "Icosphere(MESH)",
+    "rv_rig(ARMATURE)"
+  ],
+  "shape_keys_baked": [
+    [
+      "Basis",
+      1.0
+    ],
+    [
+      "fix_neck_width",
+      1.0
+    ],
+    [
+      "fix_waist_width",
+      1.0
+    ],
+    [
+      "fix_pelvis_thrust",
+      1.0
+    ]
+  ],
+  "vertex_groups": "cleared (Mixamo re-rigs)",
+  "vertices": 70042,
+  "polygons": 49994,
+  "triangles": 49994,
+  "height_m": 1.9005,
+  "textures": [
+    "texture_diffuse 2048x2048",
+    "texture_metallic-texture_roughness 2048x2048",
+    "texture_normal 2048x2048"
+  ],
+  "pose": "neutral rest (armature removed; no bone had a non-rest pose)",
+  "contains": "single mesh only; no props, cameras, lights or helper objects"
+}

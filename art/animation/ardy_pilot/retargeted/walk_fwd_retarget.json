@@ -1,0 +1,11 @@
+{
+  "clip": "walk_fwd",
+  "frames": 40,
+  "fps": 20,
+  "duration_s": 1.95,
+  "src_height": 1.6797,
+  "scale_to_rig": 1.1314,
+  "root_displacement_m": 0.5819,
+  "forward_speed_m_s": 0.2984,
+  "mapped_bones": 18
+}

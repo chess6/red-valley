@@ -1,0 +1,2 @@
+# Godot must not scan this directory: it is a local Python venv and GPU-pilot
+# state for the asset-generation experiment, not game data.

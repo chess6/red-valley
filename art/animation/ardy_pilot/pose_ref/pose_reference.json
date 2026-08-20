@@ -1,0 +1,80 @@
+{
+  "01_start": {
+    "trunk_lean_visible_deg": 2.0,
+    "trunk_lean_spine_chain_deg": 2.89,
+    "hip_drop_m": 0.0,
+    "hand_height_m": 0.88,
+    "hand_lateral_from_hip_m": 0.2188,
+    "hand_forward_of_hips_m": 0.1,
+    "spout_height_m": 0.6807,
+    "spout_above_soil_m": 0.4607,
+    "spout_points_down": -0.42,
+    "foot_R_z": 0.0855,
+    "foot_L_z": 0.0855,
+    "can_tilt_deg": 3.8,
+    "gaze_error_deg": 0.0,
+    "head_pitch_below_horiz_deg": 10.4,
+    "left_hand_fwd_of_hips_m": 0.1186,
+    "knee_gap_m": 0.2362,
+    "ankle_gap_m": 0.4302,
+    "ik_error_m": 0.0,
+    "body_can_intersections": 0,
+    "hand_can_intersections": 0,
+    "grip_drift_m_deg": [
+      1.5e-08,
+      0.0
+    ]
+  },
+  "02_pour": {
+    "trunk_lean_visible_deg": 12.51,
+    "trunk_lean_spine_chain_deg": 18.05,
+    "hip_drop_m": 0.025,
+    "hand_height_m": 0.85,
+    "hand_lateral_from_hip_m": 0.1578,
+    "hand_forward_of_hips_m": 0.2307,
+    "spout_height_m": 0.4857,
+    "spout_above_soil_m": 0.2657,
+    "spout_points_down": -0.927,
+    "foot_R_z": 0.0855,
+    "foot_L_z": 0.0855,
+    "can_tilt_deg": 47.0,
+    "gaze_error_deg": 43.9,
+    "head_pitch_below_horiz_deg": 41.2,
+    "left_hand_fwd_of_hips_m": 0.2138,
+    "knee_gap_m": 0.2902,
+    "ankle_gap_m": 0.4302,
+    "ik_error_m": 0.0,
+    "body_can_intersections": 0,
+    "hand_can_intersections": 0,
+    "grip_drift_m_deg": [
+      9.5e-08,
+      0.0
+    ]
+  },
+  "03_return": {
+    "trunk_lean_visible_deg": 4.0,
+    "trunk_lean_spine_chain_deg": 5.78,
+    "hip_drop_m": 0.005,
+    "hand_height_m": 0.88,
+    "hand_lateral_from_hip_m": 0.2188,
+    "hand_forward_of_hips_m": 0.12,
+    "spout_height_m": 0.6963,
+    "spout_above_soil_m": 0.4763,
+    "spout_points_down": -0.38,
+    "foot_R_z": 0.0855,
+    "foot_L_z": 0.0855,
+    "can_tilt_deg": 9.4,
+    "gaze_error_deg": 0.0,
+    "head_pitch_below_horiz_deg": 10.4,
+    "left_hand_fwd_of_hips_m": 0.1371,
+    "knee_gap_m": 0.2905,
+    "ankle_gap_m": 0.4302,
+    "ik_error_m": 0.0,
+    "body_can_intersections": 0,
+    "hand_can_intersections": 0,
+    "grip_drift_m_deg": [
+      6e-08,
+      0.0
+    ]
+  }
+}

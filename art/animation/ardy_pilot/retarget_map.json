@@ -1,0 +1,80 @@
+{
+  "_comment": "CoreSkeleton27 (ARDY) -> Red Valley production skeleton. Committed as data, not inferred by string matching (docs/SKELETON_SPEC.md). Verified against ardy/skeleton/definitions.py::CoreSkeleton27 and art/animation/ardy_pilot/rig/rv_rig.json.",
+  "source_skeleton": "cskel27",
+  "source_joint_count": 27,
+  "target_skeleton": "rv_rig",
+  "target_deform_bone_count": 22,
+  "map": {
+    "hips": "Hips",
+    "spine": "Spine1",
+    "chest": "Spine3",
+    "neck": "Neck",
+    "head": "Head",
+    "clavicle.R": "RightShoulder",
+    "upperarm.R": "RightArm",
+    "forearm.R": "RightForeArm",
+    "hand.R": "RightHand",
+    "clavicle.L": "LeftShoulder",
+    "upperarm.L": "LeftArm",
+    "forearm.L": "LeftForeArm",
+    "hand.L": "LeftHand",
+    "thigh.R": "RightUpLeg",
+    "shin.R": "RightLeg",
+    "foot.R": "RightFoot",
+    "toe.R": "RightToeBase",
+    "thigh.L": "LeftUpLeg",
+    "shin.L": "LeftLeg",
+    "foot.L": "LeftFoot",
+    "toe.L": "LeftToeBase"
+  },
+  "target_unmapped": {
+    "root": "Intentional. Our root is a ground-plane reference that never animates. ARDY's world displacement lives on Hips; it is stripped here and handed to code as forward speed (the in-place conversion).",
+    "prop_socket.R": "Non-deforming attachment point. Follows hand.R; never receives motion data."
+  },
+  "source_unmapped": {
+    "Spine": "Spine chain compresses 4 -> 2. See spine_compression below.",
+    "Spine2": "Spine chain compresses 4 -> 2. See spine_compression below.",
+    "RightHandThumb1": "We have no finger bones by spec; dropped.",
+    "LeftHandThumb1": "We have no finger bones by spec; dropped.",
+    "RightHandEnd": "Leaf//end joint, no target bone; used only for hand orientation if needed.",
+    "LeftHandEnd": "Leaf/end joint, no target bone; used only for hand orientation if needed."
+  },
+  "spine_compression": {
+    "problem": "ARDY has Spine, Spine1, Spine2, Spine3 (4 joints); we have spine, chest (2). Dropping the extra two would silently discard torso bend.",
+    "rule": "COMPOSE, do not drop. target.spine receives Spine * Spine1; target.chest receives Spine2 * Spine3, both as accumulated local rotations along the chain.",
+    "status": "MUST be implemented in the retarget step; naive name-matching would lose it."
+  },
+  "export_artifact": {
+    "neutral_bone": "Blender's glTF exporter injects this because prop_socket.R is non-deforming. It carries no animation; the retarget must ignore it rather than treat it as a joint."
+  },
+  "source_joint_order": [
+    "Hips",
+    "Spine",
+    "Spine1",
+    "Spine2",
+    "Spine3",
+    "Neck",
+    "Head",
+    "RightShoulder",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "RightHandEnd",
+    "RightHandThumb1",
+    "LeftShoulder",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "LeftHandEnd",
+    "LeftHandThumb1",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "RightToeBase",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "LeftToeBase"
+  ],
+  "_source_order_note": "Authoritative index order, read from ardy.skeleton.definitions.CoreSkeleton27 and committed as data so the retarget never has to import torch."
+}
