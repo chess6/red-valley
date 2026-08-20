@@ -39,6 +39,48 @@
     "resolution": 1400,
     "pixel_to_world": "P = centre + right*((px/RES-0.5)*S) + up*((0.5-py/RES)*S)"
   },
+  "palm_depth": {
+    "centre_world": [
+      -0.405972,
+      -0.018986,
+      0.856489
+    ],
+    "right": [
+      -0.171347,
+      -0.952312,
+      0.252471
+    ],
+    "up": [
+      -0.331577,
+      -0.18557,
+      -0.924998
+    ],
+    "ortho_scale_m": 0.15,
+    "resolution": 1400,
+    "pixel_to_world": "P = centre + right*((px/RES-0.5)*S) + up*((0.5-py/RES)*S)",
+    "encoding": "colour = nrm offset from centre; blue=-30mm, green=0mm, yellow=+30mm, linear"
+  },
+  "edge_depth": {
+    "centre_world": [
+      -0.405972,
+      -0.018986,
+      0.856489
+    ],
+    "right": [
+      0.927738,
+      -0.242209,
+      -0.283968
+    ],
+    "up": [
+      -0.331577,
+      -0.18557,
+      -0.924998
+    ],
+    "ortho_scale_m": 0.15,
+    "resolution": 1400,
+    "pixel_to_world": "P = centre + right*((px/RES-0.5)*S) + up*((0.5-py/RES)*S)",
+    "encoding": "colour = bar offset from centre; blue=-45mm, green=0mm, yellow=+45mm, linear"
+  },
   "frame": {
     "hand_origin": [
       -0.421489,

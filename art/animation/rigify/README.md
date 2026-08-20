@@ -41,3 +41,51 @@ and the thumb branching clear of the fingers.
 7. Retarget the accepted walk; build one closed grip via finger and hand IK.
 8. Validate shoulder, neck, fingers, face, foot contacts, Godot import, grip.
 9. Render walk and grip beside the diagnostic rig.
+
+## Iteration 1 — halted before alignment (2026-08-20)
+
+Plates were improved substantially, and improving them surfaced a defect in the
+accepted rig that blocks explicit finger placement. No metarig alignment and no
+rig generation were performed, so the four overlay renders do not exist yet.
+
+### Plates now available
+
+| file | content |
+|---|---|
+| `hand_palm_grid.png` / `hand_edge_grid.png` | shaded, mm grid |
+| `hand_palm_depth_grid.png` | colour = `nrm` offset (blue −30 / green 0 / yellow +30 mm) |
+| `hand_edge_depth_grid.png` | colour = `bar` offset (blue −45 / green 0 / yellow +45 mm) |
+
+Depth coding was added because the curled phalanges overlap in every plain view,
+so no single silhouette can carry joint depth. Exposure was cut (the first edge
+plate was a featureless white mass) and the camera no longer sits inside the
+thigh.
+
+### Defect found in the accepted rig
+
+Of the vertices standing more than 14 mm proud of the palm — the thumb and
+thenar mass — **254 of 549 are dominated by `forearm.R`, not `hand.R`**.
+
+Isolating the hand on hand-weight alone therefore deletes the thumb entirely,
+which is what the first strict plate showed. It also explains why the abandoned
+custom rig's right thumb collapsed to 9 vertices: the thumb was never on the
+hand bone to begin with. The plates now include forearm-dominated vertices past
+the wrist station, which recovers the thumb and drops the arm shaft.
+
+This is recorded as a finding about the accepted rig. Nothing was modified.
+
+### Remaining uncertainty — do not guess past this
+
+1. **Finger identity and spacing.** The four finger lobes read at bar −52, −41,
+   −19 and +18 mm, giving gaps of 11, 22 and 37 mm. Evenly spaced fingers should
+   be roughly 15–20 mm apart, so at least one lobe is two digits merged, or one
+   digit is hidden behind another by the curl. Lobe widths (15, 17, 22, 27 mm)
+   point the same way — 27 mm is too wide for one finger.
+2. **Phalangeal joints.** Only each digit's base and tip are readable. There are
+   no knuckle-crease landmarks at this mesh density, so MCP/PIP/DIP stations
+   could only be assumed at anatomical 45/30/25 proportions, not measured.
+3. **Thumb axis.** Position is now clear (bar ≈ +28, `nrm` ≈ +25 mm, fing −45 to
+   −8). Its metacarpal base is not, because that region blends into the palm.
+
+Item 1 must be resolved before alignment; placing a chain that spans two digits
+would repeat exactly the failure that ended the custom rig.

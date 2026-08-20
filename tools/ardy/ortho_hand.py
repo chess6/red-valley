@@ -60,8 +60,18 @@ centre = sum(co, Vector()) / len(co)
 # Isolate the hand. The palm faces the thigh, so a camera on the palm side sits
 # inside the leg and renders trousers; and the forearm occludes the edge view.
 import bmesh
-keep = set(v.index for v in obj.data.vertices
-           if wt(v, "hand." + SIDE) >= 0.15 or (obj.matrix_world @ v.co - centre).length < 0.075)
+# The accepted rig weights much of the thumb/thenar mass to forearm.R (254 of
+# 549 vertices standing proud of the palm), so isolating on hand weight alone
+# deletes the thumb. Include forearm-dominated vertices that sit past the wrist
+# station, which keeps the thumb and drops the arm shaft.
+t_lo_cut = lo - 0.006
+keep = set()
+for v in obj.data.vertices:
+    p_ = obj.matrix_world @ v.co
+    if (p_ - centre).length > 0.090: continue
+    if (p_ - o).dot(fing) < t_lo_cut: continue
+    if wt(v, "hand." + SIDE) >= 0.40 or wt(v, "forearm." + SIDE) >= 0.40:
+        keep.add(v.index)
 bm = bmesh.new(); bm.from_mesh(obj.data); bm.verts.ensure_lookup_table()
 doomed = [v for v in bm.verts if v.index not in keep]
 bmesh.ops.delete(bm, geom=doomed, context="VERTS")
@@ -98,6 +108,36 @@ cd = bpy.data.cameras.new("C"); cam = bpy.data.objects.new("C", cd)
 sc.collection.objects.link(cam); sc.camera = cam
 cd.type = "ORTHO"; cd.ortho_scale = SCALE
 
+def depth_material(axis, origin, lo=-0.030, hi=0.030):
+    """Colour = position along `axis`, so the plate carries depth as well as
+    silhouette. Without this the curled phalanges overlap in every direction and
+    joints cannot be read from any single view."""
+    m = bpy.data.materials.new("depth"); m.use_nodes = True
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        if n.type != "OUTPUT_MATERIAL": nt.nodes.remove(n)
+    out = nt.nodes["Material Output"]
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sub = nt.nodes.new("ShaderNodeVectorMath"); sub.operation = "SUBTRACT"
+    sub.inputs[1].default_value = origin
+    dot = nt.nodes.new("ShaderNodeVectorMath"); dot.operation = "DOT_PRODUCT"
+    dot.inputs[1].default_value = axis
+    mr = nt.nodes.new("ShaderNodeMapRange")
+    mr.inputs["From Min"].default_value = lo; mr.inputs["From Max"].default_value = hi
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "LINEAR"
+    ramp.color_ramp.elements[0].color = (0.05, 0.15, 0.9, 1)
+    ramp.color_ramp.elements[1].color = (1.0, 0.85, 0.1, 1)
+    e = ramp.color_ramp.elements.new(0.5); e.color = (0.1, 0.9, 0.4, 1)
+    em = nt.nodes.new("ShaderNodeEmission")
+    nt.links.new(geo.outputs["Position"], sub.inputs[0])
+    nt.links.new(sub.outputs["Vector"], dot.inputs[0])
+    nt.links.new(dot.outputs["Value"], mr.inputs["Value"])
+    nt.links.new(mr.outputs["Result"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], em.inputs["Color"])
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return m
+
 VIEWS = {
     # name: (view direction toward the hand, right vector, up vector)
     "palm":  (-nrm, bar, fing),     # looking onto the palm: x=across, y=along fingers
@@ -123,6 +163,35 @@ for name, (viewdir, right, up) in VIEWS.items():
         "pixel_to_world": "P = centre + right*((px/RES-0.5)*S) + up*((0.5-py/RES)*S)",
     }
     print("RENDERED", sc.render.filepath)
+
+# depth-coded palm plate: same camera, colour carries the nrm coordinate
+dm = depth_material(list(nrm), list(centre))
+obj.data.materials.clear(); obj.data.materials.append(dm)
+viewdir, right, up = VIEWS["palm"]
+from mathutils import Matrix as _M
+R = [right.normalized(), up.normalized(), (-viewdir).normalized()]
+cam.matrix_world = (_M.Translation(centre - viewdir * 0.5)
+                    @ _M((R[0], R[1], R[2])).transposed().to_4x4())
+sc.render.filepath = os.path.join(OUT, "hand_palm_depth.png")
+bpy.ops.render.render(write_still=True)
+print("RENDERED", sc.render.filepath)
+mapping["palm_depth"] = dict(mapping["palm"])
+mapping["palm_depth"]["encoding"] = ("colour = nrm offset from centre; blue=-30mm, "
+                                     "green=0mm, yellow=+30mm, linear")
+
+# edge depth plate: depth along bar, to separate the thumb from the index mass
+dm2 = depth_material(list(bar), list(centre), -0.045, 0.045)
+obj.data.materials.clear(); obj.data.materials.append(dm2)
+viewdir, right, up = VIEWS["edge"]
+R = [right.normalized(), up.normalized(), (-viewdir).normalized()]
+cam.matrix_world = (_M.Translation(centre - viewdir * 0.5)
+                    @ _M((R[0], R[1], R[2])).transposed().to_4x4())
+sc.render.filepath = os.path.join(OUT, "hand_edge_depth.png")
+bpy.ops.render.render(write_still=True)
+print("RENDERED", sc.render.filepath)
+mapping["edge_depth"] = dict(mapping["edge"])
+mapping["edge_depth"]["encoding"] = ("colour = bar offset from centre; blue=-45mm, "
+                                     "green=0mm, yellow=+45mm, linear")
 
 mapping["frame"] = {
     "hand_origin": [round(x, 6) for x in o],
