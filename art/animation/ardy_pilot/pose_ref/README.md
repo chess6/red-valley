@@ -25,20 +25,31 @@ rotate. The approved 10-15 deg band is applied to the *visible* angle.
 | | start | pour | return |
 |---|---|---|---|
 | visible trunk lean | 2 | 12.51 | 4 |
-| hip drop (m) | 0 | 0.06 | 0.01 |
-| hand height (m) | 0.88 | 0.79 | 0.87 |
-| hand lateral of thigh (m) | 0.2188 | 0.1508 | 0.2088 |
-| hand forward of hips (m) | 0.1 | 0.2607 | 0.14 |
-| spout above soil (m) | 0.5543 | 0.2722 | 0.5164 |
-| spout downward component | -0.184 | -0.923 | -0.27 |
-| knee gap (m) | 0.2362 | 0.2897 | 0.2904 |
+| hip drop (m) | 0 | 0.025 | 0.005 |
+| hand height (m) | 0.88 | 0.8417 | 0.88 |
+| hand lateral of thigh (m) | 0.2188 | 0.1578 | 0.2188 |
+| spout above soil (m) | 0.5313 | 0.29 | 0.5134 |
+| can tilt off vertical (deg) | 7.2 | 47 | 5.9 |
+| head pitch below horiz (deg) | 10.4 | 41.2 | 10.4 |
+| left hand fwd of hips (m) | 0.1186 | 0.2138 | 0.1371 |
+| knee gap (m) | 0.2362 | 0.2902 | 0.2905 |
 | body/can intersections | 0 | 0 | 0 |
 
-Carried poses aim the can *upright*; the pour aims it nozzle-down and forward.
-`pose_reference.py` raises if any pose intersects, so a colliding pose cannot
-pass silently.
-
 Soles measure z = 0.0000 in all three poses.
+
+Knee angle 172.8 deg carrying, 151.8 deg pouring (180 = straight). Nozzle sits
+over the bed at y = -0.309 (bed spans -1.25..-0.25).
+
+## Why the can orientation is constructed, not searched
+
+Rolling about the arm axis plus a world-X pitch spans only two of the three
+rotational degrees of freedom, so "body tilted ~47 deg forward AND spout steeply
+down-forward" is unreachable by that search -- it returned a tilt in range with
+the nozzle far too high. The orientation is now built directly from the can's
+fixed internal geometry: grip->tip is 0.323 m at 68.2 deg off the body axis, so
+a tip 0.15-0.30 m above soil *requires* a body tilt of at least ~46 deg. Hand
+height then follows from the orientation rather than being set independently.
+A yaw sweep finds the first orientation that clears the thigh.
 
 ## Bugs fixed while authoring
 
