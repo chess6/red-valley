@@ -46,7 +46,27 @@ for d in ("thumb", "f_index", "f_middle", "f_ring", "f_pinky"):
     L = sum(c for k, c in fing.items() if d in k and k.endswith(".L"))
     print("   %-9s R=%-5d L=%-5d" % (d, R, L))
 print("groups now: %d (all DEF-)" % len(mesh.vertex_groups))
+
+# The "0 vs 26" contradiction: bind_rigify counted v.groups while the 23 legacy
+# groups from the old rig were still attached, so vertices whose ONLY weight was
+# legacy looked weighted. Removing the legacy groups exposes them. Fill from the
+# nearest weighted neighbour so production output has none.
+from mathutils.kdtree import KDTree
+orphan = [v for v in mesh.data.vertices if not v.groups]
+print("unweighted after dropping legacy groups: %d (these had ONLY legacy weight)"
+      % len(orphan))
+if orphan:
+    donors = [v for v in mesh.data.vertices if v.groups]
+    kd = KDTree(len(donors))
+    for i, v in enumerate(donors): kd.insert(v.co, i)
+    kd.balance()
+    for v in orphan:
+        _, i, _ = kd.find(v.co)
+        for g in donors[i].groups:
+            n = GN.get(g.group)
+            if n: mesh.vertex_groups[n].add([v.index], g.weight, "REPLACE")
+    print("filled %d from nearest weighted neighbour" % len(orphan))
 nw = sum(1 for v in mesh.data.vertices if not v.groups)
-print("unweighted verts: %d" % nw)
+print("unweighted verts FINAL: %d" % nw)
 bpy.ops.wm.save_as_mainfile(filepath=OUT)
 print("CLEAN_DONE")

@@ -58,3 +58,51 @@ against index's 388/393, and 26 vertices remain unweighted.
 
 Finger curl, fist, thumb opposition, wrist flex/extend on index, middle, ring
 and thumb; elbow, shoulder, knee and crouch on the body. Renders in `deform/`.
+
+## Hand-correction pass (2026-08-20): unweighted resolved, pinky still FAILED
+
+### "0 vs 26 unweighted" — explained and fixed
+
+`bind_rigify` counted `v.groups` while the 23 legacy groups from the old rig
+were still attached, so vertices whose **only** weight was legacy looked
+weighted. Dropping the legacy groups exposed 26 of them. They are now filled
+from the nearest weighted neighbour. **Final unweighted count: 0.**
+
+### Pinky: NOT repositioned — the region cannot be selected reliably
+
+Three independent findings, in order:
+
+1. **`fing`-depth cuts can never isolate the pinky.** It is curled so far that it
+   has no extent past the palm along the finger axis: cutting at `fing > +6`
+   removes the pinky entirely, and the three surviving components span bar
+   −37…+44. Across every cut from −6 to +20, on both hands, the maximum was
+   **three** components, never four.
+2. **Welding drops the pinky region below the weight threshold.** `hand.R >= 0.4`
+   selects 1126 vertices on the raw mesh but only **262** on the welded one,
+   because `remove_doubles` averages weights across merged duplicates. The
+   welded hand region therefore spans bar −45…+56 and excludes the pinky, which
+   the plates place at bar −60…−48.
+3. **The frame is not the problem.** Plate, raw and welded bases agree exactly —
+   `dot(bar, plate_bar) = +1.0000`, centres within 0.6 mm. The earlier
+   sign-flip hypothesis is disproved.
+
+So the pinky chain still owns zero vertices on both hands, and both hands still
+fail the fist test — `hands/fist_R.png` and `hands/fist_L.png` each show one
+digit remaining extended.
+
+Ring is unchanged and still weak: 83 (R) / 112 (L) against index's 388 / 393.
+
+### The blocker, stated precisely
+
+Every method tried selects the hand **by vertex weight**, and the weights are
+exactly what is unreliable here — they are the defect this pass set out to
+correct, and welding degrades them further. Selecting by weight to find the
+region, then binding to produce weights, is circular.
+
+**Proposed fix, not applied:** select the hand region purely geometrically —
+distance from the `hand.R` bone head plus a cut past the wrist station — with no
+weight test anywhere. That removes the circularity and should let the welded
+surface's own topology separate all five digits, which it already does cleanly
+for the other four.
+
+Not attempted here rather than guessed at, per the standing instruction.
