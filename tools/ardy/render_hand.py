@@ -42,8 +42,13 @@ mat = bpy.data.materials.new("digit"); mat.use_nodes = True
 nt = mat.node_tree
 bsdf = nt.nodes["Principled BSDF"]
 ca = nt.nodes.new("ShaderNodeVertexColor"); ca.layer_name = "digitcol"
-nt.links.new(ca.outputs["Color"], bsdf.inputs["Base Color"])
-bsdf.inputs["Roughness"].default_value = 0.6
+# Emission, not diffuse: lit diffuse washed the codes out to near-white and the
+# ownership could not be read at all.
+em = nt.nodes.new("ShaderNodeEmission")
+nt.links.new(ca.outputs["Color"], em.inputs["Color"])
+em.inputs["Strength"].default_value = 1.0
+out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
 
 sc = bpy.context.scene
 sc.render.engine = "BLENDER_EEVEE"

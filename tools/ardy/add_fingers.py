@@ -157,7 +157,7 @@ def build(side):
     for n_, ch in chains.items():
         L = sum((ch[i + 1] - ch[i]).length for i in range(3))
         print("     %-7s tracked %2d pts, chain length %.4f m" % (n_, len(tracks[n_]), L))
-    return F, chains
+    return F, chains, tracks
 
 RESULT = {}
 for side in ("R", "L"):
@@ -166,7 +166,7 @@ for side in ("R", "L"):
 bpy.ops.object.mode_set(mode="OBJECT")
 bpy.ops.object.mode_set(mode="EDIT")
 inv = rig.matrix_world.inverted()
-for side, (F, chains) in RESULT.items():
+for side, (F, chains, tracks) in RESULT.items():
     for dname in DIGITS:
         if dname not in chains: continue
         pts = chains[dname]
@@ -184,39 +184,92 @@ PB = rig.pose.bones
 print("bones now: %d (was 23)" % len(rig.data.bones))
 
 # --- weights: redistribute ONLY what already sits on hand.R / hand.L ----------
-def seg_dist(p, a, b):
-    ab = b - a
-    L2 = ab.length_squared
-    s = 0.0 if L2 < 1e-12 else max(0.0, min(1.0, (p - a).dot(ab) / L2))
-    return (p - (a + ab * s)).length
+def project(p, poly):
+    """Closest point on a polyline: returns (arc-fraction, radial distance,
+    before_base) where before_base means the vertex sits proximal to the base."""
+    best = (1e9, 0.0, 0.0, False)
+    acc, total = 0.0, sum((poly[i + 1] - poly[i]).length for i in range(len(poly) - 1))
+    for i in range(len(poly) - 1):
+        a_, b_ = poly[i], poly[i + 1]
+        ab = b_ - a_; L2 = ab.length_squared
+        t = 0.0 if L2 < 1e-12 else (p - a_).dot(ab) / L2
+        cl = max(0.0, min(1.0, t))
+        q = a_ + ab * cl
+        d = (p - q).length
+        if d < best[0]:
+            before = (i == 0 and t < 0.0)
+            best = (d, (acc + ab.length * cl) / max(1e-9, total), 0.0, before)
+        acc += ab.length
+    return best[1], best[0], best[3]
 
-for side, (F, chains) in RESULT.items():
+NBIN = 8
+for side, (F, chains, tracks) in RESULT.items():
     hg = obj.vertex_groups["hand." + side]
     for dname in chains:
         for i in (1, 2, 3):
             n = "%s.%02d.%s" % (dname, i, side)
             if n not in obj.vertex_groups: obj.vertex_groups.new(name=n)
-    GI2 = {g.name: g.index for g in obj.vertex_groups}
-    segs = {d: [(chains[d][i], chains[d][i + 1]) for i in range(3)]
-            for d in DIGITS if d in chains}
-    CAP = 0.013
-    captured = {d: 0 for d in segs}
-    for v in obj.data.vertices:
-        w = wt(v, "hand." + side)
-        if w <= 0.0: continue
+
+    cand = [v for v in obj.data.vertices if wt(v, "hand." + side) > 0.0]
+    # pass 1 -- tentative nearest tube, generous cap, to sample local thickness
+    prelim = {d: [[] for _ in range(NBIN)] for d in tracks}
+    info = {}
+    for v in cand:
         p = obj.matrix_world @ v.co
-        best, bd = None, 1e9
-        for dname in segs:
-            d = min(seg_dist(p, a, b) for a, b in segs[dname])
-            if d < bd: bd, best = d, dname
-        if bd > CAP: continue
-        inv_d = [1.0 / max(1e-4, seg_dist(p, a, b)) ** 2 for a, b in segs[best]]
-        tot = sum(inv_d)
-        for i, share in enumerate(inv_d, start=1):
-            obj.vertex_groups["%s.%02d.%s" % (best, i, side)].add(
+        rows = []
+        for d, poly in tracks.items():
+            sfrac, dist, before = project(p, poly)
+            rows.append((dist, d, sfrac, before))
+        rows.sort()
+        dist, d, sfrac, before = rows[0]
+        info[v.index] = rows
+        if not before and dist < 0.022:
+            prelim[d][min(NBIN - 1, int(sfrac * NBIN))].append(dist)
+    # pass 2 -- adaptive radius per cross-section, smoothed along the digit
+    RAD = {}
+    for d, bins in prelim.items():
+        r = []
+        for bl in bins:
+            if len(bl) >= 4:
+                bl2 = sorted(bl); r.append(bl2[int(0.80 * (len(bl2) - 1))])
+            else:
+                r.append(None)
+        known = [x for x in r if x is not None]
+        fill = sum(known) / len(known) if known else 0.010
+        r = [x if x is not None else fill for x in r]
+        r = [max(0.004, min(0.020, (r[max(0, i - 1)] + r[i] + r[min(NBIN - 1, i + 1)]) / 3.0))
+             for i in range(NBIN)]
+        RAD[d] = r
+        print("  %s %-7s radius by station: %s" % (side, d,
+              " ".join("%.3f" % x for x in r)))
+    def radius(d, sfrac):
+        x = max(0.0, min(0.999, sfrac)) * NBIN
+        i = int(x); f = x - i
+        return RAD[d][i] * (1 - f) + RAD[d][min(NBIN - 1, i + 1)] * f
+    # pass 3 -- final assignment on NORMALISED distance, so a fat proximal
+    # phalanx and a slim tip are judged on the same scale and neither leaks
+    captured = {d: 0 for d in tracks}
+    MARGIN = 1.15
+    for v in cand:
+        w = wt(v, "hand." + side)
+        best = None
+        for dist, d, sfrac, before in info[v.index]:
+            if before: continue                     # proximal to the base = palm
+            R = radius(d, sfrac)
+            nd = dist / R
+            if nd <= MARGIN and (best is None or nd < best[0]):
+                best = (nd, d, sfrac)
+        if best is None: continue                   # stays on the palm
+        _, d, sfrac = best
+        u = max(0.0, min(3.0, sfrac * 3.0))
+        tent = [max(0.0, 1.0 - abs(u - (j + 0.5))) for j in range(3)]
+        if sum(tent) < 1e-6: tent = [1.0, 0.0, 0.0]
+        tot = sum(tent)
+        for j, share in enumerate(tent, start=1):
+            obj.vertex_groups["%s.%02d.%s" % (d, j, side)].add(
                 [v.index], w * share / tot, "REPLACE")
         hg.add([v.index], 0.0, "REPLACE")
-        captured[best] += 1
+        captured[d] += 1
     print("  %s captured: %s" % (side, captured))
 
 bpy.ops.object.mode_set(mode="OBJECT")
