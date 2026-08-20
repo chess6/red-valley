@@ -35,7 +35,14 @@ print("mesh height %.4f m" % H)
 def band(lo, hi):
     return V[(V[:, 2] >= zmin + lo*H) & (V[:, 2] < zmin + hi*H)]
 
-def halfwidth(zrel, pct=55):
+def halfwidth(zrel, pct=90):
+    """Lateral half-width of the body at a height band.
+
+    pct matters: at shoulder height a cross-section is mostly torso interior,
+    so a mid percentile (55) lands near the spine and puts the shoulder joint
+    at roughly half its true offset -- which drags the whole arm inside the
+    torso and makes the hands clip the waist. p90 tracks the actual deltoid
+    edge; the joint is then set inboard of the skin by SHOULDER_INSET."""
     b = band(zrel, zrel + 0.02)
     return float(np.percentile(np.abs(b[:, 0]), pct)) if len(b) >= 20 else 0.0
 
@@ -63,6 +70,7 @@ def at(chain, t, fb):
 
 def Z(r): return zmin + r*H
 SH = 0.82
+SHOULDER_INSET = 0.80          # joint sits inboard of the skin surface
 hw = halfwidth(SH - 0.02) or 0.10*H
 leg = band(0.35, 0.40)
 legx = float(np.percentile(np.abs(leg[:, 0]), 60)) if len(leg) else 0.09*H
@@ -74,8 +82,8 @@ J = {
   "hips": (0.0, 0.0, Z(0.52)), "spine": (0.0, 0.0, Z(0.62)),
   "chest": (0.0, 0.0, Z(0.72)), "neck": (0.0, 0.0, Z(0.845)),
   "head": (0.0, 0.0, Z(0.90)), "head_end": (0.0, 0.0, Z(1.0)),
-  "clavicle.R": (SR*hw*0.30, 0.0, Z(0.80)), "clavicle.L": (SL*hw*0.30, 0.0, Z(0.80)),
-  "shoulder.R": (SR*hw*0.98, 0.0, Z(SH)),   "shoulder.L": (SL*hw*0.98, 0.0, Z(SH)),
+  "clavicle.R": (SR*hw*0.22, 0.0, Z(0.80)), "clavicle.L": (SL*hw*0.22, 0.0, Z(0.80)),
+  "shoulder.R": (SR*hw*SHOULDER_INSET, 0.0, Z(SH)),   "shoulder.L": (SL*hw*SHOULDER_INSET, 0.0, Z(SH)),
   "elbow.R": at(cr, 0.63, (SR*hw*1.15, 0.0, Z(0.63))),
   "elbow.L": at(cl, 0.63, (SL*hw*1.15, 0.0, Z(0.63))),
   "wrist.R": at(cr, 0.47, (SR*hw*1.25, 0.0, Z(0.47))),
