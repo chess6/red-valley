@@ -70,9 +70,12 @@ FING = ["f_index", "f_middle", "f_ring", "f_pinky"]
 # +X curls on the right hand; -X would hyperextend it (see matched_hands.py).
 HAND_TESTS = {
     "hand_rest":       lambda: None,
-    "hand_curl":       lambda: [rot("%s.01_master.R" % f, x=55) for f in FING],
-    "hand_fist":       lambda: ([rot("%s.01_master.R" % f, x=85) for f in FING]
-                                + [rot("thumb.01_master.R", x=40)]),
+    "hand_curl":       lambda: [rot("%s.0%d.R" % (f, j), x=a) for f in FING
+                                for j, a in ((1, 32), (2, 40), (3, 22))],
+    "hand_fist":       lambda: ([rot("%s.0%d.R" % (f, j), x=a) for f in FING
+                                 for j, a in ((1, 50), (2, 68), (3, 42))]
+                                + [rot("thumb.01.R", x=34, z=-22),
+                                   rot("thumb.02.R", x=40), rot("thumb.03.R", x=28)]),
     "hand_thumb_opp":  lambda: rot("thumb.01_master.R", x=55, z=-25),
     "hand_wrist_flex": lambda: rot("hand_fk.R", x=-45),
     "hand_wrist_ext":  lambda: rot("hand_fk.R", x=45),

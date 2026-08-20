@@ -40,15 +40,29 @@ def rot(n, **kw):
                                 math.radians(kw.get("y", 0)),
                                 math.radians(kw.get("z", 0)))
 
-# Rigify mirrors the finger controls, so a curl is +X on the right and -X on the
-# left. Using one sign for both hands hyperextends one of them -- every earlier
-# fist and curl render of the RIGHT hand was showing it bent backwards.
-SGN = {"R": +1.0, "L": -1.0}
+# BOTH hands curl at +X. An earlier test concluded the signs were mirrored, but
+# that measured the left hand against the RIGHT hand's palm normal; measured
+# against each hand's own thumb-derived normal, +88 curls both (+39.6 mm R,
+# +36.9 mm L) and -88 hyperextends both.
+#
+# A fist is not one rotation: the knuckle, middle and end joints close by
+# different amounts. Driving only the master gives a uniform arc that reads as a
+# claw, so the three joints are driven separately.
+FIST = {"01": 50, "02": 68, "03": 42}
+CURL = {"01": 32, "02": 40, "03": 22}
+def set_digit(f, s, table):
+    for j, ang in table.items():
+        rot("%s.%s.%s" % (f, j, s), x=ang)
+
 POSES = {
     "relaxed": lambda s: None,
-    "curl":    lambda s: [rot("%s.01_master.%s" % (f, s), x=55 * SGN[s]) for f in FING],
-    "fist":    lambda s: ([rot("%s.01_master.%s" % (f, s), x=88 * SGN[s]) for f in FING]
-                          + [rot("thumb.01_master.%s" % s, x=45 * SGN[s], z=-20 * SGN[s])]),
+    "curl":    lambda s: [set_digit(f, s, CURL) for f in FING],
+    # X (curl) does not mirror, but Z (the thumb's sweep across the palm) does --
+    # using one Z on both hands left the thumbs 4.5 mm and 8.5 mm out of step.
+    "fist":    lambda s: ([set_digit(f, s, FIST) for f in FING]
+                          + [set_digit("thumb", s, {"01": 34, "02": 40, "03": 28}),
+                             rot("thumb.01.%s" % s, x=34,
+                                 z=-22 if s == "R" else 22)]),
 }
 for tag, fn in POSES.items():
     for s in ("R", "L"):

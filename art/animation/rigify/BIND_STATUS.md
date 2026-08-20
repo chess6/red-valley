@@ -202,3 +202,50 @@ The INCONCLUSIVE verdict was reached partly on visual evidence that is now known
 to be wrong. The weight and topology findings still support it, but the visual
 half of the case needs redoing against correctly-curled renders before that
 verdict should be relied on.
+
+## Curl direction and refinement — both hands (2026-08-20)
+
+### The mirrored-sign conclusion was itself wrong
+
+I previously reported that the curl sign is opposite per hand. It is not. That
+test measured **both** hands against the **right** hand's palm normal taken from
+`hand_ortho_mapping.json`; for the left hand that normal points the wrong way,
+so the sign of the dot product lied.
+
+Re-measured against each hand's own palm normal — derived from its own thumb
+mass, which cannot suffer a mirroring error — **both hands curl at +X**:
+
+| rotation | right | left |
+|---|---|---|
+| x = +88° | +39.6 mm, CURL | +36.9 mm, CURL |
+| x = −88° | −47.1 mm, hyperextend | −51.8 mm, hyperextend |
+
+### Curl refined
+
+A fist is not one rotation. Driving only `*_master` gives a uniform arc that
+reads as a claw, so the three joints are now driven separately:
+
+    fist   MCP 50 deg, PIP 68 deg, DIP 42 deg
+    curl   MCP 32 deg, PIP 40 deg, DIP 22 deg
+
+**X does not mirror between hands, but Z does.** Applying one Z to both thumbs
+left them 4.5 mm and 8.5 mm out of step; mirrored, they agree within 1 mm.
+
+### Verified on the mesh, not the bones
+
+Displacement of the actual deformed surface toward the palm, in a full fist:
+
+| digit | right | left |
+|---|---|---|
+| index | +9.4 mm | +9.5 mm |
+| middle | +10.7 mm | +10.5 mm |
+| ring | +4.6 mm | +4.3 mm |
+| thumb | +1.3 mm | +0.3 mm |
+| **pinky** | **no surface** | **no surface** |
+
+Both hands are now symmetric to within 0.3 mm on the working digits, and both
+fists close.
+
+Unchanged: no vertex carries more than 0.5 weight on any pinky bone, so the
+pinky has no surface to move. Ring curls at less than half the index/middle
+travel, consistent with its weak 83 / 112 vertex ownership.
