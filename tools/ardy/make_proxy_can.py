@@ -57,10 +57,13 @@ def tube(name, a, b, r):
     dx, dy, dz = bx-ax, by-ay, bz-az
     length = math.sqrt(dx*dx + dy*dy + dz*dz)
     mid = ((ax+bx)/2, (ay+by)/2, (az+bz)/2)
+    # XYZ Euler composes as Rz @ Ry @ Rx, so Rz(rot_z) @ Ry(rot_y) maps the
+    # cylinder's +Z axis to (sin ry cos rz, sin ry sin rz, cos ry). No extra
+    # quarter turn: adding one yaws the spout 90 deg across the body.
     rot_y = math.acos(max(-1.0, min(1.0, dz/length)))
     rot_z = math.atan2(dy, dx)
     o = cyl(name, r, length, mid)
-    o.rotation_euler = (0.0, rot_y, rot_z + math.pi/2)
+    o.rotation_euler = (0.0, rot_y, rot_z)
     return o
 
 parts = []
