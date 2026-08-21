@@ -47,6 +47,11 @@ for d in ("thumb", "f_index", "f_middle", "f_ring"):
     for j in ("01", "02", "03"):
         n = "%s.%s.%s" % (d, j, S)
         if n in rig.pose.bones: EDIT.append(n)
+# Euler, not quaternion: the N-panel then shows three rotation fields in
+# degrees that can be typed into, instead of four quaternion components that
+# nobody can reason about by hand.
+for n in EDIT:
+    rig.pose.bones[n].rotation_mode = "XYZ"
 coll = rig.data.collections if hasattr(rig.data, "collections") else None
 for b in rig.data.bones:
     keep = b.name in EDIT
@@ -67,6 +72,22 @@ for az, el, tag in ((-70, 12, "PALM"), (20, 12, "SIDE"), (-35, 16, "THREEQUARTER
     c.rotation_euler = (hand - c.location).to_track_quat("-Z", "Y").to_euler()
 bpy.context.scene.camera = bpy.data.objects["CAM_PALM"]
 print("cameras: CAM_PALM, CAM_SIDE, CAM_THREEQUARTER")
+
+# Leave the file with the ARMATURE active and already in Pose Mode. Blender
+# stores the mode, and Pose Mode is not even offered in the dropdown unless an
+# armature is the active object -- creating the cameras last made a camera
+# active, so the option was missing entirely.
+for o in bpy.data.objects:
+    try: o.select_set(False)
+    except Exception: pass
+rig.select_set(True)
+bpy.context.view_layer.objects.active = rig
+bpy.ops.object.mode_set(mode="POSE")
+try:
+    rig.data.bones.active = rig.data.bones[EDIT[3]]   # f_index.01.R
+except Exception:
+    pass
+print("saved in mode: %s, active object: %s" % (rig.mode, bpy.context.view_layer.objects.active.name))
 
 bpy.ops.wm.save_as_mainfile(filepath=OUT)
 print("CHECKPOINT_DONE", OUT)

@@ -62,3 +62,36 @@ no body, no wrist, no root.
 - **In Godot:** a second `AnimationTree` blend targeting only the finger tracks,
   or simply bake the finger pose into each `water_can` clip at export. The
   contract is the same either way: fingers are static, the arm is animated.
+
+## Superseded: the twisted arm, and what caused it
+
+The user reported the arm and hand looked "all twisted weirdly". They were right.
+Three compounding faults, all mine:
+
+1. **Hand targeted below reach.** I aimed the wrist at 0.82 m, but a fully
+   extended arm from a 1.558 m shoulder reaches only 0.843 m standing. IK
+   therefore locked the elbow straight at **179.9 deg**.
+2. **The can hung along the palm normal.** Making it look upright then required
+   rolling the wrist ~127 deg. A real can hangs from its bar under gravity,
+   independent of hand roll, so the socket's body axis must be **world-down**,
+   not the palm normal.
+3. **My wrist metric was wrong.** It compared raw forearm and hand matrices,
+   whose rest orientations differ by construction, so it reported ~170 deg on a
+   perfectly neutral wrist. It now measures deviation from the REST relationship.
+
+`tools/ardy/carry_pose.py` builds the corrected pose:
+
+| measure | before | after |
+|---|---|---|
+| elbow angle | 179.9 deg (locked) | **142.4 deg** |
+| wrist deviation from rest | 127.1 deg | **0.0 deg** |
+| can tilt off vertical | 86.4 deg | **0.0 deg** |
+| hand/can intersecting tris | 79 | 140 |
+
+The bar axis is now derived as horizontal and perpendicular to the forearm,
+rather than from a PCA of the palm slab which could come out near-vertical and
+made the world-down projection degenerate.
+
+Finger closure uses **fixed anatomical angles, not a search** — the bar sits in
+the grip channel, which is exactly where the fingers are, so any search anchored
+at zero closure begins already in contact. 140 intersecting triangles remain.
