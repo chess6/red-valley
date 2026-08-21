@@ -90,7 +90,13 @@ def stop_line() -> float:
 
 def _vast(*args: str) -> object:
     if not VAST_BIN.exists():
-        raise BudgetError(f"vastai CLI not found at {VAST_BIN}")
+        raise BudgetError(
+            f"vastai CLI not found at {VAST_BIN}. This is infrastructure, not a "
+            f"balance problem: the guard cannot read the account, so it fails "
+            f"closed and no compute may start. Rebuild it with "
+            f"tools/assetgen/bootstrap.sh (pinned in "
+            f"tools/assetgen/requirements.txt), then re-run this guard. "
+            f"Credentials are separate and come from .env.")
     try:
         proc = subprocess.run(
             [str(VAST_BIN), *args, "--raw"],

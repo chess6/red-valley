@@ -1,0 +1,13 @@
+# Vast.ai CLI environment for tools/assetgen/vast.sh and provision.py.
+#
+# The venv itself is gitignored, but this file is TRACKED so deleting the venv
+# can never again remove undocumented infrastructure. It has happened once: a
+# repository cleanup removed tools/assetgen/.venv as "pip-regenerable", the old
+# checkout was then trashed and emptied, and the spend guard failed closed with
+# "vastai CLI not found" because nothing recorded what had been installed.
+#
+# Rebuild with: tools/assetgen/bootstrap.sh
+#
+# No version was recorded for the original install, so this pin is the version
+# installed on 2026-08-20 during that repair, not a recovered original.
+vastai==1.5.5
