@@ -64,13 +64,14 @@ def main():
               "this generator's sets carry no root_2d; positions are absolute"))
 
     def world(c, joint):
-        """root-relative -> world, for the ground plane."""
-        p = c.global_joints_positions[:, BI[joint]].numpy().copy()
-        if have_root and hasattr(c, "root_2d"):
-            r = c.root_2d.numpy()
-            p[:, 0] += r[:, 0]
-            p[:, 2] += r[:, 1]
-        return p
+        """Stored joint positions are ABSOLUTE in both generators.
+
+        An earlier version added root_2d back, on the assumption they were
+        root-relative. They are not: doing so inflated the lead foot's spread to
+        step + root and made a genuinely planted rear foot look like it slid
+        exactly as far as the body moved. The tell was that both feet reported
+        the same spread as the root advance."""
+        return c.global_joints_positions[:, BI[joint]].numpy().copy()
 
     lead = [c for c in cs if "LeftFoot" in getattr(c, "joint_names", [])]
     pos = [world(c, "LeftFoot") for c in lead]

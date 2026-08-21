@@ -68,6 +68,67 @@ MAX_LEAN_DEG = 60.0
 POUR_TILT_DEG = 44.0
 
 
+def _rot(axis, rad):
+    a = np.asarray(axis, dtype=float); a = a / np.linalg.norm(a)
+    K = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]])
+    return np.eye(3) + math.sin(rad) * K + (1 - math.cos(rad)) * (K @ K)
+
+
+
+
+def make_poser(sk, torch):
+    """FK-based CCD posing, on the generator's own skeleton.
+
+    The constraint format stores LOCAL ROTATIONS, so the contract has to be
+    authored as a real pose, not as a list of target positions. This is the same
+    approach build_water_constraints.py used for the original water clip, where it
+    converged to under 2 mm.
+    """
+    BI = sk.bone_index
+    parents = [int(x) for x in sk.joint_parents]
+    J = len(sk.bone_order_names)
+
+    def fk(local, root):
+        gr, pj, _ = sk.fk(local[None], root[None])
+        return gr[0], pj[0]
+
+    def rot_world_at(local, gr, j, axis, rad):
+        """Pre-multiply joint j's GLOBAL rotation, expressed in its local frame."""
+        a = torch.tensor(axis, dtype=local.dtype)
+        a = a / a.norm()
+        K = torch.tensor([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]],
+                         dtype=local.dtype)
+        R = (torch.eye(3, dtype=local.dtype) + math.sin(rad) * K
+             + (1 - math.cos(rad)) * (K @ K))
+        p = parents[j]
+        Rp = gr[p] if p >= 0 else torch.eye(3, dtype=local.dtype)
+        local[j] = Rp.T @ R @ Rp @ local[j]
+
+    def reach(local, root, chain, end_name, target, iters=60, step_cap_deg=12.0):
+        tgt = torch.tensor(np.asarray(target, dtype=np.float64))
+        e = BI[end_name]
+        for _ in range(iters):
+            for j in reversed(chain):
+                gr, pj = fk(local, root)
+                v1 = pj[e] - pj[j]
+                v2 = tgt - pj[j]
+                if v1.norm() < 1e-6 or v2.norm() < 1e-6:
+                    continue
+                ax = torch.cross(v1, v2)
+                if ax.norm() < 1e-9:
+                    continue
+                ang = math.acos(float(torch.clamp((v1 @ v2) / (v1.norm() * v2.norm()), -1, 1)))
+                rot_world_at(local, gr, j, tuple(ax.tolist()),
+                             min(ang, math.radians(step_cap_deg)))
+            gr, pj = fk(local, root)
+            if float((pj[e] - tgt).norm()) < 2e-3:
+                break
+        gr, pj = fk(local, root)
+        return float((pj[e] - tgt).norm())
+
+    return BI, parents, J, fk, rot_world_at, reach
+
+
 def rot_axis(axis, deg):
     a = np.asarray(axis, dtype=float)
     a = a / np.linalg.norm(a)
@@ -181,10 +242,8 @@ def main():
     print("  body scale %.3f (hip %.3f m vs character %.3f m): bed %.3f, band %.3f-%.3f, "
           "stagger %.3f" % (S, hip_h, CHARACTER_HIP_H, soil, band[0], band[1], lead_adv))
 
-    poses = np.repeat(rest[None], N_FRAMES, axis=0)
 
-    # forward is +Z: generate.py seeds first_heading_angle=0 as "facing +Z"
-    FWD = np.array([0.0, 0.0, 1.0])
+    FWD = np.array([0.0, 0.0, 1.0])   # generators seed heading 0 as "facing +Z"
     # hand: derived from the spout target through the rigid can
     # Solve for the DEEPEST point of the documented band the body can actually
     # reach, instead of picking a height and then forcing it. The shoulder is
@@ -199,6 +258,7 @@ def main():
     neck = next((n for n in ("Neck", "Neck1", "Neck2") if n in BI), None)
     assert neck, "no neck joint found in %s" % a.generator
     trunk = float(np.linalg.norm(rest[BI[neck]] - rest[BI["Hips"]]))
+
     # Ask for the DOCUMENTED target first. The previous version searched from the
     # shallowest end of the band downward and broke on the first feasible point,
     # so it always returned 0.30 -- the easiest point -- while the contract says
@@ -245,66 +305,63 @@ def main():
         print("  documented target %.3f m above the bed is reachable" % target_above)
     print("  needs %.0f deg trunk lean + %.3f m pelvis drop (knee flexion)"
           % (LEAN_NEEDED, DROP_NEEDED))
-    # THE ROOT MUST MOVE, on every frame, not just the ones with a hips key.
-    #
-    # EndEffectorConstraintSet derives root_2d, root_y and heading from whatever
-    # full pose it is handed, so leaving the pelvis at rest on the foot frames
-    # pinned the body to the origin and made a forward step geometrically
-    # impossible. The first A/B run produced no step from EITHER generator for
-    # exactly this reason -- the contract forbade it. Positions are also stored
-    # root-relative, so an inconsistent root makes the foot targets incoherent
-    # frame to frame.
-    #
-    # So: give the pelvis one continuous trajectory -- still before the step,
-    # easing forward and down across it, settled after -- and build every other
-    # target on top of it.
-    t_land0, t_land1 = WINDOWS_S["lead_released"][0], WINDOWS_S["lead_landed"][0]
-    f0, f1 = int(round(t_land0 * FPS)), int(round(t_land1 * FPS))
+
+    # ---- author a real POSE per constrained frame -------------------------
+    # The saved format keeps LOCAL ROTATIONS and rebuilds positions by FK, so a
+    # pose array of target positions with identity rotations serialises to "rest
+    # pose, translated" -- which is precisely what made the first A/B contract
+    # contain no step. Every constrained frame is now solved with IK.
+    BI2, parents, JN_, fk, rot_world_at, reach = make_poser(sk, torch)
+
+    t0 = WINDOWS_S["lead_released"][0]
+    t1 = WINDOWS_S["lead_landed"][0]
+    f0, f1 = int(round(t0 * FPS)), int(round(t1 * FPS))
     w = np.clip((np.arange(N_FRAMES) - f0) / max(1, (f1 - f0)), 0.0, 1.0)
-    w = w * w * (3 - 2 * w)                       # smooth, no step discontinuity
+    w = w * w * (3 - 2 * w)
     root_fwd = w * (lead_adv * 0.5)
     root_dn = w * DROP_NEEDED
-    for f in range(N_FRAMES):
-        poses[f, :, 2] += root_fwd[f]             # +Z forward, generator-native
-        poses[f, :, 1] -= root_dn[f]
 
-    # Absolute ground targets, written AFTER the root shift. Written before it,
-    # the shift moved the planted feet too and the contract asked the support
-    # foot to slide 0.26 m -- caught by the local prover, not by a paid run.
     lead_start = rest[BI["LeftFoot"]].copy()
     lead_end = lead_start + FWD * lead_adv
-    for f in SETTLE:
-        poses[f, BI["LeftFoot"]] = lead_start
-    for f in LEAD_LANDED:
-        poses[f, BI["LeftFoot"]] = lead_end
-    for f in SUPPORT:
-        poses[f, BI["RightFoot"]] = rest[BI["RightFoot"]]
+    rear_fixed = rest[BI["RightFoot"]].copy()
 
+    LEG = {"Left": [BI["LeftUpLeg"], BI["LeftLeg"]] if "LeftUpLeg" in BI
+                   else [BI["LeftLeg"], BI["LeftShin"]],
+           "Right": [BI["RightUpLeg"], BI["RightLeg"]] if "RightUpLeg" in BI
+                    else [BI["RightLeg"], BI["RightShin"]]}
+    ARM = [BI["RightShoulder"], BI["RightArm"], BI["RightForeArm"]]
 
+    all_frames = sorted(set(SETTLE) | set(LEAD_LANDED) | set(POUR) | set(SUPPORT)
+                        | set(sparse(win("pour"), 3)))
+    poses = np.repeat(rest[None], N_FRAMES, axis=0)
+    rots = np.repeat(np.eye(3)[None, None], N_FRAMES, axis=0).repeat(len(names), axis=1)
+    worst = {"lead": 0.0, "rear": 0.0, "hand": 0.0}
 
-    _, R_carry = wrist_from_spout(rest[BI["RightHand"]]
-                                  + np.array(meta["markers"]["spout_tip"]), 0.0, meta)
-    for f in POUR:
-        poses[f, BI["RightHand"]] = grip
-    sh, arm = sh0, arm_len
-    # The reach is supposed to come from the STEP and the lean, so judge the
-    # target against the shoulder where it will actually be, not against a
-    # T-pose shoulder standing still.
-    need = float(np.linalg.norm(grip - sh_eff))
-    print("  spout target %s -> wrist %s" % (np.round(spout, 3), np.round(grip, 3)))
-    print("  wrist is %.3f m from the stepped shoulder; arm is %.3f m (%.0f%% extension)"
-          % (need, arm, 100.0 * need / arm))
-    assert need <= arm * 0.98, (
-        "the contract asks for %.0f%% arm extension even after the step; an "
-        "unreachable constraint would just force a crouch or a stretched arm. "
-        "Move the spout target closer or lengthen the stagger." % (100.0 * need / arm))
+    for f in all_frames:
+        local = torch.eye(3).repeat(len(names), 1, 1).double()
+        root = torch.tensor(np.array([0.0, rest[BI["Hips"]][1] - root_dn[f],
+                                      root_fwd[f]]))
+        # feet: absolute ground targets, so the body advances OVER planted feet
+        lt = lead_end if f in LEAD_LANDED else lead_start
+        worst["lead"] = max(worst["lead"],
+                            reach(local, root, LEG["Left"], "LeftFoot", lt))
+        worst["rear"] = max(worst["rear"],
+                            reach(local, root, LEG["Right"], "RightFoot", rear_fixed))
+        if f in POUR:
+            worst["hand"] = max(worst["hand"],
+                                reach(local, root, ARM, "RightHand", grip))
+            gr, _ = fk(local, root)
+            # wrist orientation so the handle sits in the palm and the spout tips
+            want = torch.tensor(R_wrist)
+            p_ = parents[BI["RightHand"]]
+            local[BI["RightHand"]] = gr[p_].T @ want
+        gr, pj = fk(local, root)
+        poses[f] = pj.numpy()
+        rots[f] = gr.numpy()
 
-    rots = np.repeat(np.eye(3)[None, None], N_FRAMES, axis=1).repeat(len(names), axis=1)
-    rots = np.repeat(np.eye(3)[None][None], N_FRAMES, axis=0).repeat(len(names), axis=1)
-    for f in POUR:
-        rots[f, BI["RightHand"]] = R_wrist
-    for f in CARRY:
-        rots[f, BI["RightHand"]] = R_carry
+    print("  IK residuals: lead foot %.4f m, rear foot %.4f m, hand %.4f m"
+          % (worst["lead"], worst["rear"], worst["hand"]))
+    assert max(worst.values()) < 0.02, "IK did not reach its targets: %s" % worst
 
     def mk(cls, frames):
         fi = torch.tensor(frames)
