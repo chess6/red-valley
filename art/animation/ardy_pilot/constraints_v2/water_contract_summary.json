@@ -1,0 +1,57 @@
+{
+  "generator": "ardy",
+  "skeleton_joints": 27,
+  "fps": 20,
+  "frames": 48,
+  "duration_s": 2.4,
+  "windows_seconds": {
+    "settle": [
+      0.0,
+      0.4
+    ],
+    "lead_released": [
+      0.45,
+      0.95
+    ],
+    "lead_landed": [
+      1.0,
+      2.4
+    ],
+    "pour": [
+      1.1,
+      1.8
+    ],
+    "carry_end": [
+      2.2,
+      2.4
+    ]
+  },
+  "windows_frames": {
+    "settle": [
+      0,
+      8
+    ],
+    "lead_landed": [
+      20,
+      47
+    ],
+    "pour": [
+      22,
+      36
+    ]
+  },
+  "lead_advance_m_generator_units": 0.264,
+  "body_scale_vs_character": 0.9429,
+  "spout_target_above_bed_m_generator_units": 0.2829,
+  "spout_target_above_bed_m_character_units": 0.3,
+  "lead_advance_m_character_units": 0.28,
+  "documented_band_m": [
+    0.15,
+    0.3
+  ],
+  "lean_allowance_deg": 60.0,
+  "min_lean_needed_deg": 54.0,
+  "pour_tilt_deg": 44.0,
+  "constrained_frames_total": 100,
+  "note": "no compression to 1.2 s during the architectural comparison"
+}

@@ -1,0 +1,57 @@
+{
+  "generator": "kimodo",
+  "skeleton_joints": 30,
+  "fps": 30,
+  "frames": 72,
+  "duration_s": 2.4,
+  "windows_seconds": {
+    "settle": [
+      0.0,
+      0.4
+    ],
+    "lead_released": [
+      0.45,
+      0.95
+    ],
+    "lead_landed": [
+      1.0,
+      2.4
+    ],
+    "pour": [
+      1.1,
+      1.8
+    ],
+    "carry_end": [
+      2.2,
+      2.4
+    ]
+  },
+  "windows_frames": {
+    "settle": [
+      0,
+      12
+    ],
+    "lead_landed": [
+      30,
+      71
+    ],
+    "pour": [
+      33,
+      54
+    ]
+  },
+  "lead_advance_m_generator_units": 0.2764,
+  "body_scale_vs_character": 0.9873,
+  "spout_target_above_bed_m_generator_units": 0.2962,
+  "spout_target_above_bed_m_character_units": 0.3,
+  "lead_advance_m_character_units": 0.28,
+  "documented_band_m": [
+    0.15,
+    0.3
+  ],
+  "lean_allowance_deg": 60.0,
+  "min_lean_needed_deg": 6.0,
+  "pour_tilt_deg": 44.0,
+  "constrained_frames_total": 149,
+  "note": "no compression to 1.2 s during the architectural comparison"
+}
