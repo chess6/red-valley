@@ -1,0 +1,31 @@
+{
+  "status": "FIRST A/B RUN INVALID -- contract defect found, generators exonerated",
+  "spend_usd": 0.16,
+  "cap_usd": 0.2,
+  "instance": {
+    "gpu": "RTX 3090 24GB",
+    "dph": 0.144,
+    "watchdog_h": 1.3,
+    "destroyed": true
+  },
+  "pins": {
+    "kimodo_code": "1aece8c124d73d255ceff5086d983b844c9f4e94",
+    "kimodo_ckpt": "6c9233af1180b8151e3c4703477104af5dce9dd5",
+    "ardy_code": "693f74d13b3d04a0a22ce127ee79c929dd89756b",
+    "ardy_ckpt": "abe6c43beb28c867c950acb824b9c4ef3d63fb76"
+  },
+  "raw_outputs": {
+    "art/animation/ab/raw/kimodo_water.npz": "4254f6b8ac82a2acde8cd1134f7528ffb36347dd5bb10e926521be236f3abb3d",
+    "art/animation/ab/raw/ardy_water.npz": "c803ba21a7aaaee94824257c3da8a2f3dba5c3f7adcc2e85f40241023a04aa3d"
+  },
+  "root_cause": "EndEffectorConstraintSet.get_save_info() serialises LOCAL ROTATIONS plus the root; joint POSITIONS are reconstructed by FK on load. The contract authored target positions into a pose array and left rotations at identity, so the saved file encoded a rest pose translated forward by the root -- no step and no reach. Proof: every stored foot z equals root_2d exactly, frame for frame.",
+  "consequence": "Neither generator stepped, and that is NOT a generator result. Both faithfully reproduced the contract they were given. Every step- and reach-related conclusion from this run is void. The anthropometry finding (ARDY needs 46 deg of trunk lean where Kimodo needs 0) stands, because it is derived from skeleton geometry rather than from generated motion.",
+  "still_valid": [
+    "both repos/checkpoints pinned and licensed",
+    "Kimodo COMPUTES in SOMASkeleton30 but EXPORTS SOMASkeleton77 -- both true",
+    "SOMA77 adapter written; load-bearing joints reconstruct to 8e-7 m",
+    "sparse conditioning accepted by both (5 sets, 21 keyframes)",
+    "prompt-embedding cache step ran but produced no file -- unresolved"
+  ],
+  "next": "author constraint poses as ROTATIONS solved by IK, as tools/ardy/build_water_constraints.py already did for the original water clip, then re-prove locally before spending again"
+}

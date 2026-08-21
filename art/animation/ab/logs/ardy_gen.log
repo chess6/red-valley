@@ -1,0 +1,35 @@
+Using device: cuda:0
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 1251.35it/s]
+Setting up text encoder (mode=auto); first run may take a while...
+Text encoder service is unreachable, falling back to local LLM2Vec encoder. (InstantiationException: Error in call to target 'ardy.model.text_encoder_api.TextEncoderAPI':
+ConnectError('[Errno 111] Connection refused'))
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1042.58it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 7015.71it/s]
+[transformers] [1mLlamaBiModel LOAD REPORT[0m from: meta-llama/Meta-Llama-3-8B-Instruct
+Key            | Status     |  | 
+---------------+------------+--+-
+lm_head.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/448 [00:00<?, ?it/s]Loading weights:  92%|█████████▏| 412/448 [00:00<00:00, 4111.68it/s]Loading weights: 100%|██████████| 448/448 [00:00<00:00, 4122.20it/s]
+/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:305: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+/workspace/ardy/ardy/skeleton/base.py:72: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  neutral_joints = torch.load(pfolder / "joints.p").squeeze()
+/workspace/ardy/ardy/model/llm2vec/llm2vec_wrapper.py:100: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  encoded_text = torch.tensor(encoded_text).to(self._device)
+sparsify_token_seq: False
+Loaded model: ARDY-Core-RP-20FPS-Horizon40
+Will generate 'A person stands beside a garden bed holding a watering can in the right hand, takes one short step forward with the left foot into a stagger, keeps the right foot planted behind as support, bends the knees to lower the body and extends the right arm down and forward over the bed, tipping the can to pour, keeping the back neutral rather than bending deeply at the waist, then settles.' with 48 frames (2.4s at 20 fps)
+Using 10 denoising steps
+Using 160 history frames per autoregressive step
+Using 5 set of constraints
+    RightHandConstraintSet on frames [22, 26, 29, 32, 36]
+    RightFootConstraintSet on frames [0, 9, 19, 28, 38, 47]
+    LeftFootConstraintSet on frames [0, 4, 8]
+    LeftFootConstraintSet on frames [20, 29, 38, 47]
+    EndEffectorConstraintSet on frames [22, 29, 36]
+  0%|          | 0/10 [00:00<?, ?it/s] 30%|███       | 3/10 [00:00<00:00, 26.84it/s]100%|██████████| 10/10 [00:00<00:00, 48.34it/s]100%|██████████| 10/10 [00:00<00:00, 45.04it/s]
+  0%|          | 0/10 [00:00<?, ?it/s] 70%|███████   | 7/10 [00:00<00:00, 63.41it/s]100%|██████████| 10/10 [00:00<00:00, 63.47it/s]
+Saving the npz output to /workspace/out/ardy_water.npz

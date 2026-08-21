@@ -7,3 +7,6 @@ art/animation/rigify/water_can/water_can.glb
 art/animation/v2/walk_fwd/walk_fwd.glb
 art/animation/v2/water_can/water_can.glb
 art/animation/v2/isolate/plain/plain.glb
+art/animation/ab/logs/ab.log
+art/animation/ab/logs/ardy_gen.log
+art/animation/ab/logs/kimodo_gen.log

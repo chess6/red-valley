@@ -182,12 +182,9 @@ def main():
           "stagger %.3f" % (S, hip_h, CHARACTER_HIP_H, soil, band[0], band[1], lead_adv))
 
     poses = np.repeat(rest[None], N_FRAMES, axis=0)
+
     # forward is +Z: generate.py seeds first_heading_angle=0 as "facing +Z"
     FWD = np.array([0.0, 0.0, 1.0])
-    lead_start = rest[BI["LeftFoot"]].copy()
-    lead_end = lead_start + FWD * lead_adv
-    for f in LEAD_LANDED:
-        poses[f, BI["LeftFoot"]] = lead_end
     # hand: derived from the spout target through the rigid can
     # Solve for the DEEPEST point of the documented band the body can actually
     # reach, instead of picking a height and then forcing it. The shoulder is
@@ -248,6 +245,41 @@ def main():
         print("  documented target %.3f m above the bed is reachable" % target_above)
     print("  needs %.0f deg trunk lean + %.3f m pelvis drop (knee flexion)"
           % (LEAN_NEEDED, DROP_NEEDED))
+    # THE ROOT MUST MOVE, on every frame, not just the ones with a hips key.
+    #
+    # EndEffectorConstraintSet derives root_2d, root_y and heading from whatever
+    # full pose it is handed, so leaving the pelvis at rest on the foot frames
+    # pinned the body to the origin and made a forward step geometrically
+    # impossible. The first A/B run produced no step from EITHER generator for
+    # exactly this reason -- the contract forbade it. Positions are also stored
+    # root-relative, so an inconsistent root makes the foot targets incoherent
+    # frame to frame.
+    #
+    # So: give the pelvis one continuous trajectory -- still before the step,
+    # easing forward and down across it, settled after -- and build every other
+    # target on top of it.
+    t_land0, t_land1 = WINDOWS_S["lead_released"][0], WINDOWS_S["lead_landed"][0]
+    f0, f1 = int(round(t_land0 * FPS)), int(round(t_land1 * FPS))
+    w = np.clip((np.arange(N_FRAMES) - f0) / max(1, (f1 - f0)), 0.0, 1.0)
+    w = w * w * (3 - 2 * w)                       # smooth, no step discontinuity
+    root_fwd = w * (lead_adv * 0.5)
+    root_dn = w * DROP_NEEDED
+    for f in range(N_FRAMES):
+        poses[f, :, 2] += root_fwd[f]             # +Z forward, generator-native
+        poses[f, :, 1] -= root_dn[f]
+
+    # Absolute ground targets, written AFTER the root shift. Written before it,
+    # the shift moved the planted feet too and the contract asked the support
+    # foot to slide 0.26 m -- caught by the local prover, not by a paid run.
+    lead_start = rest[BI["LeftFoot"]].copy()
+    lead_end = lead_start + FWD * lead_adv
+    for f in SETTLE:
+        poses[f, BI["LeftFoot"]] = lead_start
+    for f in LEAD_LANDED:
+        poses[f, BI["LeftFoot"]] = lead_end
+    for f in SUPPORT:
+        poses[f, BI["RightFoot"]] = rest[BI["RightFoot"]]
+
 
 
     _, R_carry = wrist_from_spout(rest[BI["RightHand"]]
@@ -283,9 +315,10 @@ def main():
     # that knee flexion supplies, so the model is not forced to find the height
     # by bowing. Without it the only lever the generator has is trunk hinge.
     HIPS = sparse(win("pour"), 3)
+    # the pelvis key just confirms the trajectory the root already follows
     for f in HIPS:
-        poses[f, BI["Hips"]] = rest[BI["Hips"]] - np.array([0.0, DROP_NEEDED, 0.0]) \
-                               + FWD * (lead_adv * 0.5)
+        poses[f, BI["Hips"]] = (rest[BI["Hips"]] - np.array([0.0, root_dn[f], 0.0])
+                                + FWD * root_fwd[f])
 
     sets = [
         mk(RightHandConstraintSet, POUR),        # spout over the bed
