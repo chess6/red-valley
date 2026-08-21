@@ -81,12 +81,56 @@ print("palm normal . thumbdir = %+.3f (sign check)" % NRM.dot(THUMBDIR))
 
 META = json.load(open(CAN_GLB.replace(".glb", ".json")))
 GA = Matrix(META["grip_anchor_basis_rows"])
-BAR_R = 0.012
-depth = sorted((c - PALM).dot(NRM) for c in handv)
-lift = depth[int(0.85 * (len(depth) - 1))] + BAR_R + 0.0015
-SOCK = (Matrix.Translation(PALM + NRM * lift)
+BAR_R = META["dimensions_m"]["handle_bar_diameter"] / 2.0
+# Seat the bar in the hand's actual GRIP CHANNEL, not at palm-centroid + lift.
+# The old method put the bar 0.025 m off the palm centroid, which is exactly
+# where the thumb tip sits, so the thumb and index had no collision-free pose at
+# any closure. Curl the digits first, then measure the space they enclose.
+PRECURL = {"f_index": 0.55, "f_middle": 0.55, "f_ring": 0.55, "thumb": 0.45}
+BASE_ANG = {"f_index": (52, 68, 44), "f_middle": (52, 68, 44),
+            "f_ring": (40, 52, 30), "thumb": (34, 40, 28)}
+def set_digit(d, frac):
+    for j, a in zip(("01", "02", "03"), BASE_ANG[d]):
+        nm = "%s.%s.%s" % (d, j, S)
+        if nm in PB:
+            PB[nm].rotation_mode = "XYZ"
+            PB[nm].rotation_euler = (math.radians(a * frac), 0, 0)
+    if d == "thumb" and "thumb.01.R" in PB:
+        PB["thumb.01.R"].rotation_euler = (math.radians(BASE_ANG[d][0] * frac), 0,
+                                           math.radians(-22 * frac))
+for d, f in PRECURL.items(): set_digit(d, f)
+bpy.context.view_layer.update()
+
+def surf_of(groups, wmin=0.5):
+    idx = [GIx.get(g) for g in groups]
+    idx = [i for i in idx if i is not None]
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = mesh.evaluated_get(dg); m = ev.to_mesh()
+    pts = [mesh.matrix_world @ m.vertices[v.index].co for v in mesh.data.vertices
+           if any(g.group in idx and g.weight > wmin for g in v.groups)]
+    ev.to_mesh_clear()
+    return pts
+
+pads = surf_of(["DEF-f_index.03.%s" % S, "DEF-f_middle.03.%s" % S,
+                "DEF-f_index.02.%s" % S, "DEF-f_middle.02.%s" % S])
+palm_s = surf_of(["DEF-palm.01.%s" % S, "DEF-palm.02.%s" % S,
+                  "DEF-palm.03.%s" % S, "DEF-hand.%s" % S], wmin=0.3)
+if not pads or not palm_s:
+    raise SystemExit("cannot sample the grip channel")
+P_pads = sum(pads, Vector()) / len(pads)
+# palm surface on the gripping side only
+palm_face = [c for c in palm_s if (c - PALM).dot(NRM) > 0]
+P_palm = sum(palm_face, Vector()) / len(palm_face) if palm_face else PALM
+CHANNEL = (P_pads + P_palm) * 0.5
+gap = (P_pads - P_palm).length
+print("grip channel: pads<->palm gap %.4f m, bar diameter %.4f m" % (gap, BAR_R * 2))
+print("  channel centre %.4f m off the palm centroid along the normal"
+      % (CHANNEL - PALM).dot(NRM))
+for d in PRECURL: set_digit(d, 0.0)
+bpy.context.view_layer.update()
+
+SOCK = (Matrix.Translation(CHANNEL)
         @ Matrix((BAR.cross(NRM), BAR, NRM)).transposed().to_4x4())
-print("socket: lift %.4f m off the palm centre" % lift)
 
 before = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=CAN_GLB)

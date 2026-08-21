@@ -33,17 +33,27 @@ os.makedirs(OUT_DIR, exist_ok=True)
 #   handle bar : along X, through the origin -- this is what the hand wraps
 #   body       : hangs below and slightly behind the grip
 #   spout      : leaves the lower body, angles forward and down to the tip
-BODY_R, BODY_H = 0.085, 0.185
-# The hand measures 0.095 m across the handle axis. A 0.100 m bar with 0.009 m
-# struts leaves a clear span of 0.082 m, so the hand could not fit inside its own
-# handle and the fingers always clashed with the struts. Real cans are ~0.13-0.15.
-BAR_R, BAR_LEN = 0.012, 0.140
-STRUT_R = 0.009
-SPOUT_R = 0.016
+# Dimensions sized to the MEASURED hand, not guessed. The previous proxy failed
+# the grip because its body was a 0.085 m radius cylinder whose top sat only
+# 0.0825 m below the grip -- exactly where the thumb and index have to be, so no
+# collision-free pose existed at any closure.
+#
+#   hand width across the handle axis .......... 0.095 m (measured)
+#   required clear span between the struts ..... 0.115 m (hand + 10 mm each side)
+#   required drop from bar to body top ......... 0.075 m (fingers wrap and hang
+#                                                 below the bar) + margin
+HAND_W = 0.095
+BAR_R, BAR_LEN = 0.011, 0.140      # 22 mm bar: graspable, not a rod
+STRUT_R = 0.008
+CLEAR_SPAN = BAR_LEN - 2 * STRUT_R  # 0.124 m > 0.115 required
+BODY_R, BODY_H = 0.075, 0.200
+BODY_TOP_DROP = 0.130               # bar -> body top, vs 0.0825 before
+SPOUT_R = 0.014
 
-BODY_C = (0.0, 0.030, -0.175)          # body centre
-SPOUT_BASE = (0.0, -0.055, -0.215)     # leaves the lower front of the body
-SPOUT_TIP = (0.0, -0.300, -0.120)      # nozzle opening
+BODY_C = (0.0, 0.020, -(BODY_TOP_DROP + BODY_H / 2.0))
+SHOULDER_Z = -BODY_TOP_DROP
+SPOUT_BASE = (0.0, -0.050, -(BODY_TOP_DROP + BODY_H * 0.85))
+SPOUT_TIP = (0.0, -0.300, -0.150)   # long spout rising toward the body top
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 
@@ -74,10 +84,12 @@ parts = []
 parts.append(cyl("can_body", BODY_R, BODY_H, BODY_C))
 parts.append(cyl("can_handle_bar", BAR_R, BAR_LEN, (0.0, 0.0, 0.0),
                  rot=(0.0, math.radians(90), 0.0)))
-# struts tying the grip bar down to the body shoulders
-top_z = BODY_C[2] + BODY_H/2
-for sx in (-BAR_LEN/2, BAR_LEN/2):
-    parts.append(tube("can_strut", (sx, 0.0, 0.0), (sx*0.55, BODY_C[1], top_z), STRUT_R))
+# Open arch: each strut sweeps from a bar end down to the body shoulder in two
+# segments, so the opening the hand passes through is genuinely clear.
+for sx in (-BAR_LEN / 2, BAR_LEN / 2):
+    mid = (sx * 0.92, 0.012, SHOULDER_Z * 0.45)
+    parts.append(tube("can_strut", (sx, 0.0, 0.0), mid, STRUT_R))
+    parts.append(tube("can_strut", mid, (sx * 0.52, 0.020, SHOULDER_Z), STRUT_R))
 parts.append(tube("can_spout", SPOUT_BASE, SPOUT_TIP, SPOUT_R))
 
 bpy.ops.object.select_all(action="DESELECT")
@@ -155,8 +167,15 @@ meta = {
     "grip_anchor_contract": ("Y along the handle bar, Z toward the can body; "
                              "coincide this frame with prop_socket.R"),
     "spout_tip_offset_from_grip_m": round(math.dist((0, 0, 0), tip), 4),
-    "dimensions_m": {"body_radius": BODY_R, "body_height": BODY_H,
-                     "spout_radius": SPOUT_R, "handle_bar_length": BAR_LEN},
+    "dimensions_m": {
+        "body_radius": BODY_R, "body_height": BODY_H,
+        "spout_radius": SPOUT_R, "handle_bar_length": BAR_LEN,
+        "handle_bar_diameter": round(BAR_R * 2, 4),
+        "handle_clear_span": round(CLEAR_SPAN, 4),
+        "hand_width_measured": HAND_W,
+        "clear_span_margin": round(CLEAR_SPAN - HAND_W, 4),
+        "bar_to_body_top": BODY_TOP_DROP,
+    },
     "triangles": len(can.data.loop_triangles) if can.data.loop_triangles else None,
 }
 can.data.calc_loop_triangles()
