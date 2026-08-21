@@ -2,3 +2,5 @@
 # permitted past the pre-commit guard. One path per line.
 art/animation/ardy_pilot/derived/rv_player_proportioned.glb
 art/animation/ardy_pilot/proxy/watering_can_proxy.glb
+art/animation/rigify/walk_fwd/walk_fwd.glb
+art/animation/rigify/water_can/water_can.glb
