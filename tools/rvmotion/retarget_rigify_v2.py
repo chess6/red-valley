@@ -43,7 +43,16 @@ INPLACE = "--inplace" in ARGV
 POUR = next((a.split("=", 1)[1] for a in ARGV if a.startswith("--wrist-pour=")), None)
 ARM_IK = next((a.split("=", 1)[1] for a in ARGV if a.startswith("--arm-ik=")), None)
 PROP = next((a.split("=", 1)[1] for a in ARGV if a.startswith("--prop=")), None)
+# The spout solve is OFF unless explicitly requested. Measured cost of leaving it
+# on: normalised forward reach 0.96x -> 0.86x and shoulder-flexion range 20 -> 11
+# deg (per-frame debiased error 1.1 -> 9.5), in exchange for 2 cm of spout height
+# on a band it still missed by 6 cm. It was distorting the arm to chase a target
+# this source cannot reach; the gap belongs in the report, not in the pose.
 SPOUT_BAND = next((a.split("=", 1)[1] for a in ARGV if a.startswith("--spout-band=")), None)
+if SPOUT_BAND and "--allow-spout-solve" not in ARGV:
+    print("spout solve DISABLED (pass --allow-spout-solve to re-enable); "
+          "band will be reported, not chased")
+    SPOUT_BAND = None
 SOIL = float(next((a.split("=", 1)[1] for a in ARGV if a.startswith("--soil=")), 0.22))
 HAND_CLEAR = float(next((a.split("=", 1)[1] for a in ARGV if a.startswith("--hand-clear=")), 0.0))
 HAND_FWD = float(next((a.split("=", 1)[1] for a in ARGV if a.startswith("--hand-fwd=")), 0.0))
@@ -575,8 +584,19 @@ for f in range(T):
         sh_now = (W @ PB["DEF-upper_arm.%s" % s_].matrix).to_translation()
         ARM_REACH = 0.97 * (rig.data.bones["upper_arm_fk.%s" % s_].length
                             + rig.data.bones["forearm_fk.%s" % s_].length)
+        # Scale the shoulder->hand vector by the ARM-LENGTH ratio, not the global
+        # body scale. This character's arm is 1.35x the source skeleton's, so
+        # placing the hand at the source's absolute arm extent parked it well
+        # inside the rig's reach and cost 22% of normalised forward reach the
+        # moment the arm was switched to IK (1.04x -> 0.82x, measured).
+        _src_arm = float(np.linalg.norm(POS[CAL_F, JN.index(("Right" if s_ == "R" else "Left") + "ForeArm")]
+                                        - POS[CAL_F, JN.index(armj0)])
+                         + np.linalg.norm(POS[CAL_F, JN.index(jn)]
+                                          - POS[CAL_F, JN.index(("Right" if s_ == "R" else "Left") + "ForeArm")]))
+        ARM_RATIO = (rig.data.bones["upper_arm_fk.%s" % s_].length
+                     + rig.data.bones["forearm_fk.%s" % s_].length) / max(1e-6, _src_arm)
         base = Vector(sh_now + Vector((POS[f, JN.index(jn)]
-                                       - POS[f, JN.index(armj0)]) * SCALE))
+                                       - POS[f, JN.index(armj0)]) * ARM_RATIO))
         if HAND_CLEAR:
             # Hold the hand out from the thigh. The source keeps the arm against
             # the body, so the hanging can intersects the leg at the carry frames;
@@ -593,7 +613,7 @@ for f in range(T):
         upd()
         pole = PB["upper_arm_ik_target.%s" % s_]
         el = Vector(sh_now + Vector((POS[f, JN.index(eln)]
-                                     - POS[f, JN.index(armj0)]) * SCALE))
+                                     - POS[f, JN.index(armj0)]) * ARM_RATIO))
         sh = Vector(sh_now)
         limb = (base - sh)
         dirv = el - (sh + base) * 0.5

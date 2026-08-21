@@ -29,12 +29,12 @@
         "max": 0.0
       },
       "DEF-upper_arm.R": {
-        "mean": 2.99,
-        "max": 9.63
+        "mean": 1.43,
+        "max": 3.54
       },
       "DEF-forearm.R": {
-        "mean": 6.3,
-        "max": 21.04
+        "mean": 2.6,
+        "max": 7.1
       },
       "DEF-hand.R": {
         "mean": 3.83,
@@ -77,8 +77,8 @@
         "max": 0.0
       }
     },
-    "overall_mean_deg": 1.096,
-    "overall_max_deg": 21.04,
+    "overall_mean_deg": 0.803,
+    "overall_max_deg": 10.593,
     "gate_mean_lt_2deg": true,
     "per_bone_limits_deg": {
       "DEF-upper_arm.R": 8.0,
@@ -104,12 +104,12 @@
     ],
     "authored_override_deviation_deg": {
       "DEF-upper_arm.R": {
-        "mean": 2.99,
-        "max": 9.63
+        "mean": 1.43,
+        "max": 3.54
       },
       "DEF-forearm.R": {
-        "mean": 6.3,
-        "max": 21.04
+        "mean": 2.6,
+        "max": 7.1
       },
       "DEF-hand.R": {
         "mean": 3.83,
@@ -120,17 +120,17 @@
     "note": "bones driven by IK are expected to deviate where the goal was moved deliberately; those deviations are listed, never averaged away"
   },
   "twist_channel": {
-    "DEF-upper_arm.L.001": {
-      "range_deg": 8.38
-    },
     "DEF-forearm.R.001": {
-      "range_deg": 43.7
+      "range_deg": 22.57
     },
     "DEF-upper_arm.R.001": {
-      "range_deg": 29.64
+      "range_deg": 28.77
     },
     "DEF-forearm.L.001": {
       "range_deg": 17.57
+    },
+    "DEF-upper_arm.L.001": {
+      "range_deg": 8.38
     },
     "DEF-spine.001": {
       "range_deg": 23.99
@@ -138,7 +138,7 @@
   },
   "wrist": {
     "R": {
-      "pos_rms_vs_source_m": 0.1366,
+      "pos_rms_vs_source_m": 0.2208,
       "orientation_delta_err_max_deg": 10.59
     },
     "L": {
@@ -151,8 +151,8 @@
     "source_clip": "water_can_oneshot",
     "R": {
       "source_deg": 34.01,
-      "target_deg": 84.36,
-      "loss_pct": -148.0
+      "target_deg": 27.93,
+      "loss_pct": 17.9
     },
     "L": {
       "source_deg": 30.39,
@@ -181,13 +181,13 @@
     "gate_peak_slide_lt_5cm_s": false
   },
   "prop_rigidity": {
-    "max_hand_relative_drift_m": 1.79e-07,
+    "max_hand_relative_drift_m": 2.72e-07,
     "max_hand_relative_drift_deg": 0.0,
     "gate_rigid": true
   },
   "spout": {
-    "min_above_bed_m": 0.3643,
-    "max_above_bed_m": 0.7015,
+    "min_above_bed_m": 0.3858,
+    "max_above_bed_m": 0.5556,
     "documented_band_m": [
       0.15,
       0.3
@@ -196,8 +196,8 @@
       9,
       17
     ],
-    "window_min_m": 0.3643,
-    "window_max_m": 0.3849,
+    "window_min_m": 0.3858,
+    "window_max_m": 0.4265,
     "window_frames_in_band": 0,
     "window_frames_total": 9,
     "frames_in_band_whole_clip": 0,
@@ -207,74 +207,95 @@
   "collisions": {
     "per_frame": {
       "0": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 12,
+        "by_bone": {
+          "DEF-forearm.R.001": 36
+        }
       },
       "2": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 9,
+        "by_bone": {
+          "DEF-forearm.R.001": 27
+        }
       },
       "4": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 10,
+        "by_bone": {
+          "DEF-forearm.R.001": 30
+        }
       },
       "6": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 12,
+        "by_bone": {
+          "DEF-forearm.R.001": 36
+        }
       },
       "8": {
-        "tris": 2,
+        "tris": 19,
         "by_bone": {
-          "DEF-forearm.R.001": 6
+          "DEF-forearm.R.001": 57
         }
       },
       "10": {
-        "tris": 2,
+        "tris": 19,
         "by_bone": {
-          "DEF-forearm.R.001": 6
+          "DEF-forearm.R.001": 57
         }
       },
       "12": {
-        "tris": 2,
+        "tris": 19,
         "by_bone": {
-          "DEF-forearm.R.001": 6
+          "DEF-forearm.R.001": 57
         }
       },
       "14": {
-        "tris": 3,
+        "tris": 19,
         "by_bone": {
-          "DEF-forearm.R.001": 9
+          "DEF-forearm.R.001": 57
         }
       },
       "16": {
-        "tris": 3,
+        "tris": 19,
         "by_bone": {
-          "DEF-forearm.R.001": 9
+          "DEF-forearm.R.001": 57
         }
       },
       "18": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 17,
+        "by_bone": {
+          "DEF-forearm.R.001": 51
+        }
       },
       "20": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 13,
+        "by_bone": {
+          "DEF-forearm.R.001": 39
+        }
       },
       "22": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 11,
+        "by_bone": {
+          "DEF-forearm.R.001": 33
+        }
       }
     },
-    "max_tris": 3,
+    "max_tris": 19,
+    "grip_region_vert_hits_max": 57,
+    "body_vert_hits_max": 0,
+    "gate_zero_body_collisions": true,
+    "grip_region_blocked_by": [
+      "proxy watering can handle geometry",
+      "fused Rodin hand topology"
+    ],
     "gate_zero": false
   },
   "joint_limits": {
     "per_side": {
       "R": {
-        "elbow_min_deg": 111.4,
-        "elbow_max_deg": 153.5,
-        "elbow_frame_jitter_deg": 29.2,
-        "wrist_deviation_max_deg": 61.7,
+        "elbow_min_deg": 179.7,
+        "elbow_max_deg": 179.7,
+        "elbow_frame_jitter_deg": 0.0,
+        "wrist_deviation_max_deg": 56.3,
         "knee_min_deg": 164.3,
         "knee_max_deg": 168.5,
         "knee_frame_jitter_deg": 2.01
@@ -305,37 +326,83 @@
   },
   "task_space": {
     "forward_reach_normalised": {
-      "rig": 0.5079,
-      "src": 0.6225,
-      "ratio": 0.816
+      "rig_range": 0.598,
+      "src_range": 0.6226,
+      "range_ratio": 0.961,
+      "per_frame_rmse": 0.0607,
+      "per_frame_max_abs": 0.0849,
+      "constant_bias": 0.0558,
+      "per_frame_rmse_debiased": 0.024,
+      "per_frame_max_abs_debiased": 0.0508,
+      "bias_note": "a constant offset is expected from A-pose/T-pose rest calibration and is not a tracking failure; the debiased figures are the dynamics"
     },
-    "forward_reach_raw_m": {
-      "rig": 0.3633,
-      "src": 0.3288,
-      "note": "raw ratio tracks the arm-length ratio (1.35) and is not a defect"
+    "shoulder_flexion_deg": {
+      "rig_range": 20.2,
+      "src_range": 19.3,
+      "per_frame_rmse": 6.92,
+      "per_frame_max_abs": 8.01,
+      "constant_bias_deg": 6.89,
+      "per_frame_max_abs_debiased": 1.13
     },
-    "step_displacement": {
+    "arm_chest_local_fwd_m": {
+      "rig_range": 0.2435,
+      "src_range": 0.1676
+    },
+    "spine_signed_pitch_per_frame_err_deg": [
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      }
+    ],
+    "spine_signed_pitch_rig_max_deg": [
+      8.8,
+      24.5,
+      30.5,
+      36.7,
+      35.6
+    ],
+    "spine_signed_pitch_src_max_deg": [
+      8.8,
+      24.5,
+      30.5,
+      36.7,
+      35.6
+    ],
+    "step_events": {
       "L": {
-        "rig_m": 0.0802,
-        "src_m": 0.059,
-        "ratio": 1.359
+        "rig_count": 0,
+        "src_count": 0,
+        "rig_advance_m": 0,
+        "src_advance_m": 0
       },
       "R": {
-        "rig_m": 0.0767,
-        "src_m": 0.055,
-        "ratio": 1.394
+        "rig_count": 0,
+        "src_count": 0,
+        "rig_advance_m": 0,
+        "src_advance_m": 0
       }
     },
-    "spine_segment_pitch_err_deg": [
-      0.0,
-      -0.0,
-      0.0,
-      0.0
-    ],
     "gate_reach_preserved": true,
-    "gate_step_preserved": false,
+    "gate_shoulder_flexion": true,
+    "gate_step_events_match": true,
     "gate_spine_shape": true,
-    "note": "reach is normalised by arm length because the skeletons differ; step preservation compares against the SOURCE, so a source with no step passes only if the rig also has none"
+    "note": "reach gate is +-10% of range AND <=0.10 arm-lengths per-frame max; spine uses SIGNED sagittal pitch compared frame by frame; steps are detected as release->swing->forward landing events, not displacement"
   },
   "face": {
     "rigid_core_verts": 7922,

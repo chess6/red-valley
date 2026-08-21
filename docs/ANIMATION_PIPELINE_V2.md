@@ -147,9 +147,10 @@ caught the locked elbow and a 65°/frame jump that the exemption had been hiding
 
 ## Isolation test (before Kimodo)
 
-Full write-up: `docs/ISOLATION_TEST.md`. Headline: the authored interaction
-layers are **innocent** — plain and polished retargets measured identically on
-every task-space quantity. Two retargeter defects were real and are fixed: a
+Full write-up: `docs/ISOLATION_TEST.md`. Headline, **corrected**: the authored
+layers are not innocent — the **spout solve alone** costs 10% of forward reach and
+half the shoulder-flexion range, and is now off by default. Every other authored
+layer (clearance, prop, pour rotation) measured clean. Two retargeter defects were real and are fixed: a
 spine *shape* error that produced the lower-back arch (rotation-matching is not
 direction-matching across skeletons with different rest orientations), and
 pelvis placement being corrected before the spine solve moved it. The missing

@@ -8,7 +8,15 @@ Method: the same task-space quantities measured on all three, with the authored
 layers (`HAND_CLEAR`, `HAND_FWD`, spout solve, pour rotation, arm IK) fully
 disabled for the "plain" build. Tooling: `tools/rvmotion/isolate_measure.py`.
 
-## Result: the authored layers are innocent; two retargeter defects were real
+> **Correction (measurement pass).** The first version of this document claimed
+> the authored layers were "identical on every task-space quantity" and therefore
+> innocent. That was an overstatement drawn from the four quantities that did
+> match: plain and polished reach differed all along (0.4608 m vs 0.3633 m — a
+> 21% loss), and the metrics used were too weak to see the rest. With corrected
+> metrics the authored layers are **not** innocent, and one specific layer is
+> responsible. The retargeter findings below stand; the exoneration does not.
+
+## Result: two retargeter defects were real, and one authored layer was guilty
 
 | quantity | source | plain retarget | polished v2 | verdict |
 |---|---|---|---|---|
@@ -20,9 +28,41 @@ disabled for the "plain" build. Tooling: `tools/rvmotion/isolate_measure.py`.
 | pelvis excursion | 0.075 m | **0.121 m (1.62×)** | same | **DEFECT — retargeter** |
 | lead-foot travel | 0.018/0.022 m | **0.107/0.102 m (4.7–6.1×)** | same | consequence of the pelvis defect |
 
-Plain and polished were **identical on every one of these**, which is what
-exonerates the authored layers: whatever they do, they do not remove the reach
-or create the arch.
+Plain and polished were identical on pelvis, feet, lean and spine shape — which
+is what clears those layers of the **arch**. They were never identical on reach.
+
+### Layer attribution, measured one layer at a time
+
+Source normalised reach range 0.623, shoulder-flexion range 19°.
+
+| build | reach ratio | flexion range | verdict |
+|---|---|---|---|
+| plain FK | 1.04× | 24° | faithful |
+| + arm IK | 0.82× → **0.92×** after fix | 19° (exact) | scaled by body scale instead of **arm-length ratio**; this character's arm is 1.35× the source's, so the hand was parked inside the rig's reach |
+| + hand clearance | 0.96× | 20° | innocent |
+| + prop | 0.96× | 20° | innocent |
+| + pour rotation | 0.96× | 20° | **innocent** |
+| + spout solve | **0.86×** | **11°** | **the sole culprit** |
+
+The spout solve cost 10% of forward reach and *half* the shoulder-flexion range
+(per-frame debiased error 1.1° → 9.5°) to buy 2 cm of spout height, on a band it
+still missed by 6 cm. It is now **off by default** (`--allow-spout-solve` to
+re-enable): it was distorting the arm to chase a target this source cannot reach,
+and the gap belongs in the report rather than in the pose.
+
+## Corrected metrics
+
+Six measurements were replaced because each was wrong in a way that flattered the
+result — details in `tools/rvmotion/metrics.py`:
+
+| was | now |
+|---|---|
+| unsigned pitch `atan2(\|xy\|, z)` | **signed sagittal pitch** about the character's heading — the old form literally cannot distinguish a forward curve from a backward arch |
+| max-over-clip per segment | **per-frame** comparison; two clips can share a maximum and disagree everywhere else |
+| foot travel relative to pelvis | **contact-event detection** (release → swing → forward landing), cyclic-aware for loops; a stationary foot "moves" whenever the pelvis hinges |
+| \|shoulder→wrist\| constant | that vector in **chest-local** axes plus **shoulder flexion**; constant length only says the elbow held its configuration |
+| reach gate ±25% | **±10% of range and ≤0.10 arm-lengths per-frame**, with the constant A-pose/T-pose calibration bias separated from the dynamics |
+| one collision number | **body** collisions (posing, must be zero) split from **grip-region** contact (proxy handle vs fused hand — blocker-owned) |
 
 ### Defect 1 — the arch was a spine *shape* error, invisible to a rotation metric
 

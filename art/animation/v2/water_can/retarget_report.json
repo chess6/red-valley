@@ -57,12 +57,12 @@
       "max_delta_err_deg": 0.81
     },
     "DEF-upper_arm.R": {
-      "mean_delta_err_deg": 2.99,
-      "max_delta_err_deg": 9.63
+      "mean_delta_err_deg": 1.43,
+      "max_delta_err_deg": 3.54
     },
     "DEF-forearm.R": {
-      "mean_delta_err_deg": 6.3,
-      "max_delta_err_deg": 21.04
+      "mean_delta_err_deg": 2.6,
+      "max_delta_err_deg": 7.1
     },
     "DEF-hand.R": {
       "mean_delta_err_deg": 3.83,
@@ -112,7 +112,7 @@
   "forearm_roll_range_deg": {
     "DEF-forearm.R": {
       "source_roll_range_deg": 34.01,
-      "target_roll_range_deg": 84.36
+      "target_roll_range_deg": 27.93
     },
     "DEF-forearm.L": {
       "source_roll_range_deg": 30.39,

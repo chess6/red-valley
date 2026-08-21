@@ -106,17 +106,17 @@
     "DEF-upper_arm.L.001": {
       "range_deg": 30.27
     },
-    "DEF-forearm.L.001": {
-      "range_deg": 49.87
+    "DEF-upper_arm.R.001": {
+      "range_deg": 34.59
     },
     "DEF-forearm.R.001": {
       "range_deg": 57.55
     },
-    "DEF-upper_arm.R.001": {
-      "range_deg": 34.59
-    },
     "DEF-spine.001": {
       "range_deg": 8.39
+    },
+    "DEF-forearm.L.001": {
+      "range_deg": 49.87
     }
   },
   "wrist": {
@@ -224,37 +224,83 @@
   },
   "task_space": {
     "forward_reach_normalised": {
-      "rig": 0.8234,
-      "src": 0.8005,
-      "ratio": 1.029
+      "rig_range": 0.882,
+      "src_range": 0.8594,
+      "range_ratio": 1.026,
+      "per_frame_rmse": 0.3525,
+      "per_frame_max_abs": 0.3706,
+      "constant_bias": -0.3523,
+      "per_frame_rmse_debiased": 0.0124,
+      "per_frame_max_abs_debiased": 0.0269,
+      "bias_note": "a constant offset is expected from A-pose/T-pose rest calibration and is not a tracking failure; the debiased figures are the dynamics"
     },
-    "forward_reach_raw_m": {
-      "rig": 0.589,
-      "src": 0.4228,
-      "note": "raw ratio tracks the arm-length ratio (1.35) and is not a defect"
+    "shoulder_flexion_deg": {
+      "rig_range": 50.9,
+      "src_range": 46.9,
+      "per_frame_rmse": 21.19,
+      "per_frame_max_abs": 23.07,
+      "constant_bias_deg": -21.14,
+      "per_frame_max_abs_debiased": 2.67
     },
-    "step_displacement": {
+    "arm_chest_local_fwd_m": {
+      "rig_range": 0.5748,
+      "src_range": 0.3919
+    },
+    "spine_signed_pitch_per_frame_err_deg": [
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      {
+        "rmse": 0.0,
+        "max_abs": 0.0
+      }
+    ],
+    "spine_signed_pitch_rig_max_deg": [
+      -9.1,
+      -2.4,
+      4.7,
+      13.0,
+      13.8
+    ],
+    "spine_signed_pitch_src_max_deg": [
+      -9.1,
+      -2.4,
+      4.7,
+      13.0,
+      13.8
+    ],
+    "step_events": {
       "L": {
-        "rig_m": 0.7901,
-        "src_m": 0.7975,
-        "ratio": 0.991
+        "rig_count": 1,
+        "src_count": 1,
+        "rig_advance_m": 0.7267,
+        "src_advance_m": 1.4866
       },
       "R": {
-        "rig_m": 0.7857,
-        "src_m": 0.7943,
-        "ratio": 0.989
+        "rig_count": 1,
+        "src_count": 1,
+        "rig_advance_m": 0.6452,
+        "src_advance_m": 1.4885
       }
     },
-    "spine_segment_pitch_err_deg": [
-      0.0,
-      -0.0,
-      -0.0,
-      0.0
-    ],
     "gate_reach_preserved": true,
-    "gate_step_preserved": true,
+    "gate_shoulder_flexion": true,
+    "gate_step_events_match": true,
     "gate_spine_shape": true,
-    "note": "reach is normalised by arm length because the skeletons differ; step preservation compares against the SOURCE, so a source with no step passes only if the rig also has none"
+    "note": "reach gate is +-10% of range AND <=0.10 arm-lengths per-frame max; spine uses SIGNED sagittal pitch compared frame by frame; steps are detected as release->swing->forward landing events, not displacement"
   },
   "face": {
     "rigid_core_verts": 7922,

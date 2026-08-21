@@ -56,8 +56,14 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
     if "prop_rigidity" in r:
         gate("%s: prop rigid to the hand" % label, r["prop_rigidity"]["gate_rigid"],
              "%.2e m drift" % r["prop_rigidity"]["max_hand_relative_drift_m"])
-        gate("%s: zero can/body collisions" % label, r["collisions"]["gate_zero"],
-             "%d tris" % r["collisions"]["max_tris"])
+        gate("%s: zero can/BODY collisions" % label,
+             r["collisions"]["gate_zero_body_collisions"],
+             "%d body vert-hits" % r["collisions"]["body_vert_hits_max"])
+        gate("%s: zero can/grip-region contact" % label,
+             r["collisions"]["grip_region_vert_hits_max"] == 0,
+             "%d wrist vert-hits — blocked by %s"
+             % (r["collisions"]["grip_region_vert_hits_max"],
+                " + ".join(r["collisions"]["grip_region_blocked_by"])))
         sp = r["spout"]
         gate("%s: spout holds band across pour window" % label,
              sp["gate_in_band_for_whole_pour_window"],
@@ -67,15 +73,22 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
                 sp["window_frames_total"], sp["documented_band_m"]))
     ts = r.get("task_space")
     if ts:
-        gate("%s: forward reach preserved" % label, ts["gate_reach_preserved"],
-             "normalised %.3f vs %.3f = %.2fx" % (ts["forward_reach_normalised"]["rig"],
-                                                  ts["forward_reach_normalised"]["src"],
-                                                  ts["forward_reach_normalised"]["ratio"]))
-        gate("%s: step displacement matches source" % label, ts["gate_step_preserved"],
-             ", ".join("%s rig %.3f src %.3f" % (k, v["rig_m"], v["src_m"])
-                       for k, v in ts["step_displacement"].items()))
-        gate("%s: spine shape preserved" % label, ts["gate_spine_shape"],
-             "per-segment pitch err %s deg" % ts["spine_segment_pitch_err_deg"])
+        fr = ts["forward_reach_normalised"]
+        gate("%s: forward reach preserved (+-10%%)" % label, ts["gate_reach_preserved"],
+             "range %.3f vs %.3f = %.2fx, debiased per-frame max %.3f (bias %.3f) arm-lengths"
+             % (fr["rig_range"], fr["src_range"], fr["range_ratio"],
+                fr["per_frame_max_abs_debiased"], fr["constant_bias"]))
+        sf = ts["shoulder_flexion_deg"]
+        gate("%s: shoulder flexion tracks source" % label, ts["gate_shoulder_flexion"],
+             "range %.0f vs %.0f deg, debiased per-frame max %.1f deg (bias %.1f)"
+             % (sf["rig_range"], sf["src_range"], sf["per_frame_max_abs_debiased"],
+                sf["constant_bias_deg"]))
+        gate("%s: step EVENTS match source" % label, ts["gate_step_events_match"],
+             ", ".join("%s rig %d src %d" % (k, v["rig_count"], v["src_count"])
+                       for k, v in ts["step_events"].items()))
+        gate("%s: spine signed shape preserved" % label, ts["gate_spine_shape"],
+             "per-frame max err %s deg"
+             % [e["max_abs"] for e in ts["spine_signed_pitch_per_frame_err_deg"]])
     jl = r.get("joint_limits")
     if jl:
         gate("%s: elbow within anatomical range" % label, jl["gate_elbow_range"],

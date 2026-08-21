@@ -293,8 +293,24 @@ if can is not None:
                 n = dom(vi); parts[n] = parts.get(n, 0) + 1
         coll[f] = {"tris": len(ov), "by_bone": parts}
         ev.to_mesh_clear(); cev.to_mesh_clear()
+    # Two different failures were being reported as one number. Can-vs-thigh is a
+    # posing defect the retargeter must fix. Can-vs-the-holding-wrist is the
+    # proxy handle arch passing through the arm it hangs from -- bounded by the
+    # prop and hand-topology blockers, and not fixable by posing. Neither is
+    # waived; they are counted separately so each points at its own owner.
+    GRIP_REGION = ("DEF-forearm.R.001", "DEF-forearm.R")
+    def split(v):
+        g = sum(n for b, n in v["by_bone"].items() if b in GRIP_REGION)
+        return g, sum(v["by_bone"].values()) - g
+    grip_max = max((split(v)[0] for v in coll.values()), default=0)
+    body_max = max((split(v)[1] for v in coll.values()), default=0)
     R["collisions"] = {"per_frame": coll,
                        "max_tris": max(v["tris"] for v in coll.values()),
+                       "grip_region_vert_hits_max": grip_max,
+                       "body_vert_hits_max": body_max,
+                       "gate_zero_body_collisions": body_max == 0,
+                       "grip_region_blocked_by": ["proxy watering can handle geometry",
+                                                  "fused Rodin hand topology"],
                        "gate_zero": all(v["tris"] == 0 for v in coll.values())}
 
 # ---------- 5b. authored motion must still be anatomically legal -----------
@@ -371,61 +387,105 @@ R["joint_limits"] = {
     "note": ("applies to authored-override bones too -- exemption from the fidelity "
              "gate is not exemption from anatomy")}
 
-# ---------- 5c. task-space preservation: reach, step, spine shape ----------
-# These are the gates the earlier suite lacked entirely: it could confirm that
-# rotations transferred while the delivered pose lost the reach, dropped a step,
-# or arched the lower back -- none of which a rotation metric can see.
+# ---------- 5c. task-space preservation (corrected metrics) ----------------
+# Every metric here replaced one that was wrong in a way that flattered the
+# result. See tools/rvmotion/metrics.py for what each replaces and why.
+from rvmotion.metrics import (heading_frame, spine_profile, per_frame_error,
+                              arm_in_chest_frame, detect_steps)
+
 hip_j = JN.index("Hips")
 def rig_pel(f):
     return (pos["DEF-thigh.L"][f] + pos["DEF-thigh.R"][f]) * 0.5
-rig_reach = np.array([-(pos["DEF-hand.R"][f].y - rig_pel(f).y) for f in SAMPLE])
-src_reach = -(POS[SAMPLE][:, JN.index("RightHand"), 1] - POS[SAMPLE][:, hip_j, 1])
-# arm length differs between skeletons, so compare reach NORMALISED by arm length
-rig_arm = float(rig.data.bones["upper_arm_fk.R"].length + rig.data.bones["forearm_fk.R"].length)
-src_arm = float(np.linalg.norm(POS[0, JN.index("RightForeArm")] - POS[0, JN.index("RightArm")])
-                + np.linalg.norm(POS[0, JN.index("RightHand")] - POS[0, JN.index("RightForeArm")]))
-rr = float(np.ptp(rig_reach) / rig_arm)
-sr = float(np.ptp(src_reach) / src_arm)
-# Step is measured RELATIVE TO THE PELVIS. Comparing world-space foot travel is
-# meaningless for an in-place clip: the source walks 1.5 m and the delivered loop
-# walks on the spot, so a faithful stride scored as a lost step.
-step = {}
+def v3(v): return np.array([v.x, v.y, v.z], dtype=float)
+
+RIG_SPINE = ["DEF-spine", "DEF-spine.001", "DEF-spine.002", "DEF-spine.003",
+             "DEF-spine.004", "DEF-spine.006"]
+SRC_SPINE = ["Spine", "Spine1", "Spine2", "Spine3", "Neck", "Head"]
+
+rig_prof, src_prof, rig_arm_f, src_arm_f, rig_reach, src_reach = [], [], [], [], [], []
+for i, f in enumerate(SAMPLE):
+    head = float(m.root_heading[f]) if m.root_heading is not None else None
+    s_pts = [POS[f, JN.index(n)] for n in SRC_SPINE]
+    fwd_s, left_s, up_s = heading_frame(POS[f, hip_j], POS[f, JN.index("Spine3")], head)
+    src_prof.append(spine_profile(s_pts, fwd_s, up_s))
+    r_pts = [v3(pos[n][f]) for n in RIG_SPINE if n in pos]
+    fwd_r, left_r, up_r = heading_frame(v3(rig_pel(f)), v3(pos["DEF-spine.003"][f]), head)
+    rig_prof.append(spine_profile(r_pts, fwd_r, up_r))
+    # arm in CHEST-local axes: a constant shoulder-wrist length says nothing
+    # about whether the arm swings forward from the shoulder
+    cb_s = np.stack([fwd_s, left_s, up_s], axis=1)
+    src_arm_f.append(arm_in_chest_frame(POS[f, JN.index("RightArm")],
+                                        POS[f, JN.index("RightHand")], cb_s))
+    cb_r = np.stack([fwd_r, left_r, up_r], axis=1)
+    rig_arm_f.append(arm_in_chest_frame(v3(pos["DEF-upper_arm.R"][f]),
+                                        v3(pos["DEF-hand.R"][f]), cb_r))
+    src_reach.append(float(np.dot(POS[f, JN.index("RightHand")] - POS[f, hip_j], fwd_s)))
+    rig_reach.append(float(np.dot(v3(pos["DEF-hand.R"][f]) - v3(rig_pel(f)), fwd_r)))
+
+rig_prof = np.array(rig_prof); src_prof = np.array(src_prof)
+n_seg = min(rig_prof.shape[1], src_prof.shape[1])
+seg_err = [per_frame_error(rig_prof[:, k], src_prof[:, k]) for k in range(n_seg)]
+
+rig_arm_len = float(rig.data.bones["upper_arm_fk.R"].length + rig.data.bones["forearm_fk.R"].length)
+src_arm_len = float(np.linalg.norm(POS[0, JN.index("RightForeArm")] - POS[0, JN.index("RightArm")])
+                    + np.linalg.norm(POS[0, JN.index("RightHand")] - POS[0, JN.index("RightForeArm")]))
+rr = np.array(rig_reach) / rig_arm_len
+sr = np.array(src_reach) / src_arm_len
+reach_err = per_frame_error(rr, sr)
+ratio = float(np.ptp(rr) / max(1e-9, np.ptp(sr)))
+
+flex_err = per_frame_error([a["flexion_deg"] for a in rig_arm_f],
+                           [a["flexion_deg"] for a in src_arm_f])
+
+# steps as EVENTS, in the ground frame, from the source's own contact labels
+ch2 = {n: i for i, n in enumerate(m.contact_channels)}
+steps = {}
 for side, cn in (("L", "LeftFoot"), ("R", "RightFoot")):
+    on = (m.contacts[SAMPLE, ch2[cn]] | m.contacts[SAMPLE, ch2[cn.replace("Foot", "ToeBase")]])
     d = "DEF-foot.%s" % side
-    rig_rel = [pos[d][f].y - rig_pel(f).y for f in SAMPLE]
-    src_rel = POS[SAMPLE][:, JN.index(cn), 1] - POS[SAMPLE][:, hip_j, 1]
-    step[side] = {"rig_m": round(float(np.ptp(rig_rel)), 4),
-                  "src_m": round(float(np.ptp(src_rel)), 4),
-                  "ratio": round(float(np.ptp(rig_rel) / max(1e-6, np.ptp(src_rel))), 3)}
-segs_rig, segs_src = [], []
-CH = [("DEF-spine", "DEF-spine.001", "Spine", "Spine1"),
-      ("DEF-spine.001", "DEF-spine.002", "Spine1", "Spine2"),
-      ("DEF-spine.002", "DEF-spine.003", "Spine2", "Spine3"),
-      ("DEF-spine.003", "DEF-spine.004", "Spine3", "Neck")]
-for a_, b_, sa, sb in CH:
-    if a_ not in pos or b_ not in pos: continue
-    rv = [math.degrees(math.atan2(Vector(((pos[b_][f] - pos[a_][f]).x,
-                                          (pos[b_][f] - pos[a_][f]).y)).length,
-                                  (pos[b_][f] - pos[a_][f]).z)) for f in SAMPLE]
-    dv = POS[SAMPLE][:, JN.index(sb)] - POS[SAMPLE][:, JN.index(sa)]
-    sv = np.degrees(np.arctan2(np.linalg.norm(dv[:, :2], axis=1), dv[:, 2]))
-    segs_rig.append(float(np.max(rv))); segs_src.append(float(np.max(sv)))
-shape_err = [round(a_ - b_, 2) for a_, b_ in zip(segs_rig, segs_src)]
+    rig_xy = np.array([[pos[d][f].x, pos[d][f].y] for f in SAMPLE])
+    src_xy = POS[SAMPLE][:, JN.index(cn), :2]
+    steps[side] = {"rig": detect_steps(on, rig_xy, cyclic=IS_LOOP),
+                   "src": detect_steps(on, src_xy, cyclic=IS_LOOP)}
+
 R["task_space"] = {
-    "forward_reach_normalised": {"rig": round(rr, 4), "src": round(sr, 4),
-                                 "ratio": round(rr / max(1e-6, sr), 3)},
-    "forward_reach_raw_m": {"rig": round(float(np.ptp(rig_reach)), 4),
-                            "src": round(float(np.ptp(src_reach)), 4),
-                            "note": "raw ratio tracks the arm-length ratio (%.2f) and is not a defect"
-                                    % (rig_arm / max(1e-6, src_arm))},
-    "step_displacement": step,
-    "spine_segment_pitch_err_deg": shape_err,
-    "gate_reach_preserved": abs(rr / max(1e-6, sr) - 1.0) <= 0.25,
-    "gate_step_preserved": all(abs(v["ratio"] - 1.0) <= 0.30 for v in step.values()),
-    "gate_spine_shape": max(abs(x) for x in shape_err) <= 4.0 if shape_err else True,
-    "note": ("reach is normalised by arm length because the skeletons differ; step "
-             "preservation compares against the SOURCE, so a source with no step "
-             "passes only if the rig also has none")}
+    "forward_reach_normalised": {
+        "rig_range": round(float(np.ptp(rr)), 4), "src_range": round(float(np.ptp(sr)), 4),
+        "range_ratio": round(ratio, 3),
+        "per_frame_rmse": round(reach_err["rmse"], 4),
+        "per_frame_max_abs": round(reach_err["max_abs"], 4),
+        "constant_bias": round(reach_err["bias"], 4),
+        "per_frame_rmse_debiased": round(reach_err["rmse_debiased"], 4),
+        "per_frame_max_abs_debiased": round(reach_err["max_abs_debiased"], 4),
+        "bias_note": ("a constant offset is expected from A-pose/T-pose rest "
+                      "calibration and is not a tracking failure; the debiased "
+                      "figures are the dynamics")},
+    "shoulder_flexion_deg": {
+        "rig_range": round(float(np.ptp([a["flexion_deg"] for a in rig_arm_f])), 1),
+        "src_range": round(float(np.ptp([a["flexion_deg"] for a in src_arm_f])), 1),
+        "per_frame_rmse": round(flex_err["rmse"], 2),
+        "per_frame_max_abs": round(flex_err["max_abs"], 2),
+        "constant_bias_deg": round(flex_err["bias"], 2),
+        "per_frame_max_abs_debiased": round(flex_err["max_abs_debiased"], 2)},
+    "arm_chest_local_fwd_m": {
+        "rig_range": round(float(np.ptp([a["local"][0] for a in rig_arm_f])), 4),
+        "src_range": round(float(np.ptp([a["local"][0] for a in src_arm_f])), 4)},
+    "spine_signed_pitch_per_frame_err_deg": [
+        {"rmse": round(e["rmse"], 2), "max_abs": round(e["max_abs"], 2)} for e in seg_err],
+    "spine_signed_pitch_rig_max_deg": [round(float(x), 1) for x in rig_prof.max(axis=0)],
+    "spine_signed_pitch_src_max_deg": [round(float(x), 1) for x in src_prof.max(axis=0)],
+    "step_events": {k: {"rig_count": v["rig"]["count"], "src_count": v["src"]["count"],
+                        "rig_advance_m": v["rig"]["total_advance_m"],
+                        "src_advance_m": v["src"]["total_advance_m"]}
+                    for k, v in steps.items()},
+    "gate_reach_preserved": (abs(ratio - 1.0) <= 0.10
+                             and reach_err["max_abs_debiased"] <= 0.10),
+    "gate_shoulder_flexion": flex_err["max_abs_debiased"] <= 12.0,
+    "gate_step_events_match": all(v["rig"]["count"] == v["src"]["count"] for v in steps.values()),
+    "gate_spine_shape": max(e["max_abs"] for e in seg_err) <= 4.0 if seg_err else True,
+    "note": ("reach gate is +-10% of range AND <=0.10 arm-lengths per-frame max; "
+             "spine uses SIGNED sagittal pitch compared frame by frame; steps are "
+             "detected as release->swing->forward landing events, not displacement")}
 
 # ---------- 6. face: rigid core vs blend band, measured separately ---------
 GIx = {g.name: g.index for g in body.vertex_groups}
