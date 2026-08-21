@@ -50,6 +50,9 @@ def vids(gen):
 
 doc = """<!doctype html><meta charset="utf-8"><title>Red Valley — generator A/B</title>
 <style>
+ .warn-box{background:#2a1f1f;border:1px solid #5a3535;border-radius:8px;padding:12px 14px;
+           margin:10px 0 20px;font-size:13.5px;color:#e8d5d0;line-height:1.5}
+ .warn-box b{color:#f0b8ac}
  :root{--bg:#15171a;--panel:#1d2024;--line:#2c3036;--ink:#e8eaed;--dim:#9aa2ac;--ok:#6fc48b;--bad:#e07a6b}
  *{box-sizing:border-box}
  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,sans-serif;padding:24px 28px 60px}
@@ -66,7 +69,24 @@ doc = """<!doctype html><meta charset="utf-8"><title>Red Valley — generator A/
  p.note{color:var(--dim);font-size:13px}
 </style>
 <h1>Generator A/B — ARDY vs Kimodo, identical contract</h1>
-<div class="sub">One rented 24 GB GPU, one seed each, post-processing on, same RVM/1 pipeline for both. Two scorecards, because skeleton size is not model quality.</div>
+<div class="sub">One rented 24 GB GPU, one seed each, post-processing on, same RVM/1 pipeline for both.</div>
+<div class="warn-box">
+<b>Read this before the numbers.</b> Neither clip performs the task. Both generators hit
+their constrained targets almost exactly &mdash; right hand error <b>0.000 m</b>, feet 3&ndash;12 mm &mdash;
+so this is a defect in the contract I wrote, not in either model.
+The bed sits only 0.36&nbsp;m ahead of the start and the character steps 0.26&nbsp;m of that, so the
+reach collapses to a hand at hip height 25&nbsp;cm forward: <i>standing with a can</i>.
+The A/B retarget also ran without the wrist-pour layer, so the can never tips.
+<b>No generator ranking should be drawn from these clips.</b>
+</div>
+<h2>Stability — why it looks like wiggling</h2>
+<p class="note">The earlier gate measured <b>net</b> foot displacement, so a support foot that
+shuffles and returns to its start scored ~0 and passed as planted. <b>Path</b> is the honest
+measure. Under it both clips fail the pelvis gate.</p>
+<table><tr><th>metric</th>%HEAD%</tr>
+%S%
+</table>
+
 <h2>A — morphology-normalised generator quality</h2>
 <p class="note">Measured on the <b>native</b> output in body-relative units, so skeleton size cancels. This is the fair model comparison.</p>
 <table><tr><th>metric</th>%HEAD%</tr>
@@ -106,6 +126,16 @@ B = "\n".join([
     cell("grip-region contact", lambda d: d["B_production"]["grip_region_contact"]),
     cell("joint limits ok?", lambda d: d["B_production"]["joint_limits_ok"]),
 ])
+S = "\n".join([
+    cell("pelvis path (m)", lambda d: d["A_morphology_normalised"].get("pelvis_path_m")),
+    cell("pelvis net (m)", lambda d: d["A_morphology_normalised"].get("pelvis_net_m")),
+    cell("pelvis wander ratio (path/net)", lambda d: d["A_morphology_normalised"].get("pelvis_wander_ratio")),
+    cell("rear foot PATH (m)", lambda d: d["A_morphology_normalised"].get("rear_foot_path_m")),
+    cell("rear foot path WHILE PLANTED (m)", lambda d: d["A_morphology_normalised"].get("rear_foot_path_while_planted_m")),
+    cell("rear foot NET drift (old gate)", lambda d: d["A_morphology_normalised"].get("rear_foot_drift_hip_fraction")),
+    cell("support foot quiet?", lambda d: d["A_morphology_normalised"].get("gate_support_foot_quiet")),
+    cell("pelvis steady?", lambda d: d["A_morphology_normalised"].get("gate_pelvis_not_wandering")),
+])
 C = "\n".join([
     cell("fps / frames", lambda d: "%s / %s" % (d["contract"]["fps"], d["contract"]["frames"])),
     cell("trunk lean the contract needed (deg)", lambda d: d["contract"]["min_trunk_lean_deg"]),
@@ -115,6 +145,7 @@ C = "\n".join([
     cell("keyframes per set", lambda d: d["contract"]["constrained_frames_per_set"]),
 ])
 doc = (doc.replace("%HEAD%", head).replace("%A%", A).replace("%B%", B)
-          .replace("%C%", C).replace("%V%", "".join(vids(n) for n in names)))
+          .replace("%C%", C).replace("%S%", S)
+          .replace("%V%", "".join(vids(n) for n in names)))
 open(OUT, "w").write(doc)
 print("wrote", OUT, "for", names)

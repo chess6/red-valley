@@ -21,3 +21,6 @@ art/animation/v2/native/native_walk_fwd.mp4
 art/animation/ab/logs2/ab.log
 art/animation/ab/logs2/ardy_gen.log
 art/animation/ab/logs2/kimodo_gen.log
+art/animation/contract_preview/contract_side.mp4
+art/animation/contract_preview/contract_threequarter.mp4
+art/animation/contract_preview/contract_gameplay.mp4

@@ -50,7 +50,7 @@
     0.3
   ],
   "lean_allowance_deg": 60.0,
-  "min_lean_needed_deg": 46.0,
+  "min_lean_needed_deg": 32.0,
   "pour_tilt_deg": 44.0,
   "constrained_frames_total": 21,
   "constrained_frames_per_set": {
@@ -59,7 +59,7 @@
     "LeftFootConstraintSet": 4,
     "HipsConstraintSet": 3
   },
-  "min_trunk_lean_deg": 46.0,
+  "min_trunk_lean_deg": 32.0,
   "pelvis_drop_m": 0.0943,
   "spout_target_documented_m": 0.22,
   "spout_target_escalated": false,

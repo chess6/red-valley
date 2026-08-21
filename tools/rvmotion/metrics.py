@@ -139,3 +139,39 @@ def detect_steps(contacts, foot_ground_xy, min_air_frames=1, min_advance_m=0.05,
         steps = uniq
     return {"count": len(steps), "steps": steps,
             "total_advance_m": round(sum(s["advance_m"] for s in steps), 4)}
+
+
+def stability(positions_xy, contacts=None):
+    """Total PATH travelled, not net displacement.
+
+    A support foot that shuffles 20 cm back and forth and ends where it started
+    scores ~0 on net displacement and looks perfectly planted to a gate that only
+    measures endpoints. It is exactly what a viewer calls "wiggling". Path is the
+    honest measure; the ratio of path to net says how much of the motion went
+    nowhere.
+    """
+    p = np.asarray(positions_xy, dtype=float)
+    steps = np.linalg.norm(np.diff(p, axis=0), axis=1)
+    path = float(steps.sum())
+    net = float(np.linalg.norm(p[-1] - p[0]))
+    out = {"path_m": path, "net_m": net,
+           "wander_ratio": round(path / max(net, 1e-6), 2),
+           "peak_step_m": float(steps.max()) if len(steps) else 0.0}
+    if contacts is not None:
+        on = np.asarray(contacts).astype(bool)
+        held = [steps[i] for i in range(len(steps)) if on[i] and on[i + 1]]
+        out["path_while_planted_m"] = float(np.sum(held)) if held else 0.0
+    return out
+
+
+def target_error(achieved_xyz, target_xyz):
+    """Did the pose actually reach the thing it was asked to reach?
+
+    Range- and ratio-style metrics can look healthy while the end effector never
+    goes near its target, because they compare the SHAPE of a trajectory rather
+    than its destination.
+    """
+    a = np.asarray(achieved_xyz, dtype=float)
+    t = np.asarray(target_xyz, dtype=float)
+    d = np.linalg.norm(a - t, axis=-1)
+    return {"mean_m": float(d.mean()), "max_m": float(d.max()), "min_m": float(d.min())}

@@ -44,7 +44,11 @@ WINDOWS_S = {"settle": (0.00, 0.40),          # both feet planted
 LEAD_ADVANCE_M = 0.28
 BAND = (0.15, 0.30)
 SPOUT_TARGET = 0.22           # the documented MIDPOINT, which is what we ask for
-SPOUT_INSIDE_BED = 0.10
+# Distance from the PELVIS (after the step) to the spout, not from the world
+# origin. Measuring from the origin put the bed 0.36 m ahead of the start, of
+# which the 0.26 m step consumed most -- so the "reach" collapsed to a hand at hip
+# height 25 cm forward, which reads as standing with a can rather than watering.
+REACH_AHEAD_OF_PELVIS = 0.40
 # A pour is not reached by hinging the trunk alone. Letting the pelvis drop a
 # little -- knee flexion, the way a person actually lowers a can -- supplies the
 # last few centimetres far more naturally, and changes the answer a lot: the
@@ -166,6 +170,10 @@ def main():
     ap.add_argument("--generator", required=True, choices=["ardy", "kimodo"])
     ap.add_argument("--src", required=True, help="generator checkout root")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--preview-npz", default=None,
+                    help="also write the AUTHORED contract motion as a generator-format "
+                         "npz, so the contract itself can be retargeted and looked at "
+                         "before any generation is paid for")
     ap.add_argument("--seed-npz", default=None,
                     help="clip to take the neutral standing pose from")
     a = ap.parse_args()
@@ -238,7 +246,7 @@ def main():
     soil = SOIL_H * S
     band = (BAND[0] * S, BAND[1] * S)
     lead_adv = LEAD_ADVANCE_M * S
-    standoff = SPOUT_INSIDE_BED * S
+    standoff = REACH_AHEAD_OF_PELVIS * S
     print("  body scale %.3f (hip %.3f m vs character %.3f m): bed %.3f, band %.3f-%.3f, "
           "stagger %.3f" % (S, hip_h, CHARACTER_HIP_H, soil, band[0], band[1], lead_adv))
 
@@ -265,7 +273,8 @@ def main():
     # 0.22. Escalation away from the target is now explicit and reported.
     drop_max = MAX_PELVIS_DROP * S
     def solve(above):
-        sp = np.array([0.0, soil + above, 0.0]) + FWD * (lead_adv + standoff)
+        # spout sits ahead of where the PELVIS ends up, not ahead of the origin
+        sp = np.array([0.0, soil + above, 0.0]) + FWD * (lead_adv * 0.5 + standoff)
         g, Rw = wrist_from_spout(sp, POUR_TILT_DEG, meta)
         g[0] = sh0[0] * 0.55
         cheapest = None
@@ -331,10 +340,15 @@ def main():
                     else [BI["RightLeg"], BI["RightShin"]]}
     ARM = [BI["RightShoulder"], BI["RightArm"], BI["RightForeArm"]]
 
-    all_frames = sorted(set(SETTLE) | set(LEAD_LANDED) | set(POUR) | set(SUPPORT)
-                        | set(sparse(win("pour"), 3)))
+    # For the preview, author EVERY frame so the contract can be watched as motion.
+    # Constraints still use only the sparse keyframes below.
+    all_frames = (list(range(N_FRAMES)) if a.preview_npz
+                  else sorted(set(SETTLE) | set(LEAD_LANDED) | set(POUR) | set(SUPPORT)
+                              | set(sparse(win("pour"), 3))))
     poses = np.repeat(rest[None], N_FRAMES, axis=0)
     rots = np.repeat(np.eye(3)[None, None], N_FRAMES, axis=0).repeat(len(names), axis=1)
+    locals_all = np.repeat(np.eye(3)[None, None], N_FRAMES, axis=0).repeat(len(names), axis=1)
+    roots_all = np.repeat(rest[BI["Hips"]][None], N_FRAMES, axis=0)
     worst = {"lead": 0.0, "rear": 0.0, "hand": 0.0}
 
     for f in all_frames:
@@ -342,19 +356,45 @@ def main():
         root = torch.tensor(np.array([0.0, rest[BI["Hips"]][1] - root_dn[f],
                                       root_fwd[f]]))
         # feet: absolute ground targets, so the body advances OVER planted feet
-        lt = lead_end if f in LEAD_LANDED else lead_start
+        lt = lead_end if f >= LEAD_LANDED[0] else lead_start
         worst["lead"] = max(worst["lead"],
                             reach(local, root, LEG["Left"], "LeftFoot", lt))
         worst["rear"] = max(worst["rear"],
                             reach(local, root, LEG["Right"], "RightFoot", rear_fixed))
-        if f in POUR:
+        in_pour = (POUR[0] <= f <= POUR[-1]) if a.preview_npz else (f in POUR)
+        # OUTSIDE the pour the arm must be posed too, or it stays in the skeleton's
+        # REST pose -- and ARDY's rest is a T-pose, so the preview showed the can
+        # carried out at chest height. The constraint sets ignore unnamed joints,
+        # but the preview is what a human judges the contract by, so it has to show
+        # a real carry.
+        carry = rest[BI["RightHand"]].copy()
+        carry[0] = rest[BI["RightArm"]][0] * 0.92          # in beside the hip
+        carry[1] = rest[BI["Hips"]][1] * 0.92              # hanging, near hip height
+        carry[2] = root_fwd[f] + 0.02
+        # Trunk lean, ramped with the same weight as the pelvis drop. The solver
+        # says this pose needs it; without authoring it the preview stands bolt
+        # upright and the reach comes entirely from the shoulder, which is both
+        # unnatural and not what the feasibility check assumed.
+        lean_w = w[f] if in_pour or f >= f0 else 0.0
+        if lean_w > 1e-3 and LEAN_NEEDED > 0.5:
+            spine = [BI[n] for n in ("Spine", "Spine1", "Spine2", "Spine3")
+                     if n in BI] or [BI[n] for n in ("Spine1", "Spine2", "Chest") if n in BI]
+            per = math.radians(LEAN_NEEDED * lean_w) / max(1, len(spine))
+            for sj in spine:
+                gr, _ = fk(local, root)
+                rot_world_at(local, gr, sj, (1.0, 0.0, 0.0), per)
+        if in_pour:
             worst["hand"] = max(worst["hand"],
                                 reach(local, root, ARM, "RightHand", grip))
+        else:
+            reach(local, root, ARM, "RightHand", carry)
             gr, _ = fk(local, root)
             # wrist orientation so the handle sits in the palm and the spout tips
             want = torch.tensor(R_wrist)
             p_ = parents[BI["RightHand"]]
             local[BI["RightHand"]] = gr[p_].T @ want
+        locals_all[f] = local.numpy()
+        roots_all[f] = root.numpy()
         gr, pj = fk(local, root)
         poses[f] = pj.numpy()
         rots[f] = gr.numpy()
@@ -388,6 +428,18 @@ def main():
     print("  constrained frames per set: %s" % per_type)
     assert all(v < 20 for v in per_type.values()), \
         "a constraint type exceeds 20 keyframes; that is dense conditioning"
+    if a.preview_npz:
+        fcm = np.ones((N_FRAMES, 4), dtype=bool)
+        lo, hi = int(round(WINDOWS_S["lead_released"][0] * FPS)), LEAD_LANDED[0]
+        fcm[lo:hi, 0:2] = False          # lead foot airborne during the step
+        np.savez(a.preview_npz, local_rot_mats=locals_all, global_rot_mats=rots,
+                 posed_joints=poses, root_positions=roots_all,
+                 smooth_root_pos=roots_all, foot_contacts=fcm,
+                 global_root_heading=np.stack([np.ones(N_FRAMES), np.zeros(N_FRAMES)], 1),
+                 fps=FPS, text=np.array("authored contract preview"))
+        print("  preview written: %s (%d frames) -- this is the CONTRACT, not a "
+              "generated clip" % (a.preview_npz, N_FRAMES))
+
     save_constraints_lst(a.out, sets)
     summary = {"generator": a.generator, "skeleton_joints": len(names),
                "fps": FPS, "frames": N_FRAMES, "duration_s": DURATION_S,

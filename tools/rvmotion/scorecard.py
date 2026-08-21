@@ -53,6 +53,11 @@ def morphology_scorecard(m, contract):
     advance = float(np.linalg.norm(lead[-1] - lead[0])) / hip_h
     rear_drift = float(np.abs(POS[:, rf, :2] - POS[0, rf, :2]).max()) / hip_h
     airborne = int((m.contacts.sum(axis=1) == 0).sum())
+    # PATH, not net: a foot that shuffles and returns is invisible to endpoints
+    from rvmotion.metrics import stability
+    rear_st = stability(POS[:, rf, :2], m.contacts[:, ch["RightFoot"]])
+    lead_st = stability(POS[:, lf, :2], m.contacts[:, ch["LeftFoot"]])
+    pel_st = stability(POS[:, J.index("Hips"), :2])
 
     return {
         "units": "body-relative (arm lengths, hip heights, degrees)",
@@ -69,6 +74,14 @@ def morphology_scorecard(m, contract):
         "gate_lead_foot_stepped": advance > 0.15,
         "gate_arm_not_hyperextended": float(reach.max()) <= 1.0,
         "gate_no_flight": airborne <= max(1, int(0.05 * m.num_frames)),
+        "rear_foot_path_m": round(rear_st["path_m"], 4),
+        "rear_foot_path_while_planted_m": round(rear_st.get("path_while_planted_m", 0.0), 4),
+        "lead_foot_path_m": round(lead_st["path_m"], 4),
+        "pelvis_path_m": round(pel_st["path_m"], 4),
+        "pelvis_net_m": round(pel_st["net_m"], 4),
+        "pelvis_wander_ratio": pel_st["wander_ratio"],
+        "gate_support_foot_quiet": rear_st.get("path_while_planted_m", 0.0) / hip_h < 0.08,
+        "gate_pelvis_not_wandering": pel_st["wander_ratio"] < 1.6,
     }
 
 
