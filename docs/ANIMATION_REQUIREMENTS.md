@@ -195,6 +195,35 @@ NVIDIA ARDY generates **motion data only** (joint transforms, NPZ) on NVIDIA's
 | **Pilot scope** | **Exactly two clips: one locomotion (`walk_fwd`) and one farming interaction (`water_can`)**, evaluated before any expansion |
 | **ARDY is not object-aware** | NVIDIA states this explicitly. Text prompting alone will **not** preserve a convincing grip or pour, because the generator has no knowledge of the can. `water_can` must be driven by **hand / end-effector kinematic constraints**, not prompt wording |
 
+## PIPELINE DECISION (final, 2026-08-21)
+
+**ARDY is the motion source for general locomotion AND for constrained
+interactions.** The constrained path is mandatory for interactions; text-only
+prompting of interactions is prohibited (it failed twice and is recorded as an
+interface mistake, not a model limitation).
+
+Evidence, one $0.08 run, seed 0, 8 s: `--constraints` fed through ARDY's own
+`EndEffectorConstraintSet` (RightHand + both feet + Hips at 7 keyframes) held
+the keyframes to 1-14 cm, produced a live standing pour (1.03 m of hand travel,
+feet planted, lean 14 deg at the pour, clean return to start), and passed every
+raw criterion in `tools/ardy/judge_water_constrained.py`.
+
+Division of responsibility, unchanged from the approved design:
+- ARDY: body, arms, wrist trajectory (constrained keyframes from approved poses)
+- retarget layer: rotation-only aiming onto the Rigify deform skeleton
+- prop layer: can rigidly socketed to `DEF-hand.R`; pour tilt articulated on the
+  socket about the handle-bar axis (retarget aiming discards twist, so a pour
+  can never come from source wrist rotation)
+- grip layer: fixed finger pose, gameplay-distance provisional
+- bounded local layers when the constraint inputs were imperfect (this run: a
+  9 deg arm abduction missing from the constraint file, and a ramped 22 deg
+  forward-swing during the pour window)
+
+Constraint files are BUILT by `tools/ardy/build_water_constraints.py` with
+ardy's own classes and PROVEN pre-spend by `tools/ardy/prove_constraints.py`
+(reload, frames, mask entries, finite tensors, generate.py wiring). No run
+starts without those proofs passing.
+
 ### Licence position — audit, not a blocker
 
 An earlier draft of this document framed ARDY as a possible repeat of the

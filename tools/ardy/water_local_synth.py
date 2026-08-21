@@ -71,7 +71,7 @@ gr, pj = fk1(LP, root0)
 sh = pj[BI["RightArm"]]
 reach = float((pj[BI["RightArm"]] - pj[BI["RightForeArm"]]).norm()
               + (pj[BI["RightForeArm"]] - pj[BI["RightHand"]]).norm())
-ddir = torch.tensor([-0.10, -0.92, 0.38]); ddir = ddir / ddir.norm()
+ddir = torch.tensor([-0.10, -0.90, 0.435]); ddir = ddir / ddir.norm()
 target = sh + ddir * (reach * 0.95)
 for it in range(40):
     for j in reversed([BI["RightArm"], BI["RightForeArm"]]):

@@ -74,7 +74,33 @@ def aim(pb, target):
     pb.matrix = T @ cur.rotation_difference(tgt.normalized()).to_matrix().to_4x4() @ T.inverted() @ m
     upd()
 
+# Layered arm abduction: the constraint file was built WITHOUT the 9-degree
+# right-arm abduction (added only to the synth later), so ARDY holds the arm
+# against the body and the hanging can clips the thigh at carry. Constant
+# outward offset on the upper arm, layered after its aim -- same mechanism as
+# the finger grip layer. Sign is chosen empirically at runtime.
+ABDUCT_DEG = 9.0
+# Ramped forward-swing during the pour window: ARDY keeps the pour hand ~0.26 m
+# forward where the keyframe asked ~0.43, and the tilted can body sinks into the
+# thigh. Swinging the arm forward through the same window as the socket tilt
+# clears it while leaving carry and return untouched.
+FWD_DEG = 22.0
+def pour_w(f0):
+    f_ = f0 + 1
+    if f_ < 40 or f_ > 112: return 0.0
+    if f_ < 56: t = (f_ - 40) / 16.0
+    elif f_ <= 96: t = 1.0
+    else: t = 1.0 - (f_ - 96) / 16.0
+    return t * t * (3 - 2 * t)
+def premul_world(pb, axis, deg):
+    m = pb.matrix.copy()
+    T = Matrix.Translation(m.to_translation())
+    pb.matrix = T @ Matrix.Rotation(math.radians(deg), 4, Vector(axis)) @ T.inverted() @ m
+    upd()
+
 for b in PB: b.rotation_mode = "QUATERNION"
+ABDUCT_SIGN = None
+FWD_SIGN = None
 for f in range(F):
     for b in PB: b.matrix_basis.identity()
     upd()
@@ -83,6 +109,35 @@ for f in range(F):
         if bj is None or name not in PB: continue
         cur = PB[name].matrix.to_translation()
         aim(PB[name], cur + (y2z(J[f, SRC[bj]]) - y2z(J[f, SRC[a]])))
+        if name == "DEF-upper_arm.R":
+            if ABDUCT_SIGN is None:
+                hips_x = (rig.matrix_world @ PB["DEF-spine"].matrix).to_translation().x
+                base = PB[name].matrix.copy()
+                res = {}
+                for sgn in (1.0, -1.0):
+                    PB[name].matrix = base.copy(); upd()
+                    premul_world(PB[name], (0, 1, 0), sgn * ABDUCT_DEG)
+                    res[sgn] = abs((rig.matrix_world @ PB["DEF-hand.R"].matrix
+                                    ).to_translation().x - hips_x)
+                ABDUCT_SIGN = max(res, key=res.get)
+                PB[name].matrix = base.copy(); upd()
+                print("abduction sign %+.0f (lateral %.3f vs %.3f)"
+                      % (ABDUCT_SIGN, res[1.0], res[-1.0]))
+            premul_world(PB[name], (0, 1, 0), ABDUCT_SIGN * ABDUCT_DEG)
+            w = pour_w(f)
+            if w > 0.0:
+                if FWD_SIGN is None:
+                    base = PB[name].matrix.copy()
+                    res = {}
+                    for sgn in (1.0, -1.0):
+                        PB[name].matrix = base.copy(); upd()
+                        premul_world(PB[name], (1, 0, 0), sgn * FWD_DEG)
+                        res[sgn] = (rig.matrix_world @ PB["DEF-hand.R"].matrix
+                                    ).to_translation().y
+                    FWD_SIGN = min(res, key=res.get)   # more negative y = forward
+                    PB[name].matrix = base.copy(); upd()
+                    print("pour forward-swing sign %+.0f" % FWD_SIGN)
+                premul_world(PB[name], (1, 0, 0), FWD_SIGN * FWD_DEG * w)
     # grip layer: fingers only, constant, never fighting the body motion
     for dg, (a1, a2, a3) in GRIP.items():
         for jn, ang in zip(("01", "02", "03"), (a1, a2, a3)):
@@ -157,6 +212,33 @@ hand_local = (rig.matrix_world @ PB["DEF-hand.R"].matrix).inverted() @ can.matri
 json.dump({"can_local_to_DEF-hand.R": [list(r) for r in hand_local],
            "socket_world_at_start": [list(r) for r in SOCK]},
           open(os.path.join(OUT, "can_attachment.json"), "w"), indent=2)
+# ---- pour tilt: PROP articulation on the socket, not a wrist trick ---------
+# The retarget aims each bone along a single direction, and rotation_difference
+# discards twist -- so no amount of source wrist pitch can tip the can far
+# enough to read as pouring. Real games articulate the prop: the socket itself
+# rotates about the handle-bar axis during the pour window. The same curve is
+# part of the runtime attachment contract (see can_attachment.json).
+TILT = 48.0
+pb_s = PB["prop_socket.R"]
+pb_s.rotation_mode = "XYZ"
+def spout_z_with(tilt_y_deg):
+    pb_s.rotation_euler = (0.0, math.radians(tilt_y_deg), 0.0)
+    sc.frame_set(73); upd()
+    return (can.matrix_world @ OFF_TIP).z
+from mathutils import Vector as _V
+OFF_TIP = _V(META["markers"]["spout_tip"])
+za = spout_z_with(+TILT); zb = spout_z_with(-TILT)
+sign = 1.0 if za < zb else -1.0
+pb_s.rotation_euler = (0, 0, 0)
+print("pour tilt sign: %+.0f (tip z %.3f vs %.3f)" % (sign, za, zb))
+for f_, ang in ((1, 0.0), (46, 0.0), (58, sign * TILT), (94, sign * TILT),
+                (106, 0.0), (160, 0.0)):
+    pb_s.rotation_euler = (0.0, math.radians(ang), 0.0)
+    pb_s.keyframe_insert("rotation_euler", frame=f_)
+sc.frame_set(73); upd()
+print("pour spout tip with tilt: %s" % (str([round(x, 3) for x in (can.matrix_world @ OFF_TIP)])))
+sc.frame_set(1); upd()
+
 # Anchor guarantee = two separate facts, measured separately:
 #  1. SEAT: the can's grip_anchor coincides with the intended socket frame at
 #     placement (asserted above, ~7e-8 m).
@@ -166,7 +248,7 @@ json.dump({"can_local_to_DEF-hand.R": [list(r) for r in hand_local],
 #     posed frame even though the can itself is exact.)
 hand_rel0 = None
 drift_p = 0.0; drift_r = 0.0
-for f_ in (1, 40, 73, 120, 160):
+for f_ in (1, 40, 120, 160):   # outside the deliberate pour-tilt window
     sc.frame_set(f_); upd()
     rel = (rig.matrix_world @ PB["DEF-hand.R"].matrix).inverted() @ can.matrix_world
     if hand_rel0 is None: hand_rel0 = rel.copy()

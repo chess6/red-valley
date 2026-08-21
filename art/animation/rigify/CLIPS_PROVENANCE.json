@@ -1,0 +1,43 @@
+{
+  "milestone": "animation pipeline: walk_fwd + water_can on rv_player_proportioned",
+  "date": "2026-08-21",
+  "pipeline_decision": "ARDY for general motion AND constrained interactions (see docs/ANIMATION_REQUIREMENTS.md)",
+  "clips": {
+    "walk_fwd": {
+      "file": "art/animation/rigify/walk_fwd/walk_fwd.glb",
+      "sha256": "690c459cac3bbed7fe9b33e5cc1bb6bb9a2a25c6823310b79c87e5985c57b5a1",
+      "duration_s": 1.0,
+      "fps": 20,
+      "motion_source": "ARDY Core walk8_s1.npz (paid output, tracked), frames 32-51 contiguous stride cycle",
+      "status": "provisional: contact model reports flight phases; visually clean at the 5.2 m gameplay camera"
+    },
+    "water_can": {
+      "file": "art/animation/rigify/water_can/water_can.glb",
+      "sha256": "ce61e402ad2315758a35ad31ee3468f6a811a9e2d4ba56ba9f401ffd00ea4aee",
+      "duration_s": 8.0,
+      "fps": 20,
+      "motion_source": "ARDY Core constrained run, seed 0, checkpoint nvidia/ARDY-Core-RP-20FPS-Horizon40 rev abe6c43b, constraints art/animation/ardy_pilot/constraints/water_constraints.json",
+      "raw_npz_sha256": "dec3f756d2906a198e46e10df06b927567b99b3e10576597ad142dcceda61585",
+      "local_layers": [
+        "rotation retarget to Rigify DEF",
+        "9 deg arm abduction (constant)",
+        "22 deg pour-window forward swing (ramped)",
+        "48 deg socket pour tilt (keyframed)",
+        "provisional fixed-finger grip"
+      ],
+      "cloud_cost_usd": 0.08
+    }
+  },
+  "licences": {
+    "ardy_code": "Apache-2.0",
+    "ardy_checkpoint": "NVIDIA Open Model Agreement \u2014 commercial use permitted, NVIDIA disclaims output ownership",
+    "character_mesh": "Hyper3D Rodin export \u2014 terms NOT RECORDED in-repo; MUST be resolved before promotion to assets/ (asset gate will require it)",
+    "proxy_can": "project-generated diagnostic, NOT_FOR_SHIPPING"
+  },
+  "known_limitations": [
+    "finger penetration on the handle, weak ring, stiff pinky (accepted at 5.2 m)",
+    "can arch overlaps the holding wrist during the pour tilt (grip-region category, ~100-300 tris)",
+    "walk contact model reports flight phases (sole-threshold metric); visual gate passed",
+    "face metric reads up to 29% on jaw/neck blend-band edges under head turns; face itself verified rigid visually"
+  ]
+}
