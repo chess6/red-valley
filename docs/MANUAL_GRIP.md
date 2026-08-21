@@ -7,6 +7,11 @@ The remaining work is a few minutes of human judgement, not more search.
 
 Open: `art/animation/rigify/grip/MANUAL_GRIP.blend`
 
+> **Corrected 2026-08-20.** The first checkpoint had the arm rotated behind the
+> body with the hand at 1.234 m and 0.428 m *behind* the hips — an arm FK sign
+> error, the same class of mistake as the finger curl. The arm is now solved with
+> IK: hand at 0.820 m, 0.300 m forward, 0.200 m lateral, can upright at 9.1 deg.
+
 ## What is already set up
 
 - The realistic can is **rigidly parented to a real `prop_socket.R` bone**, itself
