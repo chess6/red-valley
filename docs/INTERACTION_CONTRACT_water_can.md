@@ -43,7 +43,7 @@ axis, the required wrist transform is
 
 | item | value |
 |---|---|
-| spout target, pour window | 0.22 m bed + **0.22 m** (mid-band of the documented 0.15–0.30 m) |
+| spout target, pour window | bed + **0.22 m**, the documented mid-band. Asked for directly; if a body cannot reach it the escalation is reported, never silently substituted |
 | spout stand-off from plot edge | 0.10 m inside the bed |
 | hand rotation | from the grip anchor, so the handle sits in the palm and the spout points down-forward |
 | carry frames (0–8, 44–47) | can hangs at the side, bar axis horizontal |

@@ -61,6 +61,41 @@ task impossible for ARDY and easy for Kimodo. Lean is now a **measured outcome**
 not an input: *reaching the same target with less trunk hinge is the better
 result*, and on anthropometry alone Kimodo's skeleton starts ahead.
 
+## Contract corrections (review round)
+
+Four problems found in the first contract, all confirmed and fixed:
+
+| problem | fix |
+|---|---|
+| the builder searched the band from the shallowest end and broke on the first feasible point, so both generators were quietly asked for **0.30 m** while the written contract says the **0.22 m midpoint** | the documented 0.22 m is asked for directly; escalation away from it is explicit and reported, never silent |
+| **dense conditioning** — 22 hand, 72 rear-foot, 42 landed-foot frames, against Kimodo's guidance of <20 per type | sparse keyframes: **3–6 per set, 21 total**, with an assertion that refuses ≥20 |
+| the 54° figure assumed the shoulder could only be lowered by **trunk lean** | the solver now allows up to 10 cm of **pelvis drop** (knee flexion), and a sparse hips constraint carries it, so bowing is not the only lever |
+| no pelvis target existed | `HipsConstraintSet` on 3 pour keyframes |
+
+**Allowing knee flexion sharpens the anthropometry finding rather than softening
+it.** Reaching the documented 0.22 m target:
+
+| | trunk lean | pelvis drop |
+|---|---|---|
+| ARDY Core27 | **46°** | 0.094 m |
+| Kimodo SOMA30 | **0°** | 0.099 m |
+
+Kimodo's skeleton reaches the target with **no trunk bow at all**, using knee
+flexion alone. ARDY's still needs a 46° hinge.
+
+## Two scorecards, not one
+
+`tools/rvmotion/scorecard.py`. A single number would conflate two different
+questions, and the conflation is the whole problem here:
+
+- **A — morphology-normalised generator quality.** Did the model satisfy the
+  contract *in its own body*? Measured on the native output before retargeting,
+  in arm lengths, hip heights and degrees, so skeleton size cancels. This is the
+  fair generator comparison.
+- **B — production result.** What the player sees: retargeted onto the Rigify
+  character with the fixed shipping can, in absolute metres against the game's
+  contract. Anthropometry deliberately does *not* cancel here.
+
 ## Kimodo generation: blocked on local memory, not on anything else
 
 Everything up to generation works: repo pinned, checkpoint pinned, adapter
@@ -86,6 +121,13 @@ moves the 16 GB cost onto system RAM, which this box does not have either.
 | **B. Run `kimodo_textencoder` on a machine with ≥24 GB**, point `generate.py` at its URL | free if such a machine exists | no |
 | **C. Add RAM** (32 GB) and use the documented CPU route | hardware | no |
 | **D. Cloud GPU with ≥24 GB VRAM** | paid — needs a cap | no |
+
+**Prompt-embedding cache.** `tools/rvmotion/cache_prompt_embedding.py` saves the
+bf16 embedding from one clean encoder load. The encoder exists only to turn a
+prompt into a fixed-size vector; the motion model itself runs on the 3060 easily.
+Caching it on the run that can afford the encoder should let subsequent local
+generations skip Llama-3-8B entirely. The cache is keyed on the exact prompt
+text, so an edited prompt cannot silently reuse a stale vector.
 
 **Not attempted:** patching Kimodo's loader. That would be modifying upstream
 inference behaviour in the middle of a generator comparison, which is exactly

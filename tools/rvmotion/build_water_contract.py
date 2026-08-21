@@ -43,7 +43,17 @@ WINDOWS_S = {"settle": (0.00, 0.40),          # both feet planted
              "carry_end": (2.20, 2.40)}
 LEAD_ADVANCE_M = 0.28
 BAND = (0.15, 0.30)
+SPOUT_TARGET = 0.22           # the documented MIDPOINT, which is what we ask for
 SPOUT_INSIDE_BED = 0.10
+# A pour is not reached by hinging the trunk alone. Letting the pelvis drop a
+# little -- knee flexion, the way a person actually lowers a can -- supplies the
+# last few centimetres far more naturally, and changes the answer a lot: the
+# earlier "54 deg of trunk lean" figure assumed the shoulder could only be
+# lowered by bowing.
+MAX_PELVIS_DROP = 0.10        # character units, scaled per skeleton
+# Kimodo's guidance is sparse conditioning (< 20 frames per constraint type) plus
+# post-processing. Dense windows fight the prior instead of steering it.
+MAX_KEYS_PER_SET = 6
 # Lean is a FEASIBILITY ALLOWANCE, not a constraint on the generator.
 #
 # Capping it at 12 deg made the contract impossible for ARDY's Core27
@@ -104,10 +114,24 @@ def main():
     def win(name):
         t0, t1 = WINDOWS_S[name]
         return list(range(int(round(t0 * FPS)), min(N_FRAMES, int(round(t1 * FPS)) + 1)))
-    SETTLE = win("settle")
-    LEAD_LANDED = win("lead_landed")
-    POUR = win("pour")
-    CARRY = SETTLE + win("carry_end")
+
+    def sparse(frames, k=MAX_KEYS_PER_SET):
+        """Keyframes, not windows.
+
+        Kimodo asks for fewer than 20 constrained frames per type plus
+        post-processing; the earlier build handed it 72 rear-foot frames, which
+        pins the prior rather than steering it and leaves the model no room to
+        produce a natural transition. Endpoints are always kept so an interval
+        still reads as an interval."""
+        if len(frames) <= k:
+            return list(frames)
+        idx = np.linspace(0, len(frames) - 1, k)
+        return sorted({frames[int(round(i))] for i in idx})
+    SETTLE = sparse(win("settle"), 3)
+    LEAD_LANDED = sparse(win("lead_landed"), 4)
+    POUR = sparse(win("pour"), 5)
+    SUPPORT = sparse(list(range(N_FRAMES)), 6)      # rear foot: sparse, not every frame
+    CARRY = sparse(win("carry_end"), 2) + SETTLE
     print("  %d fps -> %d frames for %.1f s; pour frames %d-%d"
           % (FPS, N_FRAMES, DURATION_S, POUR[0], POUR[-1]))
 
@@ -115,14 +139,23 @@ def main():
     if a.generator == "ardy":
         from ardy.skeleton.registry import build_skeleton
         from ardy.constraints import (RightHandConstraintSet, LeftFootConstraintSet,
-                                      RightFootConstraintSet, save_constraints_lst)
+                                      RightFootConstraintSet, EndEffectorConstraintSet,
+                                      save_constraints_lst)
         NJ = 27
     else:
         from kimodo.skeleton.registry import build_skeleton
         from kimodo.constraints import (RightHandConstraintSet, LeftFootConstraintSet,
-                                        RightFootConstraintSet, save_constraints_lst)
+                                        RightFootConstraintSet, EndEffectorConstraintSet,
+                                        save_constraints_lst)
         NJ = int(os.environ.get("RV_KIMODO_JOINTS", "77"))
     sk = build_skeleton(NJ)
+
+    class HipsConstraintSet(EndEffectorConstraintSet):
+        """Pelvis target. Both libraries treat "Hips" as a base end-effector name,
+        so this rides the same machinery as the hand and foot sets."""
+        name = "end-effector"
+        def __init__(self, *args, **kw):
+            super().__init__(*args, joint_names=["Hips"], **kw)
     BI = sk.bone_index
     names = list(sk.bone_order_names)
     print("%s skeleton: %d joints, up-axis assumed Y (generator native)"
@@ -169,35 +202,54 @@ def main():
     neck = next((n for n in ("Neck", "Neck1", "Neck2") if n in BI), None)
     assert neck, "no neck joint found in %s" % a.generator
     trunk = float(np.linalg.norm(rest[BI[neck]] - rest[BI["Hips"]]))
-    # Search lean as well as band depth. Assuming maximum lean is best is wrong:
-    # past a point the trunk carries the shoulder FORWARD of the grip and the
-    # distance grows again. The reported lean is the smallest that reaches the
-    # deepest attainable point -- less trunk hinge for the same target is better.
-    best = None
-    for above in np.arange(band[1], band[0] - 1e-9, -0.005 * S):
+    # Ask for the DOCUMENTED target first. The previous version searched from the
+    # shallowest end of the band downward and broke on the first feasible point,
+    # so it always returned 0.30 -- the easiest point -- while the contract says
+    # 0.22. Escalation away from the target is now explicit and reported.
+    drop_max = MAX_PELVIS_DROP * S
+    def solve(above):
         sp = np.array([0.0, soil + above, 0.0]) + FWD * (lead_adv + standoff)
         g, Rw = wrist_from_spout(sp, POUR_TILT_DEG, meta)
         g[0] = sh0[0] * 0.55
+        cheapest = None
         for lean_d in np.arange(0.0, MAX_LEAN_DEG + 1e-9, 1.0):
             lean = math.radians(float(lean_d))
-            sh_try = (sh0 + FWD * (lead_adv * 0.5 + trunk * math.sin(lean))
-                      - np.array([0.0, trunk * (1 - math.cos(lean)), 0.0]))
-            if np.linalg.norm(g - sh_try) <= arm_len * 0.98:
-                best = (float(above), sp, g, Rw, float(lean_d), sh_try)
+            for drop in np.arange(0.0, drop_max + 1e-9, 0.01 * S):
+                sh_try = (sh0 + FWD * (lead_adv * 0.5 + trunk * math.sin(lean))
+                          - np.array([0.0, trunk * (1 - math.cos(lean)) + drop, 0.0]))
+                if np.linalg.norm(g - sh_try) <= arm_len * 0.98:
+                    cand = (float(lean_d), float(drop), sp, g, Rw, sh_try)
+                    if cheapest is None or lean_d < cheapest[0]:
+                        cheapest = cand
+                    break
+            if cheapest:
                 break
-        if best:
-            break
-    assert best is not None, (
-        "no point in the body-scaled %.3f-%.3f m band is reachable with a %.0f deg "
-        "lean and a %.3f m stagger -- the CONTRACT is impossible for this body, "
-        "which is a finding, not something to force"
-        % (band[0], band[1], MAX_LEAN_DEG, lead_adv))
-    SPOUT_SOLVED, spout, grip, R_wrist, LEAN_NEEDED, sh_eff = best
-    print("  minimum trunk lean that reaches it: %.0f deg (allowance %.0f)"
-          % (LEAN_NEEDED, MAX_LEAN_DEG))
-    print("  deepest reachable spout: %.3f m above the bed = %.3f in character "
-          "units (band %.2f-%.2f character)"
-          % (SPOUT_SOLVED, SPOUT_SOLVED / S, BAND[0], BAND[1]))
+        return cheapest
+    target_above = SPOUT_TARGET * S
+    sol = solve(target_above)
+    SPOUT_SOLVED = target_above
+    escalated = False
+    if sol is None:
+        for above in np.arange(target_above, band[1] + 1e-9, 0.005 * S):
+            sol = solve(above)
+            if sol:
+                SPOUT_SOLVED, escalated = float(above), True
+                break
+    assert sol is not None, (
+        "not even the shallowest band point %.3f m is reachable with %.0f deg lean "
+        "and %.3f m pelvis drop -- the CONTRACT is impossible for this body"
+        % (band[1], MAX_LEAN_DEG, drop_max))
+    LEAN_NEEDED, DROP_NEEDED, spout, grip, R_wrist, sh_eff = sol
+    if escalated:
+        print("  !! documented target %.3f m NOT reachable; escalated to %.3f m "
+              "(%.3f in character units) -- reported, not silently substituted"
+              % (target_above, SPOUT_SOLVED, SPOUT_SOLVED / S))
+    else:
+        print("  documented target %.3f m above the bed is reachable" % target_above)
+    print("  needs %.0f deg trunk lean + %.3f m pelvis drop (knee flexion)"
+          % (LEAN_NEEDED, DROP_NEEDED))
+
+
     _, R_carry = wrist_from_spout(rest[BI["RightHand"]]
                                   + np.array(meta["markers"]["spout_tip"]), 0.0, meta)
     for f in POUR:
@@ -227,12 +279,25 @@ def main():
         return cls(sk, fi, torch.tensor(poses[frames]).float(),
                    torch.tensor(rots[frames]).float(), None)
 
+    # Pelvis target at the pour: a sparse hips constraint carrying the lowering
+    # that knee flexion supplies, so the model is not forced to find the height
+    # by bowing. Without it the only lever the generator has is trunk hinge.
+    HIPS = sparse(win("pour"), 3)
+    for f in HIPS:
+        poses[f, BI["Hips"]] = rest[BI["Hips"]] - np.array([0.0, DROP_NEEDED, 0.0]) \
+                               + FWD * (lead_adv * 0.5)
+
     sets = [
-        mk(RightHandConstraintSet, POUR),                       # pour only: sparse
-        mk(RightFootConstraintSet, list(range(N_FRAMES))),      # rear foot supports
-        mk(LeftFootConstraintSet, SETTLE),                      # planted at the start
-        mk(LeftFootConstraintSet, LEAD_LANDED),                 # landed forward
+        mk(RightHandConstraintSet, POUR),        # spout over the bed
+        mk(RightFootConstraintSet, SUPPORT),     # rear foot supports throughout
+        mk(LeftFootConstraintSet, SETTLE),       # planted before the step
+        mk(LeftFootConstraintSet, LEAD_LANDED),  # landed forward in a stagger
+        mk(HipsConstraintSet, HIPS),             # pelvis lowered by knee flexion
     ]
+    per_type = {type(x).__name__: len(x.frame_indices) for x in sets}
+    print("  constrained frames per set: %s" % per_type)
+    assert all(v < 20 for v in per_type.values()), \
+        "a constraint type exceeds 20 keyframes; that is dense conditioning"
     save_constraints_lst(a.out, sets)
     summary = {"generator": a.generator, "skeleton_joints": len(names),
                "fps": FPS, "frames": N_FRAMES, "duration_s": DURATION_S,
@@ -250,6 +315,11 @@ def main():
                "min_lean_needed_deg": LEAN_NEEDED,
                "pour_tilt_deg": POUR_TILT_DEG,
                "constrained_frames_total": sum(len(s.frame_indices) for s in sets),
+               "constrained_frames_per_set": per_type,
+               "min_trunk_lean_deg": LEAN_NEEDED,
+               "pelvis_drop_m": round(DROP_NEEDED, 4),
+               "spout_target_documented_m": SPOUT_TARGET,
+               "spout_target_escalated": bool(escalated),
                "note": "no compression to 1.2 s during the architectural comparison"}
     json.dump(summary, open(a.out.replace(".json", "_summary.json"), "w"), indent=2)
     print("  wrote %s (%d sets, %d constrained frames)"
