@@ -37,7 +37,7 @@
       "max_delta_err_deg": 1.0
     },
     "DEF-spine.002": {
-      "mean_delta_err_deg": 0.45,
+      "mean_delta_err_deg": 0.46,
       "max_delta_err_deg": 0.98
     },
     "DEF-spine.003": {
@@ -85,24 +85,24 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.R": {
-      "mean_delta_err_deg": 6.6,
-      "max_delta_err_deg": 16.29
+      "mean_delta_err_deg": 2.09,
+      "max_delta_err_deg": 5.05
     },
     "DEF-shin.R": {
-      "mean_delta_err_deg": 6.67,
-      "max_delta_err_deg": 19.06
+      "mean_delta_err_deg": 2.16,
+      "max_delta_err_deg": 8.28
     },
     "DEF-foot.R": {
       "mean_delta_err_deg": 0.0,
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.L": {
-      "mean_delta_err_deg": 6.29,
-      "max_delta_err_deg": 12.4
+      "mean_delta_err_deg": 2.31,
+      "max_delta_err_deg": 6.33
     },
     "DEF-shin.L": {
-      "mean_delta_err_deg": 5.87,
-      "max_delta_err_deg": 13.1
+      "mean_delta_err_deg": 2.59,
+      "max_delta_err_deg": 8.05
     },
     "DEF-foot.L": {
       "mean_delta_err_deg": 0.0,

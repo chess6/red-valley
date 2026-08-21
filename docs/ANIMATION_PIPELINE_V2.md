@@ -80,17 +80,63 @@ rather than the source's own labels, which is what produced the false
 | one-shot duration | 8.0 s | **1.20 s** | ~1.2 s |
 | sync point | none | **0.45 s** | ~0.45 s |
 
+## Correction pass (after visual review)
+
+Visual review caught four defects that every numeric gate had passed. Each is
+recorded here because the pattern — metrics green, render wrong — is the single
+most persistent failure mode in this pipeline.
+
+| defect (spotted by eye) | cause | fix |
+|---|---|---|
+| character parked metres off-origin, legs splayed | the torso was referenced against the absolute source hip position while the feet lived in the in-place trajectory's frame — two origins | one `clip_space()` mapping used by every driven control |
+| one knee bending backwards, the other fine | Rigify ignores a pole target unless `pole_vector` is on; **every pole keyframe written was inert**, so the solver chose each knee plane itself | enable `pole_vector`; seed poles with the anatomical direction and hold the last well-conditioned one |
+| knee locked dead straight for a third of the cycle | goals were built as `rig_rest_foot + source_delta`, but this character's rest foot sits 0.134 m lateral of its hip — 0.875 m from a 0.865 m leg, already past full extension | target **hip-relative**: animated hip + the source's own hip-to-foot vector, so reachability is automatic |
+| spout swinging sideways instead of tipping down | the pour rotated `hand_fk.R` while the arm was switched to IK (an inert control), about the world X axis | rotate whichever control drives the hand, about the can's own handle-bar axis, sign chosen by measuring which way the tip drops |
+
+Two of my own "fixes" during this pass were wrong and are recorded as such: a
+smooth-locomotion foot shift that made goals unreachable, and a skating metric
+that measured deviation from a constant treadmill velocity — which counts the
+body's legitimate wobble over a planted foot as sliding.
+
+### Review defects in the validation itself
+
+| defect | fix |
+|---|---|
+| `planted_targets()` cyclic branch ended in `pass` | wrapped intervals are realigned by one stride, averaged, then sent back |
+| wrist RMS sampled the spine transform from whatever frame the scene was left on | per-frame root reference captured in the same loop |
+| an overall rotation mean hid task-critical errors | per-critical-bone limits; authored IK overrides reported with magnitude, excluded from the gate rather than averaged away |
+| forearm-roll figures compared different clips | roll is reported per clip with its source clip named; 47.2° was the 8 s take, not the 1.2 s one-shot |
+| the Godot test walked the bone chain by hand | two real `BoneAttachment3D` nodes, processed; rigidity vs `DEF-hand.R` measured at **0.000000 m** across the clip |
+| seam compared against one arbitrary interior sample | every interior transition, with median/p90/max, plus a legal-contact-transition check |
+
+### Measured after correction
+
+| metric | before correction | after |
+|---|---|---|
+| walk rotation fidelity, mean | 2.15° | **0.74°** |
+| walk critical-bone breaches | shin.R 52°, shin.L 21°, thigh.L 14° | **none** |
+| water critical-bone breaches | shin.R 108°, shin.L 116° | **none** (right arm is an authored override, reported at 10–58°) |
+| walk foot skating, peak | 16.4 cm/s | 7.4 cm/s (still failing) |
+| can/body collisions | 303 (v1) → 20 | **7**, all `DEF-forearm.R.001` — the holder's own wrist |
+| prop rigidity in Godot | untested | **0.000000 m** vs a hand attachment |
+
 ## Open gate failures (not waived)
 
-1. **Walk foot skating 8.0 cm/s peak** vs a 5 cm/s gate. Total slide is 2.4 cm
-   per foot per cycle; the excess is concentrated at contact-interval edges,
-   where the source's label flips a frame before the foot is really still.
-2. **Spout 0.503–0.619 m above the bed** vs the documented 0.15–0.30 m band.
+1. **Walk foot skating 7.4 cm/s peak** (left) vs a 5 cm/s gate; water 12.5 cm/s
+   on a clip where the feet should not move at all. Total slide is small
+   (~2.4 cm per foot per walk cycle) and the excess sits at contact-interval
+   edges. Contact-edge blending was implemented and did **not** clear it, so the
+   remaining cause is not the lock ramp — it is unresolved.
+2. **Spout 0.336–0.752 m above the bed** vs the documented 0.15–0.30 m band.
    This is a **source deficiency, not a retarget defect**: the ARDY clip never
    lowers the hand (0.94–1.02 m for all 160 frames), it only leans and reaches.
    With `IK_Stretch` off the arm cannot close the remaining ~0.20 m. An earlier
    build appeared to pass this gate — it was stretching the character's arm.
 3. **Jaw/neck blend band strains up to 82%.** See the asset blockers below.
+4. **7 triangles of can-vs-wrist contact** on the holder's own forearm. Down
+   from 303 in v1, but not zero: it is the proxy can's handle arch against this
+   hand, so it is bounded by the prop and hand-topology blockers, not by the
+   retargeter.
 
 ## Criterion changes proposed (not applied without approval)
 

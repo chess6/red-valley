@@ -57,16 +57,16 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-upper_arm.R": {
-      "mean_delta_err_deg": 3.23,
-      "max_delta_err_deg": 18.25
+      "mean_delta_err_deg": 2.51,
+      "max_delta_err_deg": 10.43
     },
     "DEF-forearm.R": {
-      "mean_delta_err_deg": 4.57,
-      "max_delta_err_deg": 37.09
+      "mean_delta_err_deg": 8.08,
+      "max_delta_err_deg": 58.2
     },
     "DEF-hand.R": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 4.52,
+      "max_delta_err_deg": 15.39
     },
     "DEF-shoulder.L": {
       "mean_delta_err_deg": 0.0,
@@ -85,24 +85,24 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.R": {
-      "mean_delta_err_deg": 1.31,
-      "max_delta_err_deg": 2.57
+      "mean_delta_err_deg": 1.18,
+      "max_delta_err_deg": 2.64
     },
     "DEF-shin.R": {
-      "mean_delta_err_deg": 1.42,
-      "max_delta_err_deg": 2.64
+      "mean_delta_err_deg": 1.02,
+      "max_delta_err_deg": 2.19
     },
     "DEF-foot.R": {
       "mean_delta_err_deg": 0.0,
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.L": {
-      "mean_delta_err_deg": 1.09,
-      "max_delta_err_deg": 3.3
+      "mean_delta_err_deg": 0.89,
+      "max_delta_err_deg": 3.39
     },
     "DEF-shin.L": {
-      "mean_delta_err_deg": 1.2,
-      "max_delta_err_deg": 3.38
+      "mean_delta_err_deg": 1.15,
+      "max_delta_err_deg": 4.44
     },
     "DEF-foot.L": {
       "mean_delta_err_deg": 0.0,
@@ -112,7 +112,7 @@
   "forearm_roll_range_deg": {
     "DEF-forearm.R": {
       "source_roll_range_deg": 34.01,
-      "target_roll_range_deg": 64.59
+      "target_roll_range_deg": 106.17
     },
     "DEF-forearm.L": {
       "source_roll_range_deg": 30.39,

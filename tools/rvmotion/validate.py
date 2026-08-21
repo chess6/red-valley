@@ -20,6 +20,11 @@ TREADMILL = float(next((A[i + 1] for i, x in enumerate(A) if x == "--treadmill")
 TREAD_DIR = next((A[i + 1] for i, x in enumerate(A) if x == "--tread-dir"), "0,1")
 SOIL = float(next((A[i + 1] for i, x in enumerate(A) if x == "--soil"), 0.22))
 LABEL = next((A[i + 1] for i, x in enumerate(A) if x == "--label"), os.path.basename(BASE))
+# Bones deliberately overridden by an authored layer (hand IK to reach the spout,
+# the wrist pour). Their deviation from source is the POINT, so it is reported
+# with its magnitude and excluded from the breach gate rather than averaged away
+# or silently tolerated.
+AUTHORED = [x for x in (next((A[i + 1] for i, y in enumerate(A) if y == "--authored"), "")).split(",") if x]
 sys.path.insert(0, os.path.join(os.getcwd(), "tools"))
 from rvmotion.canonical import RVMotion, quat_to_mat  # noqa: E402
 
@@ -61,6 +66,9 @@ for f in SAMPLE:
     for d in TRACK:
         if d in PB:
             mm = wm(d); rot.setdefault(d, {})[f] = mm.to_3x3(); pos.setdefault(d, {})[f] = mm.to_translation()
+    # per-frame root reference; sampling this outside the loop compared every
+    # wrist against one arbitrary frame's spine and made the RMS meaningless
+    pos.setdefault("__root__", {})[f] = wm("DEF-spine").to_translation()
     if can is not None: canm[f] = can.matrix_world.copy()
 
 err = {}
@@ -69,12 +77,32 @@ for j, d in DEF_MAP.items():
     for a, b in zip(SAMPLE[:-1], SAMPLE[1:]):
         ds = np2m(G[b, JN.index(j)]) @ np2m(G[a, JN.index(j)]).transposed()
         err.setdefault(d, []).append(angdiff(ds, rot[d][b] @ rot[d][a].transposed()))
+# Per-critical-bone limits. An overall mean is not a gate: the water clip's
+# right arm can be 30 deg wrong while the average stays under 1 deg, because
+# 18 well-behaved bones outvote the two that carry the task.
+CRITICAL = {"DEF-upper_arm.R": 8.0, "DEF-forearm.R": 8.0, "DEF-hand.R": 8.0,
+            "DEF-upper_arm.L": 8.0, "DEF-forearm.L": 8.0, "DEF-hand.L": 8.0,
+            "DEF-thigh.R": 12.0, "DEF-shin.R": 12.0, "DEF-foot.R": 12.0,
+            "DEF-thigh.L": 12.0, "DEF-shin.L": 12.0, "DEF-foot.L": 12.0,
+            "DEF-spine": 10.0, "DEF-spine.003": 10.0}
+per_bone = {k: {"mean": round(float(np.mean(v)), 2), "max": round(float(np.max(v)), 2)}
+            for k, v in err.items()}
+breaches = {k: {"max_deg": per_bone[k]["max"], "limit_deg": lim}
+            for k, lim in CRITICAL.items()
+            if k in per_bone and per_bone[k]["max"] > lim and k not in AUTHORED}
+authored_dev = {k: per_bone[k] for k in AUTHORED if k in per_bone}
 R["rotation_fidelity"] = {
-    "per_bone_deg": {k: {"mean": round(float(np.mean(v)), 2), "max": round(float(np.max(v)), 2)}
-                     for k, v in err.items()},
+    "per_bone_deg": per_bone,
     "overall_mean_deg": round(float(np.mean([x for v in err.values() for x in v])), 3),
     "overall_max_deg": round(float(np.max([x for v in err.values() for x in v])), 3),
-    "gate_mean_lt_2deg": bool(np.mean([x for v in err.values() for x in v]) < 2.0)}
+    "gate_mean_lt_2deg": bool(np.mean([x for v in err.values() for x in v]) < 2.0),
+    "per_bone_limits_deg": CRITICAL,
+    "per_bone_breaches": breaches,
+    "authored_override_bones": AUTHORED,
+    "authored_override_deviation_deg": authored_dev,
+    "gate_no_critical_bone_breach": not breaches,
+    "note": ("bones driven by IK are expected to deviate where the goal was moved "
+             "deliberately; those deviations are listed, never averaged away")}
 
 # twist channel actually carrying signal
 R["twist_channel"] = {d: {"range_deg": round(float(np.ptp(
@@ -87,7 +115,7 @@ for side, jn, d in (("R", "RightHand", "DEF-hand.R"), ("L", "LeftHand", "DEF-han
     if d not in rot: continue
     j = JN.index(jn)
     # scale-normalised position error relative to the hips, both sides
-    ph = np.array([list(pos[d][f] - wm("DEF-spine").to_translation()) for f in SAMPLE])
+    ph = np.array([list(pos[d][f] - pos["__root__"][f]) for f in SAMPLE])
     sh = POS[SAMPLE][:, j] - POS[SAMPLE][:, JN.index("Hips")]
     wr[side] = {"pos_rms_vs_source_m": round(float(np.sqrt(((ph - sh) ** 2).sum(1).mean())), 4),
                 "orientation_delta_err_max_deg": round(float(np.max(
@@ -95,6 +123,28 @@ for side, jn, d in (("R", "RightHand", "DEF-hand.R"), ("L", "LeftHand", "DEF-han
                              rot[d][b] @ rot[d][a].transposed())
                      for a, b in zip(SAMPLE[:-1], SAMPLE[1:])])), 2)}
 R["wrist"] = wr
+def roll_range(jn, dbone, child):
+    if dbone not in rot: return None
+    js, jc = JN.index(jn), JN.index(child)
+    src, tgt = [], []
+    for f in SAMPLE:
+        ax = POS[f, jc] - POS[f, js]
+        nn = np.linalg.norm(ax)
+        if nn < 1e-9: continue
+        av = Vector((ax / nn).tolist())
+        for M, acc in ((np2m(G[f, js]) @ np2m(G[SAMPLE[0], js]).transposed(), src),
+                       (rot[dbone][f] @ rot[dbone][SAMPLE[0]].transposed(), tgt)):
+            q = M.to_quaternion()
+            acc.append(math.degrees(q.to_axis_angle()[1] * (1 if q.axis.dot(av) > 0 else -1)))
+    s_, t_ = float(np.ptp(src)), float(np.ptp(tgt))
+    return {"source_deg": round(s_, 2), "target_deg": round(t_, 2),
+            "loss_pct": round(100 * (1 - t_ / s_), 1) if s_ > 1e-6 else None}
+R["forearm_roll"] = {"clip": LABEL, "source_clip": os.path.basename(BASE),
+                     "R": roll_range("RightForeArm", "DEF-forearm.R", "RightHand"),
+                     "L": roll_range("LeftForeArm", "DEF-forearm.L", "LeftHand"),
+                     "note": ("roll range is a property of THIS clip; the 47.2 deg "
+                              "figure was measured on the full 8 s water take, not "
+                              "on the 1.2 s one-shot crop -- they are not comparable")}
 
 # ---------- 3. foot contacts + skating -------------------------------------
 ch = {n: i for i, n in enumerate(m.contact_channels)}
@@ -107,15 +157,26 @@ for side, cn, d in (("L", "LeftFoot", "DEF-foot.L"), ("R", "RightFoot", "DEF-foo
     # locomotion speed -- the ground is what moves. Skating is the residual after
     # that expected treadmill motion is removed; measuring absolute stillness
     # would score the moonwalk bug as perfect.
-    tdx, tdy = [float(x) for x in TREAD_DIR.split(",")]
-    step = TREADMILL / sc.render.fps
-    exp = Vector((-tdx * step, -tdy * step, 0.0))
+    # Skating = how far the planted foot moves relative to the GROUND, recovered
+    # by undoing the in-place mapping. Comparing against a constant treadmill
+    # velocity was wrong: the body legitimately wobbles over a planted foot, and
+    # that wobble appeared in the residual as if the foot were sliding.
+    src_j = JN.index(cn)
+    hip_j = JN.index("Hips")
     for f in range(1, len(SAMPLE)):
         if on[f] and on[f - 1]:
             p0, p1 = pos[d][SAMPLE[f - 1]], pos[d][SAMPLE[f]]
-            dv = Vector((p1.x - p0.x, p1.y - p0.y, 0.0)) - exp
-            s = dv.length
-            tot += s; peak = max(peak, s * sc.render.fps)
+            # body motion between the two frames, from the rig itself
+            b0, b1 = pos["__root__"][SAMPLE[f - 1]], pos["__root__"][SAMPLE[f]]
+            # expected ground-relative displacement of a locked foot is zero, so
+            # add back the body's own travel to leave the world-space slide
+            src_rel0 = POS[SAMPLE[f - 1], src_j] - POS[SAMPLE[f - 1], hip_j]
+            src_rel1 = POS[SAMPLE[f], src_j] - POS[SAMPLE[f], hip_j]
+            expected = Vector((float(src_rel1[0] - src_rel0[0]),
+                               float(src_rel1[1] - src_rel0[1]), 0.0))
+            got = Vector((p1.x - p0.x, p1.y - p0.y, 0.0)) - Vector((b1.x - b0.x, b1.y - b0.y, 0.0))
+            sdev = (got - expected).length
+            tot += sdev; peak = max(peak, sdev * sc.render.fps)
     sk[side] = {"planted_frames": n_planted,
                 "total_slide_m": round(tot, 4),
                 "peak_slide_cm_per_s": round(peak * 100, 2),
@@ -131,11 +192,39 @@ if IS_LOOP:
         return np.array([[p[f].x - h.x, p[f].y - h.y, p[f].z - h.z] for p in pos.values()])
     pred = 2.0 * bsz(SAMPLE[-1]) - bsz(SAMPLE[-2])
     seam = float(np.linalg.norm(bsz(SAMPLE[0]) - pred, axis=1).max())
-    inner = float(np.linalg.norm(bsz(SAMPLE[2]) - (2.0 * bsz(SAMPLE[1]) - bsz(SAMPLE[0])), axis=1).max())
+    # Compare against EVERY interior transition, not one sample: a single
+    # interior frame is not evidence about the cycle, and the earlier version
+    # picked frame 2 arbitrarily.
+    inner_all = [float(np.linalg.norm(
+        bsz(SAMPLE[i + 1]) - (2.0 * bsz(SAMPLE[i]) - bsz(SAMPLE[i - 1])), axis=1).max())
+        for i in range(1, len(SAMPLE) - 1)]
+    # Contact state must match across the wrap or the loop changes gait phase.
+    # The wrap is a one-frame TRANSITION, so demanding identical contact state
+    # between the first and last frames is wrong -- they are a frame apart by
+    # construction. What must hold is that the transition is a legal one: at most
+    # one channel changes, exactly as inside the cycle.
+    c0 = m.contacts[SAMPLE[0]].astype(int).tolist()
+    cN = m.contacts[SAMPLE[-1]].astype(int).tolist()
+    wrap_flips = sum(1 for a_, b_ in zip(c0, cN) if a_ != b_)
+    interior_flips = max(
+        sum(1 for a_, b_ in zip(m.contacts[SAMPLE[i]].astype(int).tolist(),
+                                m.contacts[SAMPLE[i + 1]].astype(int).tolist()) if a_ != b_)
+        for i in range(len(SAMPLE) - 1))
     R["loop_seam"] = {"seam_extrapolation_err_m": round(seam, 5),
-                      "interior_extrapolation_err_m": round(inner, 5),
+                      "interior_err_median_m": round(float(np.median(inner_all)), 5),
+                      "interior_err_p90_m": round(float(np.percentile(inner_all, 90)), 5),
+                      "interior_err_max_m": round(float(np.max(inner_all)), 5),
+                      "seam_percentile_within_interior": round(
+                          100.0 * float(np.mean([seam > v for v in inner_all])), 1),
+                      "contact_state_first_frame": c0,
+                      "contact_state_last_frame": cN,
+                      "contact_channel_flips_at_wrap": wrap_flips,
+                      "max_contact_flips_inside_cycle": interior_flips,
+                      "contact_transition_legal": wrap_flips <= max(1, interior_flips),
                       "gate_documented_lt_1cm": seam < 0.01,
-                      "gate_proposed_no_worse_than_interior": seam <= inner}
+                      "gate_proposed_seam_below_interior_median": (
+                          seam <= float(np.median(inner_all))
+                          and wrap_flips <= max(1, interior_flips))}
 
 # ---------- 5. prop: rigidity, spout, collisions ---------------------------
 if can is not None:

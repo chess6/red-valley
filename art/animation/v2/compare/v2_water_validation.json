@@ -1,5 +1,5 @@
 {
-  "label": "v2",
+  "label": "v2 water_can",
   "frames": 24,
   "fps": 20,
   "rotation_fidelity": {
@@ -29,16 +29,16 @@
         "max": 0.0
       },
       "DEF-upper_arm.R": {
-        "mean": 3.41,
-        "max": 21.98
+        "mean": 2.51,
+        "max": 10.43
       },
       "DEF-forearm.R": {
-        "mean": 4.43,
-        "max": 33.01
+        "mean": 8.08,
+        "max": 58.2
       },
       "DEF-hand.R": {
-        "mean": 0.0,
-        "max": 0.0
+        "mean": 4.52,
+        "max": 15.39
       },
       "DEF-upper_arm.L": {
         "mean": 1.0,
@@ -53,88 +53,141 @@
         "max": 0.0
       },
       "DEF-thigh.R": {
-        "mean": 1.31,
-        "max": 2.57
+        "mean": 1.18,
+        "max": 2.64
       },
       "DEF-shin.R": {
-        "mean": 1.42,
-        "max": 2.64
+        "mean": 1.02,
+        "max": 2.19
       },
       "DEF-foot.R": {
         "mean": 0.0,
         "max": 0.0
       },
       "DEF-thigh.L": {
-        "mean": 1.09,
-        "max": 3.3
+        "mean": 0.89,
+        "max": 3.39
       },
       "DEF-shin.L": {
-        "mean": 1.2,
-        "max": 3.38
+        "mean": 1.15,
+        "max": 4.44
       },
       "DEF-foot.L": {
         "mean": 0.0,
         "max": 0.0
       }
     },
-    "overall_mean_deg": 0.855,
-    "overall_max_deg": 33.012,
-    "gate_mean_lt_2deg": true
+    "overall_mean_deg": 1.215,
+    "overall_max_deg": 58.199,
+    "gate_mean_lt_2deg": true,
+    "per_bone_limits_deg": {
+      "DEF-upper_arm.R": 8.0,
+      "DEF-forearm.R": 8.0,
+      "DEF-hand.R": 8.0,
+      "DEF-upper_arm.L": 8.0,
+      "DEF-forearm.L": 8.0,
+      "DEF-hand.L": 8.0,
+      "DEF-thigh.R": 12.0,
+      "DEF-shin.R": 12.0,
+      "DEF-foot.R": 12.0,
+      "DEF-thigh.L": 12.0,
+      "DEF-shin.L": 12.0,
+      "DEF-foot.L": 12.0,
+      "DEF-spine": 10.0,
+      "DEF-spine.003": 10.0
+    },
+    "per_bone_breaches": {},
+    "authored_override_bones": [
+      "DEF-upper_arm.R",
+      "DEF-forearm.R",
+      "DEF-hand.R"
+    ],
+    "authored_override_deviation_deg": {
+      "DEF-upper_arm.R": {
+        "mean": 2.51,
+        "max": 10.43
+      },
+      "DEF-forearm.R": {
+        "mean": 8.08,
+        "max": 58.2
+      },
+      "DEF-hand.R": {
+        "mean": 4.52,
+        "max": 15.39
+      }
+    },
+    "gate_no_critical_bone_breach": true,
+    "note": "bones driven by IK are expected to deviate where the goal was moved deliberately; those deviations are listed, never averaged away"
   },
   "twist_channel": {
-    "DEF-spine.001": {
-      "range_deg": 23.98
+    "DEF-upper_arm.R.001": {
+      "range_deg": 33.13
     },
     "DEF-forearm.L.001": {
       "range_deg": 16.09
     },
+    "DEF-spine.001": {
+      "range_deg": 23.98
+    },
     "DEF-upper_arm.L.001": {
       "range_deg": 8.23
     },
-    "DEF-upper_arm.R.001": {
-      "range_deg": 41.69
-    },
     "DEF-forearm.R.001": {
-      "range_deg": 36.03
+      "range_deg": 56.19
     }
   },
   "wrist": {
     "R": {
-      "pos_rms_vs_source_m": 0.2214,
-      "orientation_delta_err_max_deg": 0.0
+      "pos_rms_vs_source_m": 0.179,
+      "orientation_delta_err_max_deg": 15.39
     },
     "L": {
-      "pos_rms_vs_source_m": 0.3296,
+      "pos_rms_vs_source_m": 0.2534,
       "orientation_delta_err_max_deg": 0.0
     }
+  },
+  "forearm_roll": {
+    "clip": "v2 water_can",
+    "source_clip": "water_can_oneshot",
+    "R": {
+      "source_deg": 34.01,
+      "target_deg": 106.17,
+      "loss_pct": -212.2
+    },
+    "L": {
+      "source_deg": 30.39,
+      "target_deg": 30.39,
+      "loss_pct": 0.0
+    },
+    "note": "roll range is a property of THIS clip; the 47.2 deg figure was measured on the full 8 s water take, not on the 1.2 s one-shot crop -- they are not comparable"
   },
   "foot_contacts": {
     "source_labels_used": true,
     "per_foot": {
       "L": {
         "planted_frames": 24,
-        "total_slide_m": 0.0118,
-        "peak_slide_cm_per_s": 4.52,
-        "mean_slide_cm_per_s": 0.98
+        "total_slide_m": 0.0648,
+        "peak_slide_cm_per_s": 12.51,
+        "mean_slide_cm_per_s": 5.4
       },
       "R": {
         "planted_frames": 24,
-        "total_slide_m": 0.0162,
-        "peak_slide_cm_per_s": 4.2,
-        "mean_slide_cm_per_s": 1.35
+        "total_slide_m": 0.0571,
+        "peak_slide_cm_per_s": 12.14,
+        "mean_slide_cm_per_s": 4.76
       }
     },
     "treadmill_speed_mps": 0.0,
-    "gate_peak_slide_lt_5cm_s": true
+    "gate_peak_slide_lt_5cm_s": false
   },
   "prop_rigidity": {
-    "max_hand_relative_drift_m": 1.67e-07,
+    "max_hand_relative_drift_m": 2.24e-07,
     "max_hand_relative_drift_deg": 0.0,
     "gate_rigid": true
   },
   "spout": {
-    "min_above_bed_m": 0.5033,
-    "max_above_bed_m": 0.6189,
+    "min_above_bed_m": 0.3361,
+    "max_above_bed_m": 0.7521,
     "documented_band_m": [
       0.15,
       0.3
@@ -153,20 +206,26 @@
         "by_bone": {}
       },
       "4": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 4,
+        "by_bone": {
+          "DEF-forearm.R.001": 12
+        }
       },
       "6": {
         "tris": 0,
         "by_bone": {}
       },
       "8": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 7,
+        "by_bone": {
+          "DEF-forearm.R.001": 21
+        }
       },
       "10": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 4,
+        "by_bone": {
+          "DEF-forearm.R.001": 12
+        }
       },
       "12": {
         "tris": 0,
@@ -177,8 +236,10 @@
         "by_bone": {}
       },
       "16": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 3,
+        "by_bone": {
+          "DEF-forearm.R.001": 9
+        }
       },
       "18": {
         "tris": 0,
@@ -189,12 +250,14 @@
         "by_bone": {}
       },
       "22": {
-        "tris": 0,
-        "by_bone": {}
+        "tris": 7,
+        "by_bone": {
+          "DEF-forearm.R.001": 21
+        }
       }
     },
-    "max_tris": 0,
-    "gate_zero": true
+    "max_tris": 7,
+    "gate_zero": false
   },
   "face": {
     "rigid_core_verts": 7922,

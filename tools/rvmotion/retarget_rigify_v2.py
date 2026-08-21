@@ -180,6 +180,7 @@ if INPLACE:
     A = np.hstack([t_ax, np.ones_like(t_ax)])
     coef, *_ = np.linalg.lstsq(A, ground[:, :2], rcond=None)
     fit = A @ coef
+    LOCO_FIT = fit                       # the smooth locomotion track
     lateral_residual = ground[:, :2] - fit
     traj = np.column_stack([lateral_residual, root_src[:, 2]])
     print("in-place: removed straight-line locomotion %.3f m; kept lateral residual "
@@ -188,7 +189,26 @@ if INPLACE:
              float(np.abs(lateral_residual).max()),
              float(root_src[:, 2].max() - root_src[:, 2].min())))
 TORSO_REST = REST["torso"].to_translation()
-HIP_REST_SRC = POS[CAL_F, hip_i] * SCALE
+
+# ONE mapping from source world space into clip space, used by every driven
+# control. The previous version referenced the torso against the absolute source
+# hip position while placing the feet in the in-place trajectory's frame -- two
+# different origins, which parked the character metres from the world origin and
+# splayed the legs reaching between the two spaces.
+#
+#   body_pos[f] = where the pelvis should sit in the clip
+#   clip(p, f)  = (p - root_src[f]) + body_pos[f]
+#
+# For an in-place clip body_pos barely moves while root_src advances, so a foot
+# anchored in source world space maps to a target travelling backwards at the
+# locomotion speed -- the treadmill, for free and by construction.
+REST_HIP = Vector((0.0, 0.0, 0.0))
+REST_HIP = (W @ rig.data.bones["thigh_fk.L"].head_local
+            + W @ rig.data.bones["thigh_fk.R"].head_local) * 0.5
+body_pos = traj - traj[CAL_F] + np.array(REST_HIP)
+
+def clip_space(p, f):
+    return p - root_src[f] + body_pos[f]
 
 # --- legs: always IK, driven by the source foot, locked while planted -------
 for side in ("L", "R"):
@@ -205,20 +225,56 @@ for side in ("L", "R"):
         if "IK_Stretch" in PB[pn].keys():
             PB[pn]["IK_Stretch"] = 0.0
             PB[pn].keyframe_insert('["IK_Stretch"]', frame=1)
+        # Rigify ignores a pole target entirely unless pole_vector is on: with it
+        # off the solver picks the knee/elbow plane itself, which is exactly how
+        # one knee ended up bending backwards while the other looked fine. Every
+        # pole keyframe written before this line was inert.
+        if "pole_vector" in PB[pn].keys():
+            PB[pn]["pole_vector"] = True      # boolean IDProperty, not a float
+            PB[pn].keyframe_insert('["pole_vector"]', frame=1)
     PB["thigh_parent.%s" % side].keyframe_insert('["IK_FK"]', frame=1)
     PB["upper_arm_parent.%s" % side].keyframe_insert('["IK_FK"]', frame=1)
 
 POLE_DIST = 0.45
+# Near a straight limb the knee/elbow offset from the hip-ankle line shrinks to
+# noise, and a pole aimed along it flips frame to frame -- which shows up as the
+# shin spinning 180 deg about its own axis while the knee angle looks fine. Hold
+# the last well-conditioned direction instead.
+POLE_MIN = 0.02
+# In a standing clip the knee never leaves the hip-ankle line by much, so there
+# is no well-conditioned direction to latch onto at ANY frame -- "hold the last
+# good one" has nothing to hold. Seed with the anatomical answer: knees point
+# the way the body faces, elbows point the other way.
+FACING = Vector((0.0, -1.0, 0.0))
+LAST_POLE = {"legL": FACING.copy(), "legR": FACING.copy(),
+             "armL": -FACING, "armR": -FACING}
 LOOPED = INPLACE
 CONTACT = {"L": m.contact_channels.index("LeftFoot"),
            "R": m.contact_channels.index("RightFoot")}
+TOE = {"L": m.contact_channels.index("LeftToeBase"),
+       "R": m.contact_channels.index("RightToeBase")}
 FOOT_J = {"L": "LeftFoot", "R": "RightFoot"}
 KNEE_J = {"L": "LeftLeg", "R": "RightLeg"}
 
 # Whatever shift in-place mode applies to the body must apply to the IK targets
 # too, or the feet stay in world space while the torso walks on the spot and the
 # legs stretch to reach receding footfalls.
-BODY_SHIFT = traj - root_src
+BODY_SHIFT = body_pos - root_src
+
+# Feet use the SAME mapping as the body: clip(p,f) = p - root_src[f] + body_pos[f].
+#
+# An earlier attempt shifted the feet along the smooth locomotion fit instead, to
+# keep the pelvis's wobble off the planted foot. That is geometrically wrong: it
+# spreads the full 1.45 m stride across the whole cycle, so the foot goal swings
+# +-0.72 m from the body while the leg is only 0.86 m long with the hip 0.95 m up.
+# The goal became unreachable and (with IK_Stretch correctly off) the knee locked
+# dead straight at 179.8 deg for eight frames.
+#
+# Through root_src the foot stays hip-relative and always inside reach: a planted
+# foot is fixed in the world while the body travels over it, which is what a step
+# IS. The pelvis wobble the foot inherits in body space is real motion, not
+# skating -- the skating METRIC was what needed fixing.
+FOOT_SHIFT = BODY_SHIFT
 
 def planted_targets(side):
     """Foot target per frame: locked to one spot ON THE GROUND for the whole
@@ -234,7 +290,9 @@ def planted_targets(side):
     different spots puts a 25 cm jump at the seam."""
     j = JN.index(FOOT_J[side])
     p = POS[:, j] * SCALE                              # world space, still advancing
-    on = m.contacts[:, CONTACT[side]].astype(bool)
+    # heel OR toe: the heel label drops at toe-off while the foot is still down,
+    # and locking only on the heel leaves those frames free to slide
+    on = (m.contacts[:, CONTACT[side]] | m.contacts[:, TOE[side]]).astype(bool)
     out = p.copy()
     visited = np.zeros(T, dtype=bool)
     for f0 in range(T):
@@ -247,17 +305,52 @@ def planted_targets(side):
             if nxt >= T and not LOOPED: break
             if not on[nxt] or visited[nxt]: break
             idx.append(nxt); visited[nxt] = True; g = nxt
-        anchor = p[idx].mean(axis=0)
-        if LOOPED and len(idx) > 1 and idx[0] != min(idx):
-            # a wrapped interval spans the stride; keep it on one spot by
-            # advancing the wrapped half by exactly one stride
-            pass
-        out[idx] = anchor
-    return out + BODY_SHIFT, on
+        # A wrapped interval is ONE footfall split across the loop point. Its two
+        # halves sit a full stride apart in source world space, so averaging them
+        # raw puts the anchor half a stride away from both. Bring the wrapped
+        # half back by one stride, average there, then send it forward again.
+        stride = root_src[-1] - root_src[0] if LOOPED else np.zeros(3)
+        wrapped = [i for i in idx if i < f0]
+        head = [i for i in idx if i >= f0]
+        if wrapped and head:
+            aligned = np.vstack([p[head], p[wrapped] + stride])
+            anchor = aligned.mean(axis=0)
+            out[head] = anchor
+            out[wrapped] = anchor - stride
+        else:
+            out[idx] = p[idx].mean(axis=0)
+
+    # Ease into and out of each lock. Snapping from the free trajectory to the
+    # interval's anchor in one frame is a teleport: total slide stays tiny but
+    # the peak rate spikes, which is exactly what the 16 cm/s reading was.
+    BLEND = 2
+    onb = on.astype(bool)
+    blended = out.copy()
+    for f in range(T):
+        if not onb[f]:
+            continue
+        prev_free = sum(1 for k in range(1, BLEND + 1)
+                        if f - k >= 0 and not onb[f - k])
+        next_free = sum(1 for k in range(1, BLEND + 1)
+                        if f + k < T and not onb[f + k])
+        edge = min(prev_free, next_free) if (prev_free and next_free) else max(prev_free, next_free)
+        if edge:
+            w = 1.0 - (edge / float(BLEND + 1))       # 0 at the very edge frame
+            w = w * w * (3 - 2 * w)
+            blended[f] = out[f] * w + p[f] * (1.0 - w)
+    return blended + FOOT_SHIFT, on
 
 FOOT_TGT = {s: planted_targets(s) for s in ("L", "R")}
 foot_rest = {s: REST["foot_ik.%s" % s] for s in ("L", "R")}
-foot_src_rest = {s: POS[CAL_F, JN.index(FOOT_J[s])] * SCALE for s in ("L", "R")}
+# Every IK goal is expressed as REST + (clip-space target - clip-space reference).
+# Both terms must live in the same space. The reference used to be the ABSOLUTE
+# source foot position while the target was already mapped into clip space, so
+# the delta carried the entire world translation of the source take -- which is
+# what stretched the legs a full stride and lifted the body off the ground.
+def clip_ref(joint_name, shift=None):
+    sh = BODY_SHIFT[CAL_F] if shift is None else shift[CAL_F]
+    return POS[CAL_F, JN.index(joint_name)] * SCALE + sh
+foot_src_rest = {s: clip_ref(FOOT_J[s], FOOT_SHIFT) for s in ("L", "R")}
 
 POUR_KEYS = []
 if POUR:
@@ -314,6 +407,7 @@ sc.render.fps = m.fps; sc.render.fps_base = 1.0
 sc.frame_start, sc.frame_end = 1, T
 
 SEATED = False
+POUR_SIGN = None
 SPOUT_LO, SPOUT_HI = ([float(x) for x in SPOUT_BAND.split(",")] if SPOUT_BAND else (None, None))
 
 def seat_can():
@@ -342,22 +436,13 @@ for f in range(T):
     # torso first: it carries the whole body
     tb = PB["torso"]
     rot = np2m(G[f, hip_i]) @ OFFSET["Hips"]
-    loc = Vector(TORSO_REST) + Vector(traj[f] - HIP_REST_SRC)
+    loc = Vector(TORSO_REST) + Vector(body_pos[f] - np.array(REST_HIP))
     tb.matrix = Matrix.Translation(loc) @ rot.to_4x4()
     upd()
     for j in ORDER[1:]:
         pb = PB[present[j]]
         cur = pb.matrix.to_translation()
         pb.matrix = Matrix.Translation(cur) @ (np2m(G[f, JN.index(j)]) @ OFFSET[j]).to_4x4()
-        upd()
-    # wrist pour layer: rotate the HAND, never the prop socket under it
-    d = pour_deg(f)
-    if d:
-        pb = PB["hand_fk.R"]
-        mtx = pb.matrix.copy()
-        axis = (W.to_3x3() @ Vector((1, 0, 0)))          # world pitch axis
-        Tm = Matrix.Translation(mtx.to_translation())
-        pb.matrix = Tm @ Matrix.Rotation(math.radians(d), 4, axis) @ Tm.inverted() @ mtx
         upd()
     if ARM_IK:
         s_ = ARM_IK
@@ -366,7 +451,10 @@ for f in range(T):
         ikb = PB["hand_ik.%s" % s_]
         rot_ik = np2m(G[f, JN.index(jn)]) @ (
             np2m(G[CAL_F, JN.index(jn)]).transposed() @ REST["hand_ik.%s" % s_].to_3x3())
-        base = Vector(POS[f, JN.index(jn)] * SCALE + BODY_SHIFT[f])
+        armj0 = ("Right" if s_ == "R" else "Left") + "Arm"
+        sh_now = (W @ PB["DEF-upper_arm.%s" % s_].matrix).to_translation()
+        base = Vector(sh_now + Vector((POS[f, JN.index(jn)]
+                                       - POS[f, JN.index(armj0)]) * SCALE))
         if HAND_CLEAR:
             # Hold the hand out from the thigh. The source keeps the arm against
             # the body, so the hanging can intersects the leg at the carry frames;
@@ -382,17 +470,47 @@ for f in range(T):
         ikb.matrix = Matrix.Translation(base) @ rot_ik.to_4x4()
         upd()
         pole = PB["upper_arm_ik_target.%s" % s_]
-        el = Vector(POS[f, JN.index(eln)] * SCALE + BODY_SHIFT[f])
-        sh = Vector(POS[f, JN.index(("Right" if s_ == "R" else "Left") + "Arm")]
-                    * SCALE + BODY_SHIFT[f])
+        el = Vector(sh_now + Vector((POS[f, JN.index(eln)]
+                                     - POS[f, JN.index(armj0)]) * SCALE))
+        sh = Vector(sh_now)
         limb = (base - sh)
         dirv = el - (sh + base) * 0.5
         if limb.length > 1e-6:
             dirv = dirv - limb.normalized() * dirv.dot(limb.normalized())
-        if dirv.length > 1e-4:
-            pole.matrix = (Matrix.Translation((sh + base) * 0.5 + dirv.normalized() * 0.40)
+        key = "arm" + s_
+        if dirv.length >= POLE_MIN:
+            LAST_POLE[key] = dirv.normalized()
+        use = LAST_POLE.get(key)
+        if use is not None:
+            pole.matrix = (Matrix.Translation((sh + base) * 0.5 + use * 0.40)
                            @ REST["upper_arm_ik_target.%s" % s_].to_3x3().to_4x4())
         upd()
+        # Wrist pour: rotate whichever control actually drives the hand, about the
+        # CAN'S OWN HANDLE-BAR AXIS -- that is the axis a person tips a can about.
+        # Two bugs lived here: the rotation was applied to hand_fk.R while the arm
+        # was switched to IK (an inert control), and it used the world X axis, so
+        # once the hand's orientation changed the spout swung sideways instead of
+        # tipping down.
+        d = pour_deg(f)
+        if d and CAN is not None and SEATED:
+            mtx = ikb.matrix.copy()
+            axis = (CAN.matrix_world @ GA).to_3x3().col[1].normalized()
+            Tm = Matrix.Translation(mtx.to_translation())
+            if POUR_SIGN is None:
+                trial = {}
+                for sgn in (1.0, -1.0):
+                    ikb.matrix = (Tm @ Matrix.Rotation(math.radians(sgn * d), 4, axis)
+                                  @ Tm.inverted() @ mtx)
+                    upd()
+                    trial[sgn] = (CAN.matrix_world @ TIP).z
+                POUR_SIGN = min(trial, key=trial.get)     # the one that tips the spout DOWN
+                print("pour sign %+.0f (tip z %.3f vs %.3f)"
+                      % (POUR_SIGN, trial[1.0], trial[-1.0]))
+                ikb.matrix = mtx; upd()
+            ikb.matrix = (Tm @ Matrix.Rotation(math.radians(POUR_SIGN * d), 4, axis)
+                          @ Tm.inverted() @ mtx)
+            upd()
+
         # spout solve: lower the hand until the spout sits in the documented
         # band. Pure vertical translation of the IK goal, 3 fixed iterations.
         if CAN is not None and SPOUT_LO is not None and pour_deg(f) > 0.0:
@@ -405,32 +523,50 @@ for f in range(T):
                 ikb.matrix = mtx
                 upd()
 
-    # legs by IK
+    # legs by IK, targeted HIP-RELATIVE.
+    #
+    # Rest-relative goals (rig_rest_foot + source_delta) look reasonable and are
+    # not: this character's rest foot sits 0.134 m lateral of its hip, so the
+    # rest hip-to-foot distance is 0.875 m against a 0.865 m leg -- the rest pose
+    # is already at full extension. Any goal built on top of it saturates, and
+    # with IK_Stretch off the knee locked dead straight at 179.8 deg for a third
+    # of the cycle while the source knee was flexing through 148-166 deg.
+    #
+    # Anchoring to the ANIMATED hip and adding the source's own hip-to-foot
+    # vector makes reachability automatic: the source solved it with the same
+    # limb proportions, so the target is reachable by construction.
     for side in ("L", "R"):
         ik = PB["foot_ik.%s" % side]
         tgt, on = FOOT_TGT[side]
-        delta = Vector(tgt[f] - foot_src_rest[side])
+        upj = "%sUpLeg" % ("Left" if side == "L" else "Right")
+        hip_now = (W @ PB["DEF-thigh.%s" % side].matrix).to_translation()
+        # the locked target expressed as a hip-relative vector for this frame
+        rel = Vector(tgt[f] - (POS[f, JN.index(upj)] * SCALE + FOOT_SHIFT[f]))
         rotf = np2m(G[f, JN.index(FOOT_J[side])]) @ (
             np2m(G[CAL_F, JN.index(FOOT_J[side])]).transposed()
             @ foot_rest[side].to_3x3())
-        ik.matrix = Matrix.Translation(foot_rest[side].to_translation() + delta) @ rotf.to_4x4()
+        ik.matrix = Matrix.Translation(hip_now + rel) @ rotf.to_4x4()
         upd()
         # Pole: put the target out along the source's own knee-swivel direction,
         # measured perpendicular to the hip->ankle line. (v1 had no pole at all,
         # which is how the legs crossed; an earlier v2 draft multiplied the
         # direction by zero, which is the same bug wearing a hat.)
         pole = PB["thigh_ik_target.%s" % side]
-        knee = Vector(POS[f, JN.index(KNEE_J[side])] * SCALE + BODY_SHIFT[f])
-        hip = Vector(POS[f, JN.index("%sUpLeg" % ("Left" if side == "L" else "Right"))] * SCALE
-                     + BODY_SHIFT[f])
-        ankle = Vector(tgt[f])
+        knee = Vector(hip_now + Vector((POS[f, JN.index(KNEE_J[side])]
+                                        - POS[f, JN.index(upj)]) * SCALE))
+        hip = Vector(hip_now)
+        ankle = Vector(hip_now + rel)
         limb = (ankle - hip)
         mid = (hip + ankle) * 0.5
         dirv = (knee - mid)
         if limb.length > 1e-6:
             dirv = dirv - limb.normalized() * dirv.dot(limb.normalized())
-        if dirv.length > 1e-4:
-            pole.matrix = (Matrix.Translation(mid + dirv.normalized() * POLE_DIST)
+        key = "leg" + side
+        if dirv.length >= POLE_MIN:
+            LAST_POLE[key] = dirv.normalized()
+        use = LAST_POLE.get(key)
+        if use is not None:
+            pole.matrix = (Matrix.Translation(mid + use * POLE_DIST)
                            @ REST["thigh_ik_target.%s" % side].to_3x3().to_4x4())
         upd()
     if CAN is not None and not SEATED:

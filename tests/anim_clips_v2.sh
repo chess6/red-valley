@@ -30,6 +30,13 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
     rf = r["rotation_fidelity"]
     gate("%s: rotation fidelity mean < 2 deg" % label, rf["gate_mean_lt_2deg"],
          "%.2f deg" % rf["overall_mean_deg"])
+    gate("%s: no critical-bone limit breached" % label, rf["gate_no_critical_bone_breach"],
+         ", ".join("%s %.1f>%.0f" % (k, v["max_deg"], v["limit_deg"])
+                   for k, v in rf["per_bone_breaches"].items()) or "none")
+    if rf.get("authored_override_deviation_deg"):
+        print("  %-52s %s  (%s)" % ("%s: authored overrides (reported, not gated)" % label,
+              "NOTE", ", ".join("%s %.1f deg" % (k, v["max"])
+                                for k, v in rf["authored_override_deviation_deg"].items())))
     tw = r.get("twist_channel", {})
     live = [k for k, v in tw.items() if v["range_deg"] > 5.0]
     gate("%s: twist bones carry signal" % label, len(live) >= 2,
@@ -40,10 +47,12 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
              ", ".join("%s %.2f" % (k, v["peak_slide_cm_per_s"]) for k, v in fc["per_foot"].items()))
     if "loop_seam" in r:
         ls = r["loop_seam"]
-        gate("%s: loop seam no worse than interior" % label,
-             ls["gate_proposed_no_worse_than_interior"],
-             "seam %.4f m vs interior %.4f m" % (ls["seam_extrapolation_err_m"],
-                                                 ls["interior_extrapolation_err_m"]))
+        gate("%s: loop seam <= interior median (proposed)" % label,
+             ls["gate_proposed_seam_below_interior_median"],
+             "seam %.4f m vs interior median %.4f m, %d contact flip(s) at wrap "
+             "vs %d inside" % (ls["seam_extrapolation_err_m"], ls["interior_err_median_m"],
+                               ls["contact_channel_flips_at_wrap"],
+                               ls["max_contact_flips_inside_cycle"]))
     if "prop_rigidity" in r:
         gate("%s: prop rigid to the hand" % label, r["prop_rigidity"]["gate_rigid"],
              "%.2e m drift" % r["prop_rigidity"]["max_hand_relative_drift_m"])
@@ -84,6 +93,14 @@ if [ "$n" = 0 ]; then say "godot round-trip" "SKIP (no GLBs)"; exit "$fail"; fi
 cat > "$T/check.gd" <<'GD'
 extends SceneTree
 
+func settle(n: int) -> void:
+    # BoneAttachment3D updates on skeleton notifications during processing, so a
+    # bare seek() leaves its transform stale. Step real process frames instead of
+    # reading the bone chain by hand -- that proved the BONE moves, not that an
+    # attached prop follows it.
+    for i in n:
+        await process_frame
+
 func bone_global(sk: Skeleton3D, idx: int) -> Transform3D:
     var t := Transform3D()
     var i := idx
@@ -94,6 +111,9 @@ func bone_global(sk: Skeleton3D, idx: int) -> Transform3D:
     return t
 
 func _init():
+    run_all()
+
+func run_all() -> void:
     var fails := 0
     for spec in [["walk_fwd", 1.0, false], ["water_can", 1.2, true]]:
         var nm: String = spec[0]
@@ -126,14 +146,39 @@ func _init():
                 # (it is refreshed during processing, and there are no process
                 # ticks here), so chain rest*pose up the hierarchy by hand. This
                 # is what BoneAttachment3D reads at runtime.
-                var a := bone_global(sk, bi)
-                ap.seek(0.0, true); a = bone_global(sk, bi)
+                ap.seek(0.0, true)
+                await settle(3)
+                var a := ba.global_transform
                 ap.seek(0.45, true)
-                var b := bone_global(sk, bi)
+                await settle(3)
+                var b := ba.global_transform
                 var d := a.origin.distance_to(b.origin)
                 var ang := a.basis.get_rotation_quaternion().angle_to(
                     b.basis.get_rotation_quaternion())
-                attach_ok = (d > 0.01 or ang > 0.05) and parent_name == "DEF-hand.R"
+                # cross-check against the hand-computed chain: if these disagree
+                # the attachment is not tracking what we think it is
+                # In-engine rigidity: a second attachment on DEF-hand.R. If the
+                # prop contract holds, the socket's transform RELATIVE to the hand
+                # is constant for the whole clip. Comparing against a hand-rolled
+                # bone-chain walk instead just tested my own arithmetic.
+                var bh := BoneAttachment3D.new()
+                bh.bone_name = "DEF-hand.R"
+                sk.add_child(bh)
+                var rel_max := 0.0
+                var rel0 := Transform3D()
+                var first := true
+                for i in 13:
+                    ap.seek(1.2 * float(i) / 12.0, true)
+                    await settle(2)
+                    var rel: Transform3D = bh.global_transform.affine_inverse() * ba.global_transform
+                    if first:
+                        rel0 = rel; first = false
+                    else:
+                        rel_max = maxf(rel_max, rel0.origin.distance_to(rel.origin))
+                print("  attachment rigidity vs DEF-hand.R over the clip: ",
+                      "%.6f" % rel_max, " m")
+                var gap := rel_max
+                attach_ok = (d > 0.01 or ang > 0.05) and parent_name == "DEF-hand.R" and gap < 0.001
                 print("  BoneAttachment3D target DEF-prop_socket.R (parent ",
                       parent_name, ") moved ", "%.3f" % d, " m / ",
                       "%.1f" % rad_to_deg(ang), " deg over the descent")
@@ -144,6 +189,6 @@ func _init():
         if not (ok and attach_ok): fails += 1
     quit(1 if fails > 0 else 0)
 GD
-"$GODOT" --headless --path "$T" --script "$T/check.gd" 2>/dev/null | grep -E '^  (PASS|FAIL|BoneAttachment)'
+"$GODOT" --headless --path "$T" --script "$T/check.gd" 2>/dev/null | grep -E '^  (PASS|FAIL|BoneAttachment|attachment)'
 [ "${PIPESTATUS[0]}" -ne 0 ] && fail=1
 exit "$fail"
