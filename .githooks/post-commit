@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Every 10 commits: run the report-only hygiene audit and surface the rewrite
+# bundle reminder. Never deletes anything, never blocks.
+set -u
+ROOT=$(git rev-parse --show-toplevel)
+BASE=eddbd494fd4af06328bd6a067024a1e3968ad7a8   # first commit of the rewritten history
+BUNDLE="$HOME/RedValleyAssets/git_backup/red-valley-all-83f6cc7.bundle"
+
+git cat-file -e "$BASE^{commit}" 2>/dev/null || exit 0
+n=$(git rev-list --count "$BASE"..HEAD 2>/dev/null || echo 0)
+[ "$n" -gt 0 ] || exit 0
+[ $(( n % 10 )) -eq 0 ] || exit 0
+
+echo ""
+echo "──────────────────────────────────────────────────────────────"
+echo " $n commits since the history rewrite — running hygiene audit"
+echo "──────────────────────────────────────────────────────────────"
+python3 "$ROOT/tools/repo_hygiene.py" 2>/dev/null || echo " (hygiene tool unavailable)"
+
+if [ -f "$BUNDLE" ]; then
+    echo ""
+    echo " ROLLBACK BUNDLE REMINDER"
+    echo "   $BUNDLE"
+    echo "   $(du -h "$BUNDLE" | cut -f1), retained since the rewrite."
+    echo "   After $n clean commits it is probably safe to remove. Your call —"
+    echo "   nothing will ever delete it automatically:"
+    echo "     /usr/bin/gio trash \"$BUNDLE\""
+fi
+echo "──────────────────────────────────────────────────────────────"
+echo ""

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Block generated binaries from re-entering the repository.
+#
+# This repo previously accumulated 346 MB of regenerable binaries against 26 MB
+# of source and needed a history rewrite to undo it. This guard is what stops
+# that happening again. It is advisory-but-blocking: override deliberately with
+# `git commit --no-verify` if you genuinely mean it.
+set -u
+ROOT=$(git rev-parse --show-toplevel)
+ALLOW="$ROOT/tools/hygiene_allowlist.txt"
+
+staged=$(git diff --cached --name-only --diff-filter=AM)
+[ -z "$staged" ] && exit 0
+
+blocked=""
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    # explicitly approved production assets pass
+    if [ -f "$ALLOW" ] && grep -qxF -- "$f" "$ALLOW"; then continue; fi
+    case "$f" in
+        assets/*) continue ;;          # shipping game assets are script-generated and small
+        *.npz)    continue ;;          # paid ARDY motion clips: intentional source
+    esac
+    case "$f" in
+        *.png|*.jpg|*.jpeg|*.mp4|*.webm|*.mov|*.log|*.out|\
+        *.blend|*.blend1|*.fbx|art/*.glb|art/*/*.glb|art/*/*/*.glb|art/*/*/*/*.glb)
+            sz=$(du -h "$f" 2>/dev/null | cut -f1)
+            blocked="$blocked  $f ($sz)"$'\n' ;;
+    esac
+done <<< "$staged"
+
+if [ -n "$blocked" ]; then
+    echo "pre-commit: refusing to commit generated binaries" >&2
+    echo "" >&2
+    printf '%s' "$blocked" >&2
+    echo "" >&2
+    echo "These are reproducible from tools/ardy/*.py plus the accepted master." >&2
+    echo "If one is genuinely a production asset, add its exact path to:" >&2
+    echo "  tools/hygiene_allowlist.txt" >&2
+    echo "Otherwise leave it untracked; it stays on disk." >&2
+    echo "To override for this commit only: git commit --no-verify" >&2
+    exit 1
+fi
+exit 0

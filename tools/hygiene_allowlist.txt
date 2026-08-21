@@ -1,0 +1,4 @@
+# Explicitly approved production assets. Never proposed for removal, and
+# permitted past the pre-commit guard. One path per line.
+art/animation/ardy_pilot/derived/rv_player_proportioned.glb
+art/animation/ardy_pilot/proxy/watering_can_proxy.glb
