@@ -280,6 +280,8 @@ for side in ("L", "R"):
     PB["upper_arm_parent.%s" % side].keyframe_insert('["IK_FK"]', frame=1)
 
 POLE_DIST = 0.45
+NECK_SHARE = float(next((a.split("=", 1)[1] for a in ARGV
+                         if a.startswith("--neck-share=")), "0.0"))
 LOCK_MIN_DRIFT = 0.03
 # Near a straight limb the knee/elbow offset from the hip-ankle line shrinks to
 # noise, and a pole aimed along it flips frame to frame -- which shows up as the
@@ -513,6 +515,31 @@ for f in range(T):
         cur = pb.matrix.to_translation()
         pb.matrix = Matrix.Translation(cur) @ (np2m(G[f, JN.index(j)]) @ OFFSET[j]).to_4x4()
         upd()
+    # Spread the neck-chain rotation before the spine solve.
+    #
+    # The jaw/neck blend band was blamed on skin weights. It is not: with a
+    # realistic 50/50 neck+head split the same band strains 24%, against 190% when
+    # the head bone carries the turn alone. The retarget was leaving the chain
+    # 58% head-heavy, which concentrates the whole turn into one joint.
+    #
+    # This moves part of the head's LOCAL rotation onto the neck and then re-applies
+    # the head's absolute world orientation, so the GAZE IS UNCHANGED -- only the
+    # distribution across the two joints differs.
+    if "neck" in PB and "head" in PB and NECK_SHARE > 0.0:
+        head_world = PB["head"].matrix.copy()
+        q = PB["head"].matrix_basis.to_quaternion()
+        ax, an = q.to_axis_angle()
+        if abs(an) > math.radians(2.0):
+            nb = PB["neck"]
+            m_ = nb.matrix.copy()
+            Tn = Matrix.Translation(m_.to_translation())
+            world_ax = (nb.matrix.to_3x3() @ ax).normalized()
+            nb.matrix = (Tn @ Matrix.Rotation(an * NECK_SHARE, 4, world_ax)
+                         @ Tn.inverted() @ m_)
+            upd()
+            PB["head"].matrix = head_world          # gaze restored exactly
+            upd()
+
     # Rigify's spine DEF bones are driven by tweak bones that interpolate between
     # the torso/hips controls and the FK chain, so setting an FK control's world
     # orientation does NOT put the DEF bone there: DEF-spine came out at 32-41 deg

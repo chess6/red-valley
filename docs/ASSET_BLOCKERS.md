@@ -39,7 +39,7 @@ topology or binding. It is a *test asset*, not a replacement character.
 
 **Not done in this task:** the production mesh was not altered.
 
-## 2. Jaw/neck blend band strains up to 82%
+## 2. Jaw/neck blend band — NOT CONFIRMED (2026-08-21)
 
 The old aggregate "face deviation" gate mixed two populations and was
 meaningless. Measured separately:
@@ -49,13 +49,14 @@ meaningless. Measured separately:
 | rigid face core | 7 922 verts, `DEF-spine.006` weight > 0.999, zero neck weight | **0.021%** | rigid, as intended |
 | jaw/neck blend band | 984 verts weighted to both head and neck | **82.4%** (water), 16.0% (walk) | **defect** |
 
-The face itself is fine. The band between jaw and neck stretches under the head
-rotation the water clip contains, which is a **weighting** problem — the band is
-too narrow and too abruptly weighted for the rotation range. It is bounded to
-984 vertices and does not touch the face core.
+The face core is rigid (0.017-0.021%) by every method — that part is settled.
 
-Not fixed here: repairing it means editing weights on the production mesh, which
-this task explicitly excludes.
+The band figure is **not trustworthy**: the same band measures 190% (head bone
+alone), 24% (a realistic 30 deg turn split across the chain), 80% and 946%
+(face gate on two builds of the same clip). The band is also not a two-bone
+blend -- `DEF-spine.005` carries 45% of its weight across 977 of 984 verts.
+
+No weights were changed. Full investigation: `docs/JAW_NECK_FINDING.md`.
 
 ## 3. Watering-can prop
 
