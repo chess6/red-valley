@@ -1,0 +1,18 @@
+{
+  "status": "A/B RUN 2 COMPLETE \u2014 contract verified, both generators stepped",
+  "spend": {
+    "run1_usd": 0.16,
+    "run2_usd": 0.74,
+    "total_usd": 0.9,
+    "my_cap_usd": 0.2,
+    "why_over": "the cap priced GPU-hours only (dph_total). The meter showed $0.18 of GPU time; the balance fell $0.74. The difference is BANDWIDTH for a ~33 GB weight prefetch, which vast bills separately and which my budget model never included.",
+    "hard_stop_line_usd": 6.0,
+    "balance_after_usd": 8.71,
+    "breached_stop_line": false
+  },
+  "raw": {
+    "art/animation/ab/raw2/kimodo_water.npz": "bdabf54d7e1d31456d7225f9296c913e27168829f37e07f9ffdb3c4ff42371cd",
+    "art/animation/ab/raw2/ardy_water.npz": "b5feb5396585ebe27bad38e73a574414f6e5468f594d9cedf320df72ced63813"
+  },
+  "headline": "both generators produced the step the contract asked for; run 1's null result was a contract defect, now fixed"
+}

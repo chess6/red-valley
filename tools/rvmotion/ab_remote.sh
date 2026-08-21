@@ -9,6 +9,12 @@
 # The HF token arrives in the environment and is never echoed.
 set -uo pipefail
 W=/workspace; export HF_HOME=$W/hf
+# Hugging Face's Xet transfer backend failed mid-prefetch on a fresh instance
+# (xet_get raised inside new_file_download_group with ample disk free). Fall back
+# to plain HTTP range downloads, which are slower but do not depend on the Xet
+# CAS being reachable from an arbitrary rented host.
+export HF_HUB_DISABLE_XET=1
+export HF_HUB_ENABLE_HF_TRANSFER=0
 mkdir -p $W/{logs,out,emb}
 LOG=$W/logs/ab.log
 step(){ echo "[$(date -u +%H:%M:%S)] == $*" | tee -a $LOG; }
@@ -45,7 +51,7 @@ cd $W && [ -d ardy ] || git clone -q https://github.com/nv-tlabs/ardy.git
 cd $W/ardy && git checkout -q $ARDY_SHA
 pip install -q -e . >>$LOG 2>&1 || die "ardy install"
 
-step "prefetch weights"
+step "prefetch weights (xet disabled)"
 python - <<PY >>$LOG 2>&1 || die "prefetch"
 from huggingface_hub import snapshot_download as dl
 dl("nvidia/Kimodo-SOMA-RP-v1.1", revision="$KIMODO_CKPT", max_workers=8)

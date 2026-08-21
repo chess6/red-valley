@@ -18,3 +18,6 @@ art/animation/v2/walk_fwd/v2_walk_fwd_threequarter.mp4
 art/animation/v2/walk_fwd/v2_walk_fwd_gameplay.mp4
 art/animation/v2/native/native_water_can_oneshot.mp4
 art/animation/v2/native/native_walk_fwd.mp4
+art/animation/ab/logs2/ab.log
+art/animation/ab/logs2/ardy_gen.log
+art/animation/ab/logs2/kimodo_gen.log

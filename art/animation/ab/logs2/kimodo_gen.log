@@ -1,0 +1,35 @@
+Using device: cuda:0
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 1254.11it/s]
+/workspace/kimodo/kimodo/skeleton/base.py:72: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  neutral_joints = torch.load(pfolder / "joints.p").squeeze()
+Text encoder service is unreachable, falling back to local LLM2Vec encoder. (InstantiationException: Error in call to target 'kimodo.model.text_encoder_api.TextEncoderAPI':
+ConnectError('[Errno 111] Connection refused'))
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 889.28it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 5628.01it/s]
+[transformers] [1mLlamaBiModel LOAD REPORT[0m from: meta-llama/Meta-Llama-3-8B-Instruct
+Key            | Status     |  | 
+---------------+------------+--+-
+lm_head.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/448 [00:00<?, ?it/s]Loading weights:  74%|███████▍  | 331/448 [00:00<00:00, 3292.28it/s]Loading weights: 100%|██████████| 448/448 [00:00<00:00, 3176.90it/s]
+/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:305: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+/workspace/kimodo/kimodo/skeleton/base.py:76: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  bvh_neutral_joints = torch.load(pfolder / "bvh_joints.p").squeeze()
+/workspace/kimodo/kimodo/skeleton/base.py:81: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  global_rot_offsets = torch.load(global_offset_path).squeeze()
+/workspace/kimodo/kimodo/model/llm2vec/llm2vec_wrapper.py:94: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  encoded_text = torch.tensor(encoded_text).to(self._device)
+Loaded model: Kimodo-SOMA-RP-v1.1 (kimodo-soma-rp)
+Will generate motions with the following prompts
+    'A person stands beside a garden bed holding a watering can in the right hand, takes one short step forward with the left foot into a stagger, keeps the right foot planted behind as support, bends the knees to lower the body and extends the right arm down and forward over the bed, tipping the can to pour, keeping the back neutral rather than bending deeply at the waist, then settles.' with 72 frames
+Using 5 set of constraints
+    <kimodo.constraints.RightHandConstraintSet object at 0x7fbe7068d9d0>
+    <kimodo.constraints.RightFootConstraintSet object at 0x7fbe90180110>
+    <kimodo.constraints.LeftFootConstraintSet object at 0x7fbe802dfbd0>
+    <kimodo.constraints.LeftFootConstraintSet object at 0x7fbe706cc650>
+    <kimodo.constraints.EndEffectorConstraintSet object at 0x7fbe80282610>
+  0%|          | 0/100 [00:00<?, ?it/s]  4%|▍         | 4/100 [00:00<00:02, 33.02it/s]  8%|▊         | 8/100 [00:00<00:02, 34.68it/s] 12%|█▏        | 12/100 [00:00<00:02, 35.23it/s] 16%|█▌        | 16/100 [00:00<00:02, 35.40it/s] 20%|██        | 20/100 [00:00<00:02, 35.52it/s] 24%|██▍       | 24/100 [00:00<00:02, 35.78it/s] 28%|██▊       | 28/100 [00:00<00:02, 35.88it/s] 32%|███▏      | 32/100 [00:00<00:01, 35.94it/s] 36%|███▌      | 36/100 [00:01<00:01, 35.88it/s] 40%|████      | 40/100 [00:01<00:01, 35.93it/s] 44%|████▍     | 44/100 [00:01<00:01, 35.95it/s] 48%|████▊     | 48/100 [00:01<00:01, 35.82it/s] 52%|█████▏    | 52/100 [00:01<00:01, 36.00it/s] 56%|█████▌    | 56/100 [00:01<00:01, 35.93it/s] 60%|██████    | 60/100 [00:01<00:01, 35.93it/s] 64%|██████▍   | 64/100 [00:01<00:01, 35.87it/s] 68%|██████▊   | 68/100 [00:01<00:00, 35.87it/s] 72%|███████▏  | 72/100 [00:02<00:00, 35.92it/s] 76%|███████▌  | 76/100 [00:02<00:00, 35.94it/s] 80%|████████  | 80/100 [00:02<00:00, 36.16it/s] 84%|████████▍ | 84/100 [00:02<00:00, 36.09it/s] 88%|████████▊ | 88/100 [00:02<00:00, 36.18it/s] 92%|█████████▏| 92/100 [00:02<00:00, 36.06it/s] 96%|█████████▌| 96/100 [00:02<00:00, 35.98it/s]100%|██████████| 100/100 [00:02<00:00, 36.08it/s]100%|██████████| 100/100 [00:02<00:00, 35.85it/s]
+Saving the npz output to /workspace/out/kimodo_water.npz

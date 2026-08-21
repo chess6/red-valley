@@ -1,0 +1,114 @@
+[21:06:57] == packages
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Note: Environment variable`HF_TOKEN` is set and is the current active token independently from the token you've just configured.
+ok
+[21:07:18] == clone + install kimodo (1aece8c124d73d255ceff5086d983b844c9f4e94)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[21:10:00] == clone + install ardy (693f74d13b3d04a0a22ce127ee79c929dd89756b)
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+kimodo 1.0.0 requires transformers==5.1.0, but you have transformers 5.8.1 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[21:11:12] == prefetch weights
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files:   9%|▉         | 1/11 [00:00<00:06,  1.57it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:01<00:04,  2.03it/s]Fetching 11 files:  45%|████▌     | 5/11 [00:03<00:04,  1.48it/s]Fetching 11 files:  73%|███████▎  | 8/11 [00:03<00:01,  2.69it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:03<00:00,  3.52it/s]Fetching 11 files: 100%|██████████| 11/11 [00:22<00:00,  3.85s/it]Fetching 11 files: 100%|██████████| 11/11 [00:22<00:00,  2.08s/it]
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files:   8%|▊         | 1/12 [00:00<00:08,  1.27it/s]Fetching 12 files:  17%|█▋        | 2/12 [00:01<00:05,  1.91it/s]Fetching 12 files:  42%|████▏     | 5/12 [00:02<00:03,  1.92it/s]Fetching 12 files:  58%|█████▊    | 7/12 [00:02<00:01,  2.86it/s]Fetching 12 files:  67%|██████▋   | 8/12 [00:03<00:01,  2.00it/s]Fetching 12 files:  75%|███████▌  | 9/12 [00:29<00:20,  6.67s/it]Fetching 12 files:  75%|███████▌  | 9/12 [04:46<01:35, 31.87s/it]
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 522, in snapshot_download
+    hf_thread_map(
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/utils/tqdm.py", line 441, in hf_thread_map
+    results[future_to_index[future]] = future.result()
+                                       ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 502, in _inner_hf_hub_download
+    hf_hub_download(  # type: ignore
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1019, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1242, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1961, in _download_to_tmp_and_move
+    xet_get(
+  File "/opt/conda/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 565, in xet_get
+    with session.new_file_download_group(
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionError: Network error: Request middleware error: error sending request for url (https://huggingface.co/api/models/nvidia/ARDY-Core-RP-20FPS-Horizon40/xet-read-token/abe6c43beb28c867c950acb824b9c4ef3d63fb76)
+STOP: prefetch
+[21:17:35] == packages
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Note: Environment variable`HF_TOKEN` is set and is the current active token independently from the token you've just configured.
+ok
+[21:17:39] == clone + install kimodo (1aece8c124d73d255ceff5086d983b844c9f4e94)
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+ardy 0.2.0 requires transformers==5.8.1, but you have transformers 5.1.0 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+ardy 0.2.0 requires peft>=0.19, but you have peft 0.18.1 which is incompatible.
+ardy 0.2.0 requires transformers==5.8.1, but you have transformers 5.1.0 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[21:18:37] == clone + install ardy (693f74d13b3d04a0a22ce127ee79c929dd89756b)
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+kimodo 1.0.0 requires transformers==5.1.0, but you have transformers 5.8.1 which is incompatible.
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[21:19:35] == prefetch weights (xet disabled)
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 1153.15it/s]
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:02<00:00,  5.17it/s]Fetching 12 files: 100%|██████████| 12/12 [00:02<00:00,  5.17it/s]
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Fetching 17 files:   6%|▌         | 1/17 [00:00<00:08,  1.95it/s]Fetching 17 files:  12%|█▏        | 2/17 [00:00<00:06,  2.29it/s]Fetching 17 files:  41%|████      | 7/17 [00:01<00:01,  5.87it/s]Fetching 17 files:  53%|█████▎    | 9/17 [00:01<00:01,  4.95it/s]Fetching 17 files:  59%|█████▉    | 10/17 [00:02<00:01,  3.69it/s]Fetching 17 files:  65%|██████▍   | 11/17 [00:03<00:02,  2.62it/s]Fetching 17 files:  71%|███████   | 12/17 [00:03<00:01,  2.50it/s]Fetching 17 files:  76%|███████▋  | 13/17 [01:33<01:29, 22.46s/it]Fetching 17 files:  82%|████████▏ | 14/17 [07:22<05:22, 107.46s/it]Fetching 17 files:  88%|████████▊ | 15/17 [07:32<02:42, 81.09s/it] Fetching 17 files:  94%|█████████▍| 16/17 [07:35<00:59, 59.29s/it]Fetching 17 files: 100%|██████████| 17/17 [22:50<00:00, 303.35s/it]Fetching 17 files: 100%|██████████| 17/17 [22:50<00:00, 80.62s/it] 
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:  10%|█         | 1/10 [00:00<00:06,  1.32it/s]Fetching 10 files:  20%|██        | 2/10 [00:01<00:03,  2.09it/s]Fetching 10 files:  50%|█████     | 5/10 [00:01<00:00,  5.78it/s]Fetching 10 files:  80%|████████  | 8/10 [00:01<00:00,  5.80it/s]Fetching 10 files:  90%|█████████ | 9/10 [00:02<00:00,  3.07it/s]Fetching 10 files: 100%|██████████| 10/10 [00:13<00:00,  2.57s/it]Fetching 10 files: 100%|██████████| 10/10 [00:13<00:00,  1.34s/it]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [00:00<00:01,  1.53it/s]Fetching 4 files:  50%|█████     | 2/4 [00:00<00:00,  2.13it/s]Fetching 4 files: 100%|██████████| 4/4 [00:14<00:00,  4.27s/it]Fetching 4 files: 100%|██████████| 4/4 [00:14<00:00,  3.51s/it]
+prefetched
+[21:42:59] == cache the bf16 prompt embedding (so the 3060 can skip the encoder later)
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 911.76it/s]
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  47%|████▋     | 137/290 [00:00<00:00, 1246.75it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1778.31it/s]
+[transformers] [1mLlamaBiModel LOAD REPORT[0m from: meta-llama/Meta-Llama-3-8B-Instruct
+Key            | Status     |  | 
+---------------+------------+--+-
+lm_head.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/448 [00:00<?, ?it/s]Loading weights:  65%|██████▌   | 293/448 [00:00<00:00, 2916.91it/s]Loading weights: 100%|██████████| 448/448 [00:00<00:00, 2796.93it/s]
+/opt/conda/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:305: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+/workspace/kimodo/kimodo/model/llm2vec/llm2vec_wrapper.py:94: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  encoded_text = torch.tensor(encoded_text).to(self._device)
+Traceback (most recent call last):
+  File "/workspace/cache_prompt_embedding.py", line 64, in <module>
+    main()
+  File "/workspace/cache_prompt_embedding.py", line 45, in main
+    emb = emb.detach().to(torch.float32).cpu().numpy()
+          ^^^^^^^^^^
+AttributeError: 'tuple' object has no attribute 'detach'
+(embedding cache failed; not fatal)
+[21:45:48] == KIMODO: 2.4 s, seed 0, one sample, post-processing ON
+[21:48:31] == ARDY: 2.4 s, seed 0, one sample, post-processing ON
+[21:51:04] == outputs
+/workspace/emb:
+total 4
+drwxr-xr-x 2 root root    6 Aug 21 21:06 .
+drwxr-xr-x 1 root root 4096 Aug 21 21:10 ..
+
+/workspace/out:
+total 576
+drwxr-xr-x 2 root root     52 Aug 21 21:51 .
+drwxr-xr-x 1 root root   4096 Aug 21 21:10 ..
+-rw-r--r-- 1 root root 114468 Aug 21 21:51 ardy_water.npz
+-rw-r--r-- 1 root root 470282 Aug 21 21:48 kimodo_water.npz
+bdabf54d7e1d31456d7225f9296c913e27168829f37e07f9ffdb3c4ff42371cd  /workspace/out/kimodo_water.npz
+b5feb5396585ebe27bad38e73a574414f6e5468f594d9cedf320df72ced63813  /workspace/out/ardy_water.npz
+[21:51:04] == AB_DONE

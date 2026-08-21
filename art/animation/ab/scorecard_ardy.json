@@ -1,0 +1,82 @@
+{
+  "label": "ardy",
+  "contract": {
+    "generator": "ardy",
+    "fps": 20,
+    "frames": 48,
+    "duration_s": 2.4,
+    "constrained_frames_per_set": {
+      "RightHandConstraintSet": 5,
+      "RightFootConstraintSet": 6,
+      "LeftFootConstraintSet": 4,
+      "HipsConstraintSet": 3
+    },
+    "min_trunk_lean_deg": 46.0,
+    "pelvis_drop_m": 0.0943,
+    "spout_target_documented_m": 0.22,
+    "spout_target_escalated": false,
+    "body_scale_vs_character": 0.9429
+  },
+  "A_morphology_normalised": {
+    "units": "body-relative (arm lengths, hip heights, degrees)",
+    "arm_length_m": 0.5281,
+    "hip_height_m": 0.9015,
+    "trunk_lean_at_pour_deg": {
+      "mean": 8.4,
+      "max": 13.6
+    },
+    "arm_extension_at_pour": {
+      "mean": 0.942,
+      "max": 0.984
+    },
+    "pelvis_drop_hip_fraction": 0.1139,
+    "lead_foot_advance_hip_fraction": 0.2931,
+    "rear_foot_drift_hip_fraction": 0.0385,
+    "airborne_frames": [
+      3,
+      48
+    ],
+    "gate_rear_foot_stayed": true,
+    "gate_lead_foot_stepped": true,
+    "gate_arm_not_hyperextended": true,
+    "gate_no_flight": false
+  },
+  "B_production": {
+    "units": "absolute metres on the shipping character with the fixed can",
+    "spout_window_m": [
+      0.4693,
+      0.5126
+    ],
+    "spout_in_band": false,
+    "forward_reach_ratio": 0.877,
+    "spine_signed_shape_err_deg": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "step_events": {
+      "L": {
+        "rig_count": 1,
+        "src_count": 1,
+        "rig_advance_m": 0.2526,
+        "src_advance_m": 0.265
+      },
+      "R": {
+        "rig_count": 0,
+        "src_count": 0,
+        "rig_advance_m": 0,
+        "src_advance_m": 0
+      }
+    },
+    "foot_skating_peak_cm_s": {
+      "L": 31.84,
+      "R": 6.48
+    },
+    "body_collisions": 1239,
+    "grip_region_contact": 0,
+    "joint_limits_ok": true
+  },
+  "note": "A answers 'did the model obey the contract in its own body'; B answers 'what does the player see'. Reporting one number would hide that ARDY's skeleton must bow where Kimodo's need not."
+}

@@ -24,14 +24,22 @@ process() { # name  npz  adapter-module  src  contract-summary
   python3 tools/rvmotion/native_view.py "art/animation/ab/canonical_$NAME" \
     "$OUT/native" >/dev/null 2>&1 && echo "   native views rendered"
 
+  # retarget WITH the prop, so the production scorecard has a can to judge
+  local PROP="--prop=art/animation/ardy_pilot/proxy/watering_can_proxy.glb:art/animation/ardy_pilot/proxy/watering_can_proxy.json"
   timeout 3500 "$BLENDER" --background art/animation/rigify/rv_bound.blend \
     --python tools/rvmotion/retarget_rigify_v2.py -- \
-    "art/animation/ab/canonical_$NAME" "$OUT" 2>&1 \
+    "art/animation/ab/canonical_$NAME" "$OUT" --arm-ik=R $PROP 2>&1 \
     | grep -E "RETARGET_V2_DONE|Traceback" | sed 's/^/   /'
 
+  # pour window in FRAMES for this clip's own fps, from the contract seconds
+  local PW
+  PW=$(python3 -c "
+import json;d=json.load(open('$SUM'));w=d['windows_seconds']['pour'];f=d['fps']
+print('%d,%d'%(round(w[0]*f), round(w[1]*f)))")
   timeout 3000 "$BLENDER" --background "$OUT/$(basename $OUT).blend" \
     --python tools/rvmotion/validate.py -- "art/animation/ab/canonical_$NAME" \
-    "$OUT/validation.json" --label "$NAME" >/dev/null 2>&1
+    "$OUT/validation.json" --label "$NAME" --can --soil 0.22 --pour-window "$PW" \
+    --authored DEF-upper_arm.R,DEF-forearm.R,DEF-hand.R >/dev/null 2>&1
 
   python3 tools/rvmotion/scorecard.py --native "art/animation/ab/canonical_$NAME" \
     --contract "$SUM" --production "$OUT/validation.json" \
