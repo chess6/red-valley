@@ -1,0 +1,37 @@
+{
+  "source_standing_frame": {
+    "npz": "art/animation/ardy_pilot/clips_water/water8_00.npz",
+    "frame": 0
+  },
+  "core_scale_note": "hand heights are Core-skeleton scale (shoulder 1.479 m, arm 0.528 m)",
+  "pour": {
+    "hand": [
+      -0.2004,
+      0.9945,
+      0.3181
+    ],
+    "visible_lean_deg": 12.87,
+    "hips_y": 0.9682
+  },
+  "phases": {
+    "start": [
+      0,
+      8
+    ],
+    "pour": [
+      64,
+      72,
+      80
+    ],
+    "return": [
+      152,
+      159
+    ]
+  },
+  "joints": [
+    "RightHand",
+    "RightFoot",
+    "LeftFoot",
+    "Hips"
+  ]
+}
