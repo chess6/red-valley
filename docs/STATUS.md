@@ -21,7 +21,11 @@ the pose is now editing numbers rather than renting a machine.
 
 ## What actually gates the milestone (none of it is motion)
 
-1. **Rodin character licence unrecorded** — blocks any promotion to `assets/`.
+1. ~~Rodin character licence unrecorded~~ — **RESOLVED 2026-08-21.** Hyper3D
+   Rodin, paid Creator plan; ToS s5(a) and s2 recorded and archived in
+   `art/character/SOURCE_LICENSES.md` + `licence_evidence/`. Classified
+   **commercial_use: allowed (plan-dependent)**, NOT copyright transfer.
+   Provenance entry staged for the moment of promotion.
 2. **Fused hand topology** — blocker; MPFB CC0 control character recommended first.
 3. **Jaw/neck blend weights** strain to 80%.
 

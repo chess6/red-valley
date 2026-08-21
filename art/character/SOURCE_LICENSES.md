@@ -1,6 +1,51 @@
 # Source Assets — Licensing Record
 
-Generated 2026-08-17 for the Red Valley protagonist.
+> **The shipping player character is the Hyper3D Rodin export, recorded below.**
+> The MakeHuman/MPFB2 material further down is the SUPERSEDED earlier lineage
+> (`Player_HiFi_v01..v05`). Until 2026-08-21 this file documented only that superseded
+> character, so the asset actually in use had no licence record at all.
+
+## Player character — Hyper3D Rodin (SHIPPING)
+
+| item | value |
+|---|---|
+| Asset | `rodin_export_c40a04c4.zip` → `base_basic_pbr.glb`, `base_basic_shaded.glb` |
+| Derived baseline | `art/animation/ardy_pilot/derived/rv_player_proportioned.glb` |
+| Generated | 2026-08-19 |
+| Job / asset id | `c40a04c4` (from the export filename; the account UI exposes no separate id) |
+| Service | Hyper3D **Rodin** |
+| Plan | **Creator (paid)** — a subscription is required even to download the model |
+| Terms | https://hyper3d.ai/legal/terms — snapshot `licence_evidence/hyper3d_terms_2026-08-21.md` |
+| **commercial_use** | **allowed (plan-dependent)** |
+| **copyright_ownership** | **NOT transferred** — see below |
+| Export SHA-256 | `3b011e963363dd59c8fa595f8307ef34124a29ca4a76aac82fa69015b1c0ffcf` |
+| Derived GLB SHA-256 | `05340d9c95781e9f69d0084e99e6f29ffbf8b3daba5491ba5e24620b14152aba` |
+| Cleared by | Thomas (project owner), 2026-08-21, on the clauses quoted in the snapshot |
+
+### Why "allowed", not "owned"
+
+§5(a) says Hyper3D "will not limit your use of such Output". That is a **covenant
+not to restrict**, not an assignment of copyright. §5 separately disclaims any
+warranty that Output is copyrightable or that IP rights in it can be registered or
+credited to anyone. So the defensible record is permission to use commercially on
+a qualifying plan — recording `copyright_ownership: transferred` would assert
+something the terms do not say.
+
+### Two live risks, recorded not resolved
+
+1. **The terms are unversioned.** The page shows only "Current version" with no
+   date, so they can change silently. The dated snapshot is the mitigation;
+   re-verify before shipping and before any future clearance.
+2. **Training-data provenance is unauditable.** §5's disclaimer places the
+   copyrightability question on the user. This is a judgement call about
+   acceptable risk, not a licence defect, and it is the project owner's to make.
+
+---
+
+
+## Superseded lineage — MakeHuman / MPFB2
+
+Generated 2026-08-17. **Superseded by the Rodin character above**; retained because it is hand-made rather than generated, and is the fallback body if the Rodin risks above are ever judged unacceptable.
 
 Originals are preserved unmodified in `source_assets/makehuman/`.
 

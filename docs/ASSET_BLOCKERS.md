@@ -55,8 +55,20 @@ Still the diagnostic proxy (`NOT_FOR_SHIPPING`). A provenance-cleared mesh is
 required before any water clip can be judged as final. The attachment contract
 it must satisfy is recorded in `art/animation/v2/water_can/prop_attachment.json`.
 
-## 4. Rodin character licence — unresolved
+## 4. Rodin character licence — RESOLVED (2026-08-21)
 
-No licence entry exists in `art/character/SOURCE_LICENSES.md` or
-`AI_MODEL_LICENSES.md` for the Rodin master. The asset gate will refuse
-promotion to `assets/` without one. Unchanged from the v1 report.
+Recorded. Hyper3D Rodin, **paid Creator plan** (a subscription is required even
+to download). ToS **§5(a)** — "we will not limit your use of such Output" — and
+**§2** — export "for private or commercial use depending on your subscription
+plan". Archived with hashes in `art/character/SOURCE_LICENSES.md` and
+`art/character/licence_evidence/`.
+
+Classified **`commercial_use: allowed (plan-dependent)`**, deliberately *not*
+`copyright_ownership: transferred`: §5(a) is a covenant not to restrict, and §5
+separately disclaims any warranty that Output is copyrightable or that IP rights
+can be registered to anyone. Recording the stronger claim would assert something
+the terms do not say.
+
+Two risks recorded rather than resolved: the terms are **unversioned** ("Current
+version", no date) so they can change silently — hence the dated snapshot; and
+training-data provenance is unauditable, which §5 leaves with the user.

@@ -1,0 +1,35 @@
+{
+  "_note": "Ready-to-use provenance entry for the player character. NOT yet in asset_provenance.json: that manifest only covers files under the production root (assets/), and adding an art/ path there makes the gate fail as a stale entry. Copy this in, keyed by its assets/ path, at the moment the character is promoted.",
+  "_promote_as": "assets/character/rv_player_proportioned.glb",
+  "entry": {
+    "source": "Hyper3D Rodin generative 3D service, Creator (paid) plan. Export rodin_export_c40a04c4.zip generated 2026-08-19; master preserved in the private asset store.",
+    "generator": "Hyper3D Rodin (text/image -> 3D); derived baseline reproportioned to 1.90 m in Blender",
+    "dependency_licences": [
+      {
+        "component": "Hyper3D Rodin Output",
+        "licence": "Hyper3D ToS s5(a) \u2014 'we will not limit your use of such Output'; s2 \u2014 export for commercial use depending on subscription plan",
+        "commercial_use": true,
+        "evidence_url": "https://hyper3d.ai/legal/terms"
+      }
+    ],
+    "evidence_urls": [
+      "https://hyper3d.ai/legal/terms",
+      "repo:art/character/SOURCE_LICENSES.md",
+      "repo:art/character/licence_evidence/hyper3d_terms_2026-08-21.md"
+    ],
+    "commercial_status": "cleared",
+    "commercial_use": "allowed (plan-dependent)",
+    "copyright_ownership": "NOT transferred \u2014 Hyper3D grants permission to use and separately disclaims any warranty that Output is copyrightable or that IP rights can be registered or credited to any person (ToS s5)",
+    "sha256": "05340d9c95781e9f69d0084e99e6f29ffbf8b3daba5491ba5e24620b14152aba",
+    "source_master_sha256": "3b011e963363dd59c8fa595f8307ef34124a29ca4a76aac82fa69015b1c0ffcf",
+    "clearance": {
+      "cleared_by": "Thomas (project owner)",
+      "date": "2026-08-21",
+      "basis": "paid Creator plan; ToS s5(a) and s2 read and archived",
+      "residual_risks": [
+        "terms are unversioned ('Current version', no date) and can change silently \u2014 re-verify before shipping",
+        "training-data provenance is unauditable; ToS s5 places copyrightability on the user"
+      ]
+    }
+  }
+}
