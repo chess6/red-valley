@@ -1,5 +1,5 @@
 {
-  "status": "BOUNDED V2 + CORRECTION PASS \u2014 NOT ACCEPTED, NOT PROMOTED",
+  "status": "V2 ACCEPTED AS ARCHITECTURE (per review) \u2014 CLIPS NOT PROMOTED",
   "branch": "animation-retarget-v2",
   "cloud_spend_usd": 0.0,
   "reused_inputs": {
@@ -12,8 +12,8 @@
     "art/animation/rigify/water_can/water_can.glb": "ce61e402ad2315758a35ad31ee3468f6a811a9e2d4ba56ba9f401ffd00ea4aee"
   },
   "v2_outputs": {
-    "art/animation/v2/walk_fwd/walk_fwd.glb": "7dce40f4b2bc4cdcfdc390aa2295dc77969ce295fca741a837cf2fad11bf1057",
-    "art/animation/v2/water_can/water_can.glb": "dd2c38b79a902eac5542e1d24f6a2a21caeefda886ba5240ef23c1bf0c7b42bf"
+    "art/animation/v2/walk_fwd/walk_fwd.glb": "a531f3bdd9ef9cbec4765497b57fede3cf411753ddb32cd76b86158c57634ddd",
+    "art/animation/v2/water_can/water_can.glb": "64c0bb78588aa385aecafb8978d6634fec800024bd78f085e6565dc4c90fc11d"
   },
   "findings": {
     "F1_rotations_discarded": {
@@ -231,16 +231,16 @@
     "rotation_fidelity": {
       "per_bone_deg": {
         "DEF-spine": {
-          "mean": 1.46,
-          "max": 3.02
+          "mean": 0.05,
+          "max": 0.11
         },
         "DEF-spine.001": {
-          "mean": 0.36,
-          "max": 1.0
+          "mean": 0.0,
+          "max": 0.0
         },
         "DEF-spine.002": {
-          "mean": 0.46,
-          "max": 0.98
+          "mean": 0.05,
+          "max": 0.15
         },
         "DEF-spine.003": {
           "mean": 0.0,
@@ -255,8 +255,8 @@
           "max": 0.0
         },
         "DEF-upper_arm.R": {
-          "mean": 1.05,
-          "max": 2.44
+          "mean": 1.11,
+          "max": 2.53
         },
         "DEF-forearm.R": {
           "mean": 0.0,
@@ -267,8 +267,8 @@
           "max": 0.0
         },
         "DEF-upper_arm.L": {
-          "mean": 0.92,
-          "max": 2.58
+          "mean": 0.93,
+          "max": 2.5
         },
         "DEF-forearm.L": {
           "mean": 0.0,
@@ -279,8 +279,8 @@
           "max": 0.0
         },
         "DEF-thigh.R": {
-          "mean": 2.09,
-          "max": 5.05
+          "mean": 2.01,
+          "max": 5.19
         },
         "DEF-shin.R": {
           "mean": 2.16,
@@ -291,8 +291,8 @@
           "max": 0.0
         },
         "DEF-thigh.L": {
-          "mean": 2.31,
-          "max": 6.33
+          "mean": 2.29,
+          "max": 6.32
         },
         "DEF-shin.L": {
           "mean": 2.59,
@@ -303,7 +303,7 @@
           "max": 0.0
         }
       },
-      "overall_mean_deg": 0.744,
+      "overall_mean_deg": 0.622,
       "overall_max_deg": 8.283,
       "gate_mean_lt_2deg": true,
       "per_bone_limits_deg": {
@@ -329,29 +329,29 @@
       "note": "bones driven by IK are expected to deviate where the goal was moved deliberately; those deviations are listed, never averaged away"
     },
     "twist_channel": {
-      "DEF-upper_arm.L.001": {
-        "range_deg": 29.85
-      },
-      "DEF-forearm.L.001": {
-        "range_deg": 49.57
-      },
       "DEF-forearm.R.001": {
-        "range_deg": 57.38
-      },
-      "DEF-spine.001": {
-        "range_deg": 8.52
+        "range_deg": 57.4
       },
       "DEF-upper_arm.R.001": {
-        "range_deg": 34.38
+        "range_deg": 34.18
+      },
+      "DEF-forearm.L.001": {
+        "range_deg": 49.55
+      },
+      "DEF-upper_arm.L.001": {
+        "range_deg": 29.81
+      },
+      "DEF-spine.001": {
+        "range_deg": 9.36
       }
     },
     "wrist": {
       "R": {
-        "pos_rms_vs_source_m": 0.2964,
+        "pos_rms_vs_source_m": 0.1813,
         "orientation_delta_err_max_deg": 0.0
       },
       "L": {
-        "pos_rms_vs_source_m": 0.1892,
+        "pos_rms_vs_source_m": 0.1817,
         "orientation_delta_err_max_deg": 0.0
       }
     },
@@ -361,7 +361,7 @@
       "R": {
         "source_deg": 93.75,
         "target_deg": 93.75,
-        "loss_pct": -0.0
+        "loss_pct": 0.0
       },
       "L": {
         "source_deg": 53.85,
@@ -375,26 +375,26 @@
       "per_foot": {
         "L": {
           "planted_frames": 7,
-          "total_slide_m": 0.0155,
-          "peak_slide_cm_per_s": 7.4,
-          "mean_slide_cm_per_s": 4.43
+          "total_slide_m": 0.018,
+          "peak_slide_cm_per_s": 7.07,
+          "mean_slide_cm_per_s": 5.15
         },
         "R": {
           "planted_frames": 7,
-          "total_slide_m": 0.0101,
-          "peak_slide_cm_per_s": 4.38,
-          "mean_slide_cm_per_s": 2.87
+          "total_slide_m": 0.0091,
+          "peak_slide_cm_per_s": 4.39,
+          "mean_slide_cm_per_s": 2.61
         }
       },
       "treadmill_speed_mps": 1.4505,
       "gate_peak_slide_lt_5cm_s": false
     },
     "loop_seam": {
-      "seam_extrapolation_err_m": 0.03735,
-      "interior_err_median_m": 0.05342,
-      "interior_err_p90_m": 0.09097,
-      "interior_err_max_m": 0.09564,
-      "seam_percentile_within_interior": 22.2,
+      "seam_extrapolation_err_m": 0.03809,
+      "interior_err_median_m": 0.05193,
+      "interior_err_p90_m": 0.09159,
+      "interior_err_max_m": 0.09571,
+      "seam_percentile_within_interior": 27.8,
       "contact_state_first_frame": [
         1,
         0,
@@ -413,6 +413,41 @@
       "gate_documented_lt_1cm": false,
       "gate_proposed_seam_below_interior_median": true
     },
+    "joint_limits": {
+      "per_side": {
+        "R": {
+          "elbow_min_deg": 148.6,
+          "elbow_max_deg": 176.7,
+          "elbow_frame_jitter_deg": 4.93,
+          "wrist_deviation_max_deg": 58.5,
+          "knee_min_deg": 112.0,
+          "knee_max_deg": 173.8,
+          "knee_frame_jitter_deg": 20.67
+        },
+        "L": {
+          "elbow_min_deg": 151.9,
+          "elbow_max_deg": 173.8,
+          "elbow_frame_jitter_deg": 4.23,
+          "wrist_deviation_max_deg": 58.5,
+          "knee_min_deg": 117.4,
+          "knee_max_deg": 174.4,
+          "knee_frame_jitter_deg": 19.79
+        }
+      },
+      "limits": {
+        "elbow_min": 25.0,
+        "elbow_max": 180.0,
+        "wrist_max": 75.0,
+        "knee_min": 80.0,
+        "knee_max": 180.5,
+        "jitter_max": 35.0
+      },
+      "gate_elbow_range": true,
+      "gate_wrist_deviation": true,
+      "gate_knee_range": true,
+      "gate_no_joint_jitter": true,
+      "note": "applies to authored-override bones too -- exemption from the fidelity gate is not exemption from anatomy"
+    },
     "face": {
       "rigid_core_verts": 7922,
       "blend_band_verts": 984,
@@ -430,16 +465,16 @@
     "rotation_fidelity": {
       "per_bone_deg": {
         "DEF-spine": {
-          "mean": 1.26,
-          "max": 3.08
+          "mean": 0.02,
+          "max": 0.07
         },
         "DEF-spine.001": {
-          "mean": 0.07,
-          "max": 0.33
+          "mean": 0.0,
+          "max": 0.0
         },
         "DEF-spine.002": {
-          "mean": 0.19,
-          "max": 0.54
+          "mean": 0.01,
+          "max": 0.07
         },
         "DEF-spine.003": {
           "mean": 0.0,
@@ -454,20 +489,20 @@
           "max": 0.0
         },
         "DEF-upper_arm.R": {
-          "mean": 2.51,
-          "max": 10.43
+          "mean": 3.18,
+          "max": 9.58
         },
         "DEF-forearm.R": {
-          "mean": 8.08,
-          "max": 58.2
+          "mean": 6.45,
+          "max": 23.25
         },
         "DEF-hand.R": {
-          "mean": 4.52,
-          "max": 15.39
+          "mean": 3.83,
+          "max": 10.59
         },
         "DEF-upper_arm.L": {
-          "mean": 1.0,
-          "max": 2.44
+          "mean": 1.02,
+          "max": 2.46
         },
         "DEF-forearm.L": {
           "mean": 0.0,
@@ -478,8 +513,8 @@
           "max": 0.0
         },
         "DEF-thigh.R": {
-          "mean": 1.18,
-          "max": 2.64
+          "mean": 1.12,
+          "max": 2.71
         },
         "DEF-shin.R": {
           "mean": 1.02,
@@ -490,8 +525,8 @@
           "max": 0.0
         },
         "DEF-thigh.L": {
-          "mean": 0.89,
-          "max": 3.39
+          "mean": 0.79,
+          "max": 2.9
         },
         "DEF-shin.L": {
           "mean": 1.15,
@@ -502,8 +537,8 @@
           "max": 0.0
         }
       },
-      "overall_mean_deg": 1.215,
-      "overall_max_deg": 58.199,
+      "overall_mean_deg": 1.032,
+      "overall_max_deg": 23.247,
       "gate_mean_lt_2deg": true,
       "per_bone_limits_deg": {
         "DEF-upper_arm.R": 8.0,
@@ -529,45 +564,45 @@
       ],
       "authored_override_deviation_deg": {
         "DEF-upper_arm.R": {
-          "mean": 2.51,
-          "max": 10.43
+          "mean": 3.18,
+          "max": 9.58
         },
         "DEF-forearm.R": {
-          "mean": 8.08,
-          "max": 58.2
+          "mean": 6.45,
+          "max": 23.25
         },
         "DEF-hand.R": {
-          "mean": 4.52,
-          "max": 15.39
+          "mean": 3.83,
+          "max": 10.59
         }
       },
       "gate_no_critical_bone_breach": true,
       "note": "bones driven by IK are expected to deviate where the goal was moved deliberately; those deviations are listed, never averaged away"
     },
     "twist_channel": {
-      "DEF-upper_arm.R.001": {
-        "range_deg": 33.13
-      },
-      "DEF-forearm.L.001": {
-        "range_deg": 16.09
-      },
       "DEF-spine.001": {
-        "range_deg": 23.98
+        "range_deg": 23.97
       },
       "DEF-upper_arm.L.001": {
-        "range_deg": 8.23
+        "range_deg": 7.81
+      },
+      "DEF-upper_arm.R.001": {
+        "range_deg": 29.38
       },
       "DEF-forearm.R.001": {
-        "range_deg": 56.19
+        "range_deg": 45.22
+      },
+      "DEF-forearm.L.001": {
+        "range_deg": 16.19
       }
     },
     "wrist": {
       "R": {
-        "pos_rms_vs_source_m": 0.179,
-        "orientation_delta_err_max_deg": 15.39
+        "pos_rms_vs_source_m": 0.1333,
+        "orientation_delta_err_max_deg": 10.59
       },
       "L": {
-        "pos_rms_vs_source_m": 0.2534,
+        "pos_rms_vs_source_m": 0.1355,
         "orientation_delta_err_max_deg": 0.0
       }
     },
@@ -576,8 +611,8 @@
       "source_clip": "water_can_oneshot",
       "R": {
         "source_deg": 34.01,
-        "target_deg": 106.17,
-        "loss_pct": -212.2
+        "target_deg": 87.3,
+        "loss_pct": -156.7
       },
       "L": {
         "source_deg": 30.39,
@@ -591,34 +626,43 @@
       "per_foot": {
         "L": {
           "planted_frames": 24,
-          "total_slide_m": 0.0648,
-          "peak_slide_cm_per_s": 12.51,
-          "mean_slide_cm_per_s": 5.4
+          "total_slide_m": 0.0499,
+          "peak_slide_cm_per_s": 8.99,
+          "mean_slide_cm_per_s": 4.16
         },
         "R": {
           "planted_frames": 24,
-          "total_slide_m": 0.0571,
-          "peak_slide_cm_per_s": 12.14,
-          "mean_slide_cm_per_s": 4.76
+          "total_slide_m": 0.0459,
+          "peak_slide_cm_per_s": 10.56,
+          "mean_slide_cm_per_s": 3.83
         }
       },
       "treadmill_speed_mps": 0.0,
       "gate_peak_slide_lt_5cm_s": false
     },
     "prop_rigidity": {
-      "max_hand_relative_drift_m": 2.24e-07,
+      "max_hand_relative_drift_m": 2.37e-07,
       "max_hand_relative_drift_deg": 0.0,
       "gate_rigid": true
     },
     "spout": {
-      "min_above_bed_m": 0.3361,
-      "max_above_bed_m": 0.7521,
+      "min_above_bed_m": 0.3876,
+      "max_above_bed_m": 0.7436,
       "documented_band_m": [
         0.15,
         0.3
       ],
-      "frames_in_band": 0,
-      "gate_in_band": false
+      "pour_window_frames": [
+        9,
+        17
+      ],
+      "window_min_m": 0.3876,
+      "window_max_m": 0.4065,
+      "window_frames_in_band": 0,
+      "window_frames_total": 9,
+      "frames_in_band_whole_clip": 0,
+      "gate_in_band_for_whole_pour_window": false,
+      "note": "gate requires the band to HOLD across the pour window; an earlier version passed if any single frame entered it"
     },
     "collisions": {
       "per_frame": {
@@ -631,25 +675,21 @@
           "by_bone": {}
         },
         "4": {
-          "tris": 4,
-          "by_bone": {
-            "DEF-forearm.R.001": 12
-          }
+          "tris": 0,
+          "by_bone": {}
         },
         "6": {
           "tris": 0,
           "by_bone": {}
         },
         "8": {
-          "tris": 7,
-          "by_bone": {
-            "DEF-forearm.R.001": 21
-          }
+          "tris": 0,
+          "by_bone": {}
         },
         "10": {
-          "tris": 4,
+          "tris": 2,
           "by_bone": {
-            "DEF-forearm.R.001": 12
+            "DEF-forearm.R.001": 6
           }
         },
         "12": {
@@ -657,14 +697,14 @@
           "by_bone": {}
         },
         "14": {
-          "tris": 0,
-          "by_bone": {}
+          "tris": 2,
+          "by_bone": {
+            "DEF-forearm.R.001": 6
+          }
         },
         "16": {
-          "tris": 3,
-          "by_bone": {
-            "DEF-forearm.R.001": 9
-          }
+          "tris": 0,
+          "by_bone": {}
         },
         "18": {
           "tris": 0,
@@ -675,20 +715,53 @@
           "by_bone": {}
         },
         "22": {
-          "tris": 7,
-          "by_bone": {
-            "DEF-forearm.R.001": 21
-          }
+          "tris": 0,
+          "by_bone": {}
         }
       },
-      "max_tris": 7,
+      "max_tris": 2,
       "gate_zero": false
+    },
+    "joint_limits": {
+      "per_side": {
+        "R": {
+          "elbow_min_deg": 111.4,
+          "elbow_max_deg": 153.5,
+          "elbow_frame_jitter_deg": 32.4,
+          "wrist_deviation_max_deg": 61.2,
+          "knee_min_deg": 164.3,
+          "knee_max_deg": 168.5,
+          "knee_frame_jitter_deg": 2.01
+        },
+        "L": {
+          "elbow_min_deg": 143.2,
+          "elbow_max_deg": 160.9,
+          "elbow_frame_jitter_deg": 3.78,
+          "wrist_deviation_max_deg": 10.3,
+          "knee_min_deg": 164.8,
+          "knee_max_deg": 167.4,
+          "knee_frame_jitter_deg": 1.19
+        }
+      },
+      "limits": {
+        "elbow_min": 25.0,
+        "elbow_max": 180.0,
+        "wrist_max": 75.0,
+        "knee_min": 80.0,
+        "knee_max": 180.5,
+        "jitter_max": 35.0
+      },
+      "gate_elbow_range": true,
+      "gate_wrist_deviation": true,
+      "gate_knee_range": true,
+      "gate_no_joint_jitter": true,
+      "note": "applies to authored-override bones too -- exemption from the fidelity gate is not exemption from anatomy"
     },
     "face": {
       "rigid_core_verts": 7922,
       "blend_band_verts": 984,
       "core_worst_strain_pct": 0.0206,
-      "band_worst_strain_pct": 82.443,
+      "band_worst_strain_pct": 82.4431,
       "gate_core_rigid_lt_0p5pct": true,
       "gate_band_lt_25pct": false,
       "note": "aggregate 'face deviation' retired: it mixed these populations"
@@ -706,25 +779,33 @@
       "seam_extrapolation_err_max_m": 0.04001,
       "seam_extrapolation_err_mean_m": 0.01329,
       "worst_joint": "LeftHandEnd",
-      "interior_extrapolation_err_max_m": 0.11131,
+      "interior_err_median_m": 0.0709,
+      "interior_err_p90_m": 0.11724,
+      "interior_err_max_m": 0.12261,
+      "seam_percentile_within_interior": 16.66667,
       "seam_angular_step_change_max_deg": 8.19971
     },
     "seam_after_closure": {
       "seam_extrapolation_err_max_m": 0.03913,
       "seam_extrapolation_err_mean_m": 0.01263,
       "worst_joint": "LeftToeBase",
-      "interior_extrapolation_err_max_m": 0.11102,
+      "interior_err_median_m": 0.07221,
+      "interior_err_p90_m": 0.11732,
+      "interior_err_max_m": 0.1226,
+      "seam_percentile_within_interior": 16.66667,
       "seam_angular_step_change_max_deg": 6.30874
     },
     "gate_documented_seam_lt_1cm": {
       "value_m": 0.03913,
       "pass": false,
-      "note": "NOT MET. At 20 fps a swinging foot covers ~12 cm per frame, and the SAME extrapolation test applied inside the cycle scores 0.111 m -- so a 1 cm absolute gate is stricter than the motion itself and cannot be met by any crop of this source."
+      "note": "NOT MET. At 20 fps a swinging foot covers ~12 cm per frame, and the SAME extrapolation test applied inside the cycle has a median of 0.072 m -- so a 1 cm absolute gate is stricter than the motion itself and cannot be met by any crop of this source."
     },
     "gate_proposed_seam_no_worse_than_interior": {
       "seam_m": 0.03913,
-      "interior_m": 0.11102,
+      "interior_median_m": 0.07221,
+      "interior_p90_m": 0.11732,
       "pass": true,
+      "status": "PROPOSED AND NOT APPROVED -- reported for information only",
       "rationale": "A loop reads as continuous when the wrap frame is no more abrupt than a normal frame of the same motion. This is resolution- and speed-independent, unlike a fixed distance. PROPOSED -- awaiting approval; the documented 1 cm figure is reported above unchanged."
     },
     "contacts_at_ends": [
@@ -840,16 +921,16 @@
     "inplace": true,
     "def_motion_delta_error_deg": {
       "DEF-spine": {
-        "mean_delta_err_deg": 1.46,
-        "max_delta_err_deg": 3.02
+        "mean_delta_err_deg": 0.05,
+        "max_delta_err_deg": 0.11
       },
       "DEF-spine.001": {
-        "mean_delta_err_deg": 0.36,
-        "max_delta_err_deg": 1.0
+        "mean_delta_err_deg": 0.0,
+        "max_delta_err_deg": 0.0
       },
       "DEF-spine.002": {
-        "mean_delta_err_deg": 0.46,
-        "max_delta_err_deg": 0.98
+        "mean_delta_err_deg": 0.05,
+        "max_delta_err_deg": 0.15
       },
       "DEF-spine.003": {
         "mean_delta_err_deg": 0.0,
@@ -868,8 +949,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-upper_arm.R": {
-        "mean_delta_err_deg": 1.05,
-        "max_delta_err_deg": 2.44
+        "mean_delta_err_deg": 1.11,
+        "max_delta_err_deg": 2.53
       },
       "DEF-forearm.R": {
         "mean_delta_err_deg": 0.0,
@@ -884,8 +965,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-upper_arm.L": {
-        "mean_delta_err_deg": 0.92,
-        "max_delta_err_deg": 2.58
+        "mean_delta_err_deg": 0.93,
+        "max_delta_err_deg": 2.5
       },
       "DEF-forearm.L": {
         "mean_delta_err_deg": 0.0,
@@ -896,8 +977,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-thigh.R": {
-        "mean_delta_err_deg": 2.09,
-        "max_delta_err_deg": 5.05
+        "mean_delta_err_deg": 2.01,
+        "max_delta_err_deg": 5.19
       },
       "DEF-shin.R": {
         "mean_delta_err_deg": 2.16,
@@ -908,8 +989,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-thigh.L": {
-        "mean_delta_err_deg": 2.31,
-        "max_delta_err_deg": 6.33
+        "mean_delta_err_deg": 2.29,
+        "max_delta_err_deg": 6.32
       },
       "DEF-shin.L": {
         "mean_delta_err_deg": 2.59,
@@ -987,16 +1068,16 @@
     "inplace": false,
     "def_motion_delta_error_deg": {
       "DEF-spine": {
-        "mean_delta_err_deg": 1.26,
-        "max_delta_err_deg": 3.08
+        "mean_delta_err_deg": 0.02,
+        "max_delta_err_deg": 0.07
       },
       "DEF-spine.001": {
-        "mean_delta_err_deg": 0.07,
-        "max_delta_err_deg": 0.33
+        "mean_delta_err_deg": 0.0,
+        "max_delta_err_deg": 0.0
       },
       "DEF-spine.002": {
-        "mean_delta_err_deg": 0.19,
-        "max_delta_err_deg": 0.54
+        "mean_delta_err_deg": 0.01,
+        "max_delta_err_deg": 0.07
       },
       "DEF-spine.003": {
         "mean_delta_err_deg": 0.0,
@@ -1015,24 +1096,24 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-upper_arm.R": {
-        "mean_delta_err_deg": 2.51,
-        "max_delta_err_deg": 10.43
+        "mean_delta_err_deg": 3.18,
+        "max_delta_err_deg": 9.58
       },
       "DEF-forearm.R": {
-        "mean_delta_err_deg": 8.08,
-        "max_delta_err_deg": 58.2
+        "mean_delta_err_deg": 6.45,
+        "max_delta_err_deg": 23.25
       },
       "DEF-hand.R": {
-        "mean_delta_err_deg": 4.52,
-        "max_delta_err_deg": 15.39
+        "mean_delta_err_deg": 3.83,
+        "max_delta_err_deg": 10.59
       },
       "DEF-shoulder.L": {
         "mean_delta_err_deg": 0.0,
         "max_delta_err_deg": 0.0
       },
       "DEF-upper_arm.L": {
-        "mean_delta_err_deg": 1.0,
-        "max_delta_err_deg": 2.44
+        "mean_delta_err_deg": 1.02,
+        "max_delta_err_deg": 2.46
       },
       "DEF-forearm.L": {
         "mean_delta_err_deg": 0.0,
@@ -1043,8 +1124,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-thigh.R": {
-        "mean_delta_err_deg": 1.18,
-        "max_delta_err_deg": 2.64
+        "mean_delta_err_deg": 1.12,
+        "max_delta_err_deg": 2.71
       },
       "DEF-shin.R": {
         "mean_delta_err_deg": 1.02,
@@ -1055,8 +1136,8 @@
         "max_delta_err_deg": 0.0
       },
       "DEF-thigh.L": {
-        "mean_delta_err_deg": 0.89,
-        "max_delta_err_deg": 3.39
+        "mean_delta_err_deg": 0.79,
+        "max_delta_err_deg": 2.9
       },
       "DEF-shin.L": {
         "mean_delta_err_deg": 1.15,
@@ -1070,7 +1151,7 @@
     "forearm_roll_range_deg": {
       "DEF-forearm.R": {
         "source_roll_range_deg": 34.01,
-        "target_roll_range_deg": 106.17
+        "target_roll_range_deg": 87.3
       },
       "DEF-forearm.L": {
         "source_roll_range_deg": 30.39,

@@ -60,6 +60,12 @@ T = m.num_frames
 # canonical joint -> Rigify FK control. Terminal joints with no orientation of
 # their own (HandEnd, ToeBase tips) are deliberately absent.
 FK_MAP = {
+    # Rigify's `torso` is the MASTER of the whole torso, not the pelvis. Giving it
+    # the Hips rotation tilted the entire spine, and DEF-spine -- which is driven
+    # by tweaks blending `hips` with the FK chain -- then received that tilt PLUS
+    # its own FK rotation. Measured result: DEF-spine pitched 32.4 deg where the
+    # source had 3.0, which is what threw the pelvis backwards out of the lean.
+    # `hips` is the actual pelvis control; `torso` is left to carry translation.
     "Hips": "torso",
     "Spine": "spine_fk", "Spine1": "spine_fk.001",
     "Spine2": "spine_fk.002", "Spine3": "spine_fk.003",
@@ -109,7 +115,7 @@ IK_BONES = ["foot_ik.L", "foot_ik.R", "thigh_ik_target.L", "thigh_ik_target.R",
             "hand_ik.L", "hand_ik.R", "upper_arm_ik_target.L", "upper_arm_ik_target.R",
             "root"]
 REST = {n: (W @ rig.data.bones[n].matrix_local)
-        for n in set(FK_MAP.values()) | {b for b in IK_BONES if b in PB}}
+        for n in set(FK_MAP.values()) | {b for b in IK_BONES if b in PB} | {"torso"}}
 REST_ROT = {n: r.to_3x3() for n, r in REST.items()}
 
 # --- scale: source vs target limb geometry, measured not assumed ------------
@@ -166,6 +172,35 @@ def np2m(a):
                    (a[2][0], a[2][1], a[2][2])))
 OFFSET = {j: np2m(G[CAL_F, JN.index(j)]).transposed() @ REST_ROT[b]
           for j, b in present.items()}
+
+# Make the calibration SYMMETRIC across the body.
+#
+# The offset absorbs the rest-pose difference between source and rig, and it was
+# being computed independently per side from one arbitrary source frame. Those
+# frames are never perfectly symmetric, so each arm inherited a different
+# constant rotation -- which reads as one arm swinging further forward and less
+# far back than the other, an asymmetry the RIG invented rather than one the
+# source contains. The rig's own rest is a symmetric A-pose, so mirroring one
+# side's offset onto the other and averaging removes the rig-induced part while
+# leaving whatever asymmetry the source genuinely has.
+MIRROR = Matrix(((-1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)))
+# canonical joints are prefixed Right*/Left*, not suffixed .R/.L
+PAIRS = [(j, "Left" + j[5:]) for j in present if j.startswith("Right")]
+sym_log = {}
+for jr, jl in PAIRS:
+    if jl not in OFFSET or jr not in OFFSET:
+        continue
+    o_r, o_l = OFFSET[jr], OFFSET[jl]
+    l_as_r = MIRROR @ o_l @ MIRROR                      # left offset seen as a right one
+    q = o_r.to_quaternion().slerp(l_as_r.to_quaternion(), 0.5)
+    sym_r = q.to_matrix()
+    before = math.degrees(o_r.to_quaternion().rotation_difference(
+        l_as_r.to_quaternion()).angle)
+    OFFSET[jr] = sym_r
+    OFFSET[jl] = MIRROR @ sym_r @ MIRROR
+    sym_log[jr] = round(before, 2)
+print("calibration symmetrised; left/right offset disagreement before: %s"
+      % {k: v for k, v in sorted(sym_log.items(), key=lambda kv: -kv[1])[:4]})
 
 # --- root / torso translation ----------------------------------------------
 hip_i = JN.index("Hips")
@@ -397,6 +432,13 @@ if PROP:
     CAN.matrix_parent_inverse = Matrix.Identity(4)
     upd()
 
+DEF_OF = {"Spine": "DEF-spine", "Spine1": "DEF-spine.001", "Spine2": "DEF-spine.002",
+          "Spine3": "DEF-spine.003", "Neck": "DEF-spine.004"}
+SPINE_SOLVE = [j for j in ("Spine", "Spine1", "Spine2", "Spine3", "Neck") if j in present]
+OFFSET_DEF = {j: np2m(G[CAL_F, JN.index(j)]).transposed()
+                 @ (W @ rig.data.bones[DEF_OF[j]].matrix_local).to_3x3()
+              for j in SPINE_SOLVE}
+
 ORDER = ["Hips", "Spine", "Spine1", "Spine2", "Spine3", "Neck", "Head",
          "RightShoulder", "RightArm", "RightForeArm", "RightHand",
          "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand"]
@@ -436,7 +478,12 @@ for f in range(T):
     # torso first: it carries the whole body
     tb = PB["torso"]
     rot = np2m(G[f, hip_i]) @ OFFSET["Hips"]
-    loc = Vector(TORSO_REST) + Vector(body_pos[f] - np.array(REST_HIP))
+    # Rigify's torso control pivots at its own head, 0.115 m ABOVE the pelvis on
+    # this character. Placing that head at the target and then rotating swings the
+    # pelvis backwards out of the lean -- the "butt protruding" read. Solve for the
+    # head position that puts the PELVIS where it belongs instead.
+    d_rest = Vector(REST_HIP) - Vector(TORSO_REST)
+    loc = Vector(body_pos[f]) - rot @ d_rest
     tb.matrix = Matrix.Translation(loc) @ rot.to_4x4()
     upd()
     for j in ORDER[1:]:
@@ -444,6 +491,33 @@ for f in range(T):
         cur = pb.matrix.to_translation()
         pb.matrix = Matrix.Translation(cur) @ (np2m(G[f, JN.index(j)]) @ OFFSET[j]).to_4x4()
         upd()
+    # Rigify's spine DEF bones are driven by tweak bones that interpolate between
+    # the torso/hips controls and the FK chain, so setting an FK control's world
+    # orientation does NOT put the DEF bone there: DEF-spine came out at 32-41 deg
+    # of pitch where the source had 3, which is what pushed the pelvis backwards
+    # out of the lean. Rather than reverse-engineer the blend, close the loop on
+    # the thing that actually deforms the mesh -- measure each DEF bone and correct
+    # its driving control until they agree. Three passes converge to well under a
+    # degree here.
+    for _pass in range(3):
+        worst = 0.0
+        for j in SPINE_SOLVE:
+            dbone = DEF_OF[j]
+            want = np2m(G[f, JN.index(j)]) @ OFFSET_DEF[j]
+            got = (W @ PB[dbone].matrix).to_3x3()
+            corr = want @ got.inverted()
+            worst = max(worst, abs(corr.to_quaternion().angle))
+            ctrl = PB[present[j]]
+            mtx = ctrl.matrix.copy()
+            Tm = Matrix.Translation(mtx.to_translation())
+            ctrl.matrix = Tm @ corr.to_4x4() @ Tm.inverted() @ mtx
+            upd()
+        if math.degrees(worst) < 0.25:
+            break
+    if f == 0:
+        print("spine closed-loop: converged to %.3f deg after %d pass(es)"
+              % (math.degrees(worst), _pass + 1))
+
     if ARM_IK:
         s_ = ARM_IK
         jn = ("Right" if s_ == "R" else "Left") + "Hand"
@@ -453,6 +527,8 @@ for f in range(T):
             np2m(G[CAL_F, JN.index(jn)]).transposed() @ REST["hand_ik.%s" % s_].to_3x3())
         armj0 = ("Right" if s_ == "R" else "Left") + "Arm"
         sh_now = (W @ PB["DEF-upper_arm.%s" % s_].matrix).to_translation()
+        ARM_REACH = 0.97 * (rig.data.bones["upper_arm_fk.%s" % s_].length
+                            + rig.data.bones["forearm_fk.%s" % s_].length)
         base = Vector(sh_now + Vector((POS[f, JN.index(jn)]
                                        - POS[f, JN.index(armj0)]) * SCALE))
         if HAND_CLEAR:
@@ -513,15 +589,29 @@ for f in range(T):
 
         # spout solve: lower the hand until the spout sits in the documented
         # band. Pure vertical translation of the IK goal, 3 fixed iterations.
-        if CAN is not None and SPOUT_LO is not None and pour_deg(f) > 0.0:
-            for _ in range(3):
-                z = (CAN.matrix_world @ TIP).z - SOIL
-                mid = 0.5 * (SPOUT_LO + SPOUT_HI)
-                if abs(z - mid) < 0.005: break
-                mtx = ikb.matrix.copy()
-                mtx.translation = mtx.translation + Vector((0, 0, mid - z))
-                ikb.matrix = mtx
-                upd()
+        # Ramp the spout solve with the pour weight. Switching it on the instant
+        # pour_deg crosses zero put a step in the IK goal, which the elbow took
+        # as a 65 deg single-frame jump -- caught by the joint-jitter gate.
+        if CAN is not None and SPOUT_LO is not None and POUR_KEYS:
+            w_ = pour_deg(f) / max(1e-6, max(k[1] for k in POUR_KEYS))
+            if w_ > 1e-3:
+                for _ in range(3):
+                    z = (CAN.matrix_world @ TIP).z - SOIL
+                    mid = 0.5 * (SPOUT_LO + SPOUT_HI)
+                    if abs(z - mid) < 0.005: break
+                    mtx = ikb.matrix.copy()
+                    want = mtx.translation + Vector((0, 0, (mid - z) * w_))
+                    # Never ask for more reach than the arm has. Unclamped, the
+                    # solve chased the band until the elbow locked at 179.7 deg
+                    # for the entire pour -- the arm equivalent of the knee bug,
+                    # and it hid the real conclusion: this source cannot reach the
+                    # band, which is a SOURCE finding, not something to solve away.
+                    v_ = want - sh_now
+                    if v_.length > ARM_REACH:
+                        want = sh_now + v_.normalized() * ARM_REACH
+                    mtx.translation = want
+                    ikb.matrix = mtx
+                    upd()
 
     # legs by IK, targeted HIP-RELATIVE.
     #

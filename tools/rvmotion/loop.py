@@ -171,15 +171,22 @@ def seam_metrics(mo):
     P, n_ = mo.positions, mo.num_frames
     pred = 2.0 * bs(P, n_ - 1) - bs(P, n_ - 2)        # continue the last step
     err = np.linalg.norm(bs(P, 0) - pred, axis=1)      # vs where it actually resumes
-    # the same test one frame further in, as the scale a normal frame produces
-    inner = np.linalg.norm(bs(P, 2) - (2.0 * bs(P, 1) - bs(P, 0)), axis=1)
+    # Compare against EVERY interior transition. A single arbitrary interior
+    # sample is not evidence about the cycle -- an earlier version used frame 2
+    # and nothing else.
+    inner_all = np.array([
+        np.linalg.norm(bs(P, i + 1) - (2.0 * bs(P, i) - bs(P, i - 1)), axis=1).max()
+        for i in range(1, n_ - 1)])
     q = mo.local_quat
     def qang(a, b): return np.degrees(2 * np.arccos(np.clip(np.abs((a * b).sum(-1)), 0, 1)))
     a_in, a_out = qang(q[n_ - 1], q[n_ - 2]), qang(q[0], q[n_ - 1])
     return {"seam_extrapolation_err_max_m": float(err.max()),
             "seam_extrapolation_err_mean_m": float(err.mean()),
             "worst_joint": mo.joints[int(err.argmax())],
-            "interior_extrapolation_err_max_m": float(inner.max()),
+            "interior_err_median_m": float(np.median(inner_all)),
+            "interior_err_p90_m": float(np.percentile(inner_all, 90)),
+            "interior_err_max_m": float(inner_all.max()),
+            "seam_percentile_within_interior": float(100.0 * np.mean(err.max() > inner_all)),
             "seam_angular_step_change_max_deg": float(np.abs(a_out - a_in).max())}
 
 raw_metrics = seam_metrics(clip)
@@ -197,14 +204,16 @@ rep = {"cycle": [A, B], "frames": n, "duration_s": round(n / FPS, 4),
        "gate_documented_seam_lt_1cm": {
            "value_m": round(seam_after, 5), "pass": seam_after < 0.01,
            "note": ("NOT MET. At 20 fps a swinging foot covers ~12 cm per frame, and "
-                    "the SAME extrapolation test applied inside the cycle scores "
+                    "the SAME extrapolation test applied inside the cycle has a median of "
                     "%.3f m -- so a 1 cm absolute gate is stricter than the motion "
                     "itself and cannot be met by any crop of this source."
-                    % metrics["interior_extrapolation_err_max_m"])},
+                    % metrics["interior_err_median_m"])},
        "gate_proposed_seam_no_worse_than_interior": {
            "seam_m": round(seam_after, 5),
-           "interior_m": round(metrics["interior_extrapolation_err_max_m"], 5),
-           "pass": seam_after <= metrics["interior_extrapolation_err_max_m"],
+           "interior_median_m": round(metrics["interior_err_median_m"], 5),
+           "interior_p90_m": round(metrics["interior_err_p90_m"], 5),
+           "pass": seam_after <= metrics["interior_err_median_m"],
+           "status": "PROPOSED AND NOT APPROVED -- reported for information only",
            "rationale": ("A loop reads as continuous when the wrap frame is no more "
                          "abrupt than a normal frame of the same motion. This is "
                          "resolution- and speed-independent, unlike a fixed distance. "

@@ -70,8 +70,16 @@ rather than the source's own labels, which is what produced the false
 | metric | v1 | v2 | gate |
 |---|---|---|---|
 | DEF motion-delta error, mean | 1.49° | **0.53°** (water) / 1.65° (walk) | < 2° |
-| forearm roll, right (source 47.2°) | 25.2° | **47.2°** | ≤ 5% loss |
-| forearm roll, left (source 23.1°) | 18.3° | **23.1°** | ≤ 5% loss |
+| forearm roll, right, **8 s water take** (source 47.2°) | 25.2° | **47.2°** | ≤ 5% loss |
+| forearm roll, left, **8 s water take** (source 23.1°) | 18.3° | **23.1°** | ≤ 5% loss |
+
+> Roll figures are a property of the clip they were measured on and are **not**
+> comparable across clips. The 47.2° pair above is the 8 s water take. The
+> delivered 1.2 s one-shot has a different source roll range, and its right
+> forearm additionally carries the authored pour, so it is reported separately by
+> `tools/rvmotion/validate.py` with its source clip named. The earlier claim
+> "forearm roll exact on every clip" was wrong and is withdrawn: it holds on
+> FK-driven arms, and does not apply to a bone under an authored override.
 | twist bones carrying signal | none driven | 5 of 5 channels > 5° | ≥ 2 |
 | foot skating, treadmill-corrected | not measured | 8.0 cm/s peak | < 5 cm/s ✗ |
 | prop rigid to hand | socket rotated under static fingers | **1.7e-07 m drift** | rigid |
@@ -120,6 +128,23 @@ body's legitimate wobble over a planted foot as sliding.
 | can/body collisions | 303 (v1) → 20 | **7**, all `DEF-forearm.R.001` — the holder's own wrist |
 | prop rigidity in Godot | untested | **0.000000 m** vs a hand attachment |
 
+## Second correction pass (arm swing, pelvis, gate honesty)
+
+| defect | cause | fix |
+|---|---|---|
+| left arm swung far forward and barely back | calibration offsets were computed per side from one source frame, so each arm inherited a *different* constant rotation — up to **40.7°** of left/right disagreement. The rig invented an asymmetry the source does not have | mirror one side's offset onto the other and average; residual asymmetry (17%) now matches the source's own (20%) |
+| pelvis protruding backwards while leaning | `DEF-spine` was pitched **32.4°** where the source had **3.0°**: Rigify's `torso` is the master of the whole torso, not the pelvis, so DEF-spine received the torso tilt *plus* its own FK rotation | close the loop on the DEF bones themselves — measure each and correct its driving control until they agree, rather than reverse-engineering Rigify's tweak blending |
+| right elbow locked at 179.7° for the whole pour | the spout solve pushed the hand goal past the arm's reach — the arm equivalent of the knee bug | clamp the goal to 97% of arm length; the residual gap is a **source** finding and is now reported instead of solved away |
+| 96° "wrist deviation" | the metric measured the absolute angle between two bone axes, which is already 53° at rest on this rig | measure articulation relative to rest; the real figure is 61° |
+
+Gate honesty fixes from review: `walk_loop.json` regenerated (the retired
+single-sample interior calculation is gone from `loop.py`, not just from the
+artefact); the spout gate now requires the band to **hold across the pour
+window** rather than passing if any single frame enters it; and authored-override
+bones, while exempt from the fidelity gate, now face explicit **elbow range,
+wrist articulation, knee range and joint-jitter** gates — which immediately
+caught the locked elbow and a 65°/frame jump that the exemption had been hiding.
+
 ## Open gate failures (not waived)
 
 1. **Walk foot skating 7.4 cm/s peak** (left) vs a 5 cm/s gate; water 12.5 cm/s
@@ -127,13 +152,13 @@ body's legitimate wobble over a planted foot as sliding.
    (~2.4 cm per foot per walk cycle) and the excess sits at contact-interval
    edges. Contact-edge blending was implemented and did **not** clear it, so the
    remaining cause is not the lock ramp — it is unresolved.
-2. **Spout 0.336–0.752 m above the bed** vs the documented 0.15–0.30 m band.
+2. **Spout 0.388–0.406 m above the bed across the pour window (0/9 frames in band)** vs the documented 0.15–0.30 m band.
    This is a **source deficiency, not a retarget defect**: the ARDY clip never
    lowers the hand (0.94–1.02 m for all 160 frames), it only leans and reaches.
    With `IK_Stretch` off the arm cannot close the remaining ~0.20 m. An earlier
    build appeared to pass this gate — it was stretching the character's arm.
 3. **Jaw/neck blend band strains up to 82%.** See the asset blockers below.
-4. **7 triangles of can-vs-wrist contact** on the holder's own forearm. Down
+4. **2 triangles of can-vs-wrist contact** on the holder's own forearm. Down
    from 303 in v1, but not zero: it is the proxy can's handle arch against this
    hand, so it is bounded by the prop and hand-topology blockers, not by the
    retargeter.

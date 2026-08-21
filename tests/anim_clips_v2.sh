@@ -59,9 +59,27 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
         gate("%s: zero can/body collisions" % label, r["collisions"]["gate_zero"],
              "%d tris" % r["collisions"]["max_tris"])
         sp = r["spout"]
-        gate("%s: spout in documented band" % label, sp["gate_in_band"],
-             "%.3f-%.3f m above bed, band %s" % (sp["min_above_bed_m"], sp["max_above_bed_m"],
-                                                 sp["documented_band_m"]))
+        gate("%s: spout holds band across pour window" % label,
+             sp["gate_in_band_for_whole_pour_window"],
+             "window f%d-%d: %.3f-%.3f m, %d/%d frames in %s"
+             % (sp["pour_window_frames"][0], sp["pour_window_frames"][1],
+                sp["window_min_m"], sp["window_max_m"], sp["window_frames_in_band"],
+                sp["window_frames_total"], sp["documented_band_m"]))
+    jl = r.get("joint_limits")
+    if jl:
+        gate("%s: elbow within anatomical range" % label, jl["gate_elbow_range"],
+             ", ".join("%s %.0f-%.0f" % (k, v["elbow_min_deg"] or 0, v["elbow_max_deg"] or 0)
+                       for k, v in jl["per_side"].items()))
+        gate("%s: wrist deviation <= 75 deg" % label, jl["gate_wrist_deviation"],
+             ", ".join("%s %.0f" % (k, v["wrist_deviation_max_deg"] or 0)
+                       for k, v in jl["per_side"].items()))
+        gate("%s: knee within anatomical range" % label, jl["gate_knee_range"],
+             ", ".join("%s %.0f-%.0f" % (k, v["knee_min_deg"] or 0, v["knee_max_deg"] or 0)
+                       for k, v in jl["per_side"].items()))
+        gate("%s: no joint-angle jitter" % label, jl["gate_no_joint_jitter"],
+             ", ".join("%s elbow %.0f knee %.0f" % (k, v["elbow_frame_jitter_deg"] or 0,
+                                                    v["knee_frame_jitter_deg"] or 0)
+                       for k, v in jl["per_side"].items()))
     fa = r["face"]
     gate("%s: face core rigid < 0.5%%" % label, fa["gate_core_rigid_lt_0p5pct"],
          "%.3f%%" % fa["core_worst_strain_pct"])

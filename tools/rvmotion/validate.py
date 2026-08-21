@@ -17,6 +17,8 @@ BASE, OUT = A[0], A[1]
 HAS_CAN = "--can" in A
 IS_LOOP = "--loop" in A
 TREADMILL = float(next((A[i + 1] for i, x in enumerate(A) if x == "--treadmill"), 0.0))
+PW = next((A[i + 1] for i, x in enumerate(A) if x == "--pour-window"), None)
+POUR_WINDOW = [int(x) for x in PW.split(",")] if PW else None
 TREAD_DIR = next((A[i + 1] for i, x in enumerate(A) if x == "--tread-dir"), "0,1")
 SOIL = float(next((A[i + 1] for i, x in enumerate(A) if x == "--soil"), 0.22))
 LABEL = next((A[i + 1] for i, x in enumerate(A) if x == "--label"), os.path.basename(BASE))
@@ -247,10 +249,23 @@ if can is not None:
                           "gate_rigid": drift_p < 1e-4 and drift_r < 0.05}
     zs = [t.z - SOIL for t in tips]
     lo = float(min(zs)); hi = float(max(zs))
+    # "any frame dipped into the band" is not a pour. The spout has to STAY in the
+    # band for the whole pour window, or the water is coming out at the wrong
+    # height for most of the shot.
+    win = POUR_WINDOW or [0, len(zs) - 1]
+    wz = [zs[i] for i in range(win[0], min(win[1] + 1, len(zs)))]
+    in_win = [0.15 <= z <= 0.30 for z in wz]
     R["spout"] = {"min_above_bed_m": round(lo, 4), "max_above_bed_m": round(hi, 4),
                   "documented_band_m": [0.15, 0.30],
-                  "frames_in_band": int(sum(1 for z in zs if 0.15 <= z <= 0.30)),
-                  "gate_in_band": bool(any(0.15 <= z <= 0.30 for z in zs))}
+                  "pour_window_frames": win,
+                  "window_min_m": round(float(min(wz)), 4),
+                  "window_max_m": round(float(max(wz)), 4),
+                  "window_frames_in_band": int(sum(in_win)),
+                  "window_frames_total": len(wz),
+                  "frames_in_band_whole_clip": int(sum(1 for z in zs if 0.15 <= z <= 0.30)),
+                  "gate_in_band_for_whole_pour_window": bool(all(in_win)),
+                  "note": ("gate requires the band to HOLD across the pour window; "
+                           "an earlier version passed if any single frame entered it")}
     # collisions, hand region excluded (that is the grip, judged separately)
     GIx = {g.name: g.index for g in body.vertex_groups}
     GN = {i: n for n, i in GIx.items()}
@@ -281,6 +296,80 @@ if can is not None:
     R["collisions"] = {"per_frame": coll,
                        "max_tris": max(v["tris"] for v in coll.values()),
                        "gate_zero": all(v["tris"] == 0 for v in coll.values())}
+
+# ---------- 5b. authored motion must still be anatomically legal -----------
+# Exempting authored bones from the FIDELITY gate cannot mean exempting them from
+# anatomy. These gates apply to the delivered motion regardless of who authored it.
+def bang(a, b, c):
+    v1, v2 = (a - b), (c - b)
+    if v1.length < 1e-9 or v2.length < 1e-9:
+        return None
+    return math.degrees(v1.angle(v2))
+
+REST_WRIST = {}
+for side in ("R", "L"):
+    rf = (W @ rig.data.bones["DEF-forearm.%s" % side].matrix_local).to_3x3()
+    rh = (W @ rig.data.bones["DEF-hand.%s" % side].matrix_local).to_3x3()
+    REST_WRIST[side] = rf.inverted() @ rh
+
+joint_gates = {}
+for side in ("R", "L"):
+    elb, wri, knee = [], [], []
+    for f in SAMPLE:
+        sh = pos.get("DEF-upper_arm.%s" % side, {}).get(f)
+        el = pos.get("DEF-forearm.%s" % side, {}).get(f)
+        ha = pos.get("DEF-hand.%s" % side, {}).get(f)
+        if sh and el and ha:
+            a_ = bang(sh, el, ha)
+            if a_ is not None:
+                elb.append(a_)
+            # TRUE wrist articulation: how far the hand has rotated relative to
+            # the forearm compared with REST. The absolute angle between the two
+            # bone axes is already 53 deg at rest on this rig, so measuring it
+            # raw reported a legal wrist as a 94 deg impossibility.
+            rel = rot["DEF-forearm.%s" % side][f].inverted() @ rot["DEF-hand.%s" % side][f]
+            dev = REST_WRIST[side].inverted() @ rel
+            q = dev.to_quaternion(); ax = abs(q.angle)
+            wri.append(math.degrees(min(ax, 2 * math.pi - ax)))
+        hp = pos.get("DEF-thigh.%s" % side, {}).get(f)
+        kn = pos.get("DEF-shin.%s" % side, {}).get(f)
+        ft = pos.get("DEF-foot.%s" % side, {}).get(f)
+        if hp and kn and ft:
+            a_ = bang(hp, kn, ft)
+            if a_ is not None:
+                knee.append(a_)
+
+    def jit(v):
+        return round(float(np.max(np.abs(np.diff(v)))), 2) if len(v) > 1 else 0.0
+    joint_gates[side] = {
+        "elbow_min_deg": round(float(np.min(elb)), 1) if elb else None,
+        "elbow_max_deg": round(float(np.max(elb)), 1) if elb else None,
+        "elbow_frame_jitter_deg": jit(elb) if elb else None,
+        "wrist_deviation_max_deg": round(float(np.max(wri)), 1) if wri else None,
+        "knee_min_deg": round(float(np.min(knee)), 1) if knee else None,
+        "knee_max_deg": round(float(np.max(knee)), 1) if knee else None,
+        "knee_frame_jitter_deg": jit(knee) if knee else None,
+    }
+LIM = {"elbow_min": 25.0, "elbow_max": 180.0, "wrist_max": 75.0,
+       "knee_min": 80.0, "knee_max": 180.5, "jitter_max": 35.0}
+
+def _ok(v, lo=None, hi=None):
+    return v is None or ((lo is None or v >= lo) and (hi is None or v <= hi))
+R["joint_limits"] = {
+    "per_side": joint_gates, "limits": LIM,
+    "gate_elbow_range": all(_ok(v["elbow_min_deg"], lo=LIM["elbow_min"])
+                            and _ok(v["elbow_max_deg"], hi=LIM["elbow_max"])
+                            for v in joint_gates.values()),
+    "gate_wrist_deviation": all(_ok(v["wrist_deviation_max_deg"], hi=LIM["wrist_max"])
+                                for v in joint_gates.values()),
+    "gate_knee_range": all(_ok(v["knee_min_deg"], lo=LIM["knee_min"])
+                           and _ok(v["knee_max_deg"], hi=LIM["knee_max"])
+                           for v in joint_gates.values()),
+    "gate_no_joint_jitter": all(_ok(v["elbow_frame_jitter_deg"], hi=LIM["jitter_max"])
+                                and _ok(v["knee_frame_jitter_deg"], hi=LIM["jitter_max"])
+                                for v in joint_gates.values()),
+    "note": ("applies to authored-override bones too -- exemption from the fidelity "
+             "gate is not exemption from anatomy")}
 
 # ---------- 6. face: rigid core vs blend band, measured separately ---------
 GIx = {g.name: g.index for g in body.vertex_groups}

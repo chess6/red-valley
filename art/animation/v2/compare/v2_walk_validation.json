@@ -5,16 +5,16 @@
   "rotation_fidelity": {
     "per_bone_deg": {
       "DEF-spine": {
-        "mean": 1.46,
-        "max": 3.02
+        "mean": 0.05,
+        "max": 0.11
       },
       "DEF-spine.001": {
-        "mean": 0.36,
-        "max": 1.0
+        "mean": 0.0,
+        "max": 0.0
       },
       "DEF-spine.002": {
-        "mean": 0.46,
-        "max": 0.98
+        "mean": 0.05,
+        "max": 0.15
       },
       "DEF-spine.003": {
         "mean": 0.0,
@@ -29,8 +29,8 @@
         "max": 0.0
       },
       "DEF-upper_arm.R": {
-        "mean": 1.05,
-        "max": 2.44
+        "mean": 1.11,
+        "max": 2.53
       },
       "DEF-forearm.R": {
         "mean": 0.0,
@@ -41,8 +41,8 @@
         "max": 0.0
       },
       "DEF-upper_arm.L": {
-        "mean": 0.92,
-        "max": 2.58
+        "mean": 0.93,
+        "max": 2.5
       },
       "DEF-forearm.L": {
         "mean": 0.0,
@@ -53,8 +53,8 @@
         "max": 0.0
       },
       "DEF-thigh.R": {
-        "mean": 2.09,
-        "max": 5.05
+        "mean": 2.01,
+        "max": 5.19
       },
       "DEF-shin.R": {
         "mean": 2.16,
@@ -65,8 +65,8 @@
         "max": 0.0
       },
       "DEF-thigh.L": {
-        "mean": 2.31,
-        "max": 6.33
+        "mean": 2.29,
+        "max": 6.32
       },
       "DEF-shin.L": {
         "mean": 2.59,
@@ -77,7 +77,7 @@
         "max": 0.0
       }
     },
-    "overall_mean_deg": 0.744,
+    "overall_mean_deg": 0.622,
     "overall_max_deg": 8.283,
     "gate_mean_lt_2deg": true,
     "per_bone_limits_deg": {
@@ -103,29 +103,29 @@
     "note": "bones driven by IK are expected to deviate where the goal was moved deliberately; those deviations are listed, never averaged away"
   },
   "twist_channel": {
-    "DEF-upper_arm.L.001": {
-      "range_deg": 29.85
-    },
-    "DEF-forearm.L.001": {
-      "range_deg": 49.57
-    },
     "DEF-forearm.R.001": {
-      "range_deg": 57.38
-    },
-    "DEF-spine.001": {
-      "range_deg": 8.52
+      "range_deg": 57.4
     },
     "DEF-upper_arm.R.001": {
-      "range_deg": 34.38
+      "range_deg": 34.18
+    },
+    "DEF-forearm.L.001": {
+      "range_deg": 49.55
+    },
+    "DEF-upper_arm.L.001": {
+      "range_deg": 29.81
+    },
+    "DEF-spine.001": {
+      "range_deg": 9.36
     }
   },
   "wrist": {
     "R": {
-      "pos_rms_vs_source_m": 0.2964,
+      "pos_rms_vs_source_m": 0.1813,
       "orientation_delta_err_max_deg": 0.0
     },
     "L": {
-      "pos_rms_vs_source_m": 0.1892,
+      "pos_rms_vs_source_m": 0.1817,
       "orientation_delta_err_max_deg": 0.0
     }
   },
@@ -135,7 +135,7 @@
     "R": {
       "source_deg": 93.75,
       "target_deg": 93.75,
-      "loss_pct": -0.0
+      "loss_pct": 0.0
     },
     "L": {
       "source_deg": 53.85,
@@ -149,26 +149,26 @@
     "per_foot": {
       "L": {
         "planted_frames": 7,
-        "total_slide_m": 0.0155,
-        "peak_slide_cm_per_s": 7.4,
-        "mean_slide_cm_per_s": 4.43
+        "total_slide_m": 0.018,
+        "peak_slide_cm_per_s": 7.07,
+        "mean_slide_cm_per_s": 5.15
       },
       "R": {
         "planted_frames": 7,
-        "total_slide_m": 0.0101,
-        "peak_slide_cm_per_s": 4.38,
-        "mean_slide_cm_per_s": 2.87
+        "total_slide_m": 0.0091,
+        "peak_slide_cm_per_s": 4.39,
+        "mean_slide_cm_per_s": 2.61
       }
     },
     "treadmill_speed_mps": 1.4505,
     "gate_peak_slide_lt_5cm_s": false
   },
   "loop_seam": {
-    "seam_extrapolation_err_m": 0.03735,
-    "interior_err_median_m": 0.05342,
-    "interior_err_p90_m": 0.09097,
-    "interior_err_max_m": 0.09564,
-    "seam_percentile_within_interior": 22.2,
+    "seam_extrapolation_err_m": 0.03809,
+    "interior_err_median_m": 0.05193,
+    "interior_err_p90_m": 0.09159,
+    "interior_err_max_m": 0.09571,
+    "seam_percentile_within_interior": 27.8,
     "contact_state_first_frame": [
       1,
       0,
@@ -186,6 +186,41 @@
     "contact_transition_legal": true,
     "gate_documented_lt_1cm": false,
     "gate_proposed_seam_below_interior_median": true
+  },
+  "joint_limits": {
+    "per_side": {
+      "R": {
+        "elbow_min_deg": 148.6,
+        "elbow_max_deg": 176.7,
+        "elbow_frame_jitter_deg": 4.93,
+        "wrist_deviation_max_deg": 58.5,
+        "knee_min_deg": 112.0,
+        "knee_max_deg": 173.8,
+        "knee_frame_jitter_deg": 20.67
+      },
+      "L": {
+        "elbow_min_deg": 151.9,
+        "elbow_max_deg": 173.8,
+        "elbow_frame_jitter_deg": 4.23,
+        "wrist_deviation_max_deg": 58.5,
+        "knee_min_deg": 117.4,
+        "knee_max_deg": 174.4,
+        "knee_frame_jitter_deg": 19.79
+      }
+    },
+    "limits": {
+      "elbow_min": 25.0,
+      "elbow_max": 180.0,
+      "wrist_max": 75.0,
+      "knee_min": 80.0,
+      "knee_max": 180.5,
+      "jitter_max": 35.0
+    },
+    "gate_elbow_range": true,
+    "gate_wrist_deviation": true,
+    "gate_knee_range": true,
+    "gate_no_joint_jitter": true,
+    "note": "applies to authored-override bones too -- exemption from the fidelity gate is not exemption from anatomy"
   },
   "face": {
     "rigid_core_verts": 7922,

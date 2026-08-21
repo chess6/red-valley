@@ -29,16 +29,16 @@
   "inplace": false,
   "def_motion_delta_error_deg": {
     "DEF-spine": {
-      "mean_delta_err_deg": 1.26,
-      "max_delta_err_deg": 3.08
+      "mean_delta_err_deg": 0.02,
+      "max_delta_err_deg": 0.07
     },
     "DEF-spine.001": {
-      "mean_delta_err_deg": 0.07,
-      "max_delta_err_deg": 0.33
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
     },
     "DEF-spine.002": {
-      "mean_delta_err_deg": 0.19,
-      "max_delta_err_deg": 0.54
+      "mean_delta_err_deg": 0.01,
+      "max_delta_err_deg": 0.07
     },
     "DEF-spine.003": {
       "mean_delta_err_deg": 0.0,
@@ -57,24 +57,24 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-upper_arm.R": {
-      "mean_delta_err_deg": 2.51,
-      "max_delta_err_deg": 10.43
+      "mean_delta_err_deg": 3.18,
+      "max_delta_err_deg": 9.58
     },
     "DEF-forearm.R": {
-      "mean_delta_err_deg": 8.08,
-      "max_delta_err_deg": 58.2
+      "mean_delta_err_deg": 6.45,
+      "max_delta_err_deg": 23.25
     },
     "DEF-hand.R": {
-      "mean_delta_err_deg": 4.52,
-      "max_delta_err_deg": 15.39
+      "mean_delta_err_deg": 3.83,
+      "max_delta_err_deg": 10.59
     },
     "DEF-shoulder.L": {
       "mean_delta_err_deg": 0.0,
       "max_delta_err_deg": 0.0
     },
     "DEF-upper_arm.L": {
-      "mean_delta_err_deg": 1.0,
-      "max_delta_err_deg": 2.44
+      "mean_delta_err_deg": 1.02,
+      "max_delta_err_deg": 2.46
     },
     "DEF-forearm.L": {
       "mean_delta_err_deg": 0.0,
@@ -85,8 +85,8 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.R": {
-      "mean_delta_err_deg": 1.18,
-      "max_delta_err_deg": 2.64
+      "mean_delta_err_deg": 1.12,
+      "max_delta_err_deg": 2.71
     },
     "DEF-shin.R": {
       "mean_delta_err_deg": 1.02,
@@ -97,8 +97,8 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.L": {
-      "mean_delta_err_deg": 0.89,
-      "max_delta_err_deg": 3.39
+      "mean_delta_err_deg": 0.79,
+      "max_delta_err_deg": 2.9
     },
     "DEF-shin.L": {
       "mean_delta_err_deg": 1.15,
@@ -112,7 +112,7 @@
   "forearm_roll_range_deg": {
     "DEF-forearm.R": {
       "source_roll_range_deg": 34.01,
-      "target_roll_range_deg": 106.17
+      "target_roll_range_deg": 87.3
     },
     "DEF-forearm.L": {
       "source_roll_range_deg": 30.39,
