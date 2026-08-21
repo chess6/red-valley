@@ -1,0 +1,50 @@
+{
+  "gate_prop_socket_in_glb": {
+    "per_version": {
+      "v1": {
+        "joints": 71,
+        "prop_socket_present": false
+      },
+      "v2": {
+        "joints": 72,
+        "prop_socket_present": true
+      }
+    },
+    "v1_fails": true,
+    "v2_passes": true
+  },
+  "gate_twist_preserved": {
+    "per_side": {
+      "R": {
+        "source_deg": 47.17,
+        "v1_deg": 25.2,
+        "v2_deg": 47.17,
+        "v1_loss_pct": 46.6,
+        "v2_loss_pct": 0.0
+      },
+      "L": {
+        "source_deg": 23.13,
+        "v1_deg": 18.33,
+        "v2_deg": 23.13,
+        "v1_loss_pct": 20.8,
+        "v2_loss_pct": 0.0
+      }
+    },
+    "v1_fails": true,
+    "v2_passes": true
+  },
+  "gate_rotation_fidelity": {
+    "v1_mean_deg": 1.49,
+    "v2_mean_deg": 0.53,
+    "threshold_deg": 1.0,
+    "v1_fails": true,
+    "v2_passes": true
+  },
+  "gate_oneshot_timing": {
+    "documented_s": 1.2,
+    "v1_s": 8.0,
+    "v2_s": 1.2,
+    "v1_fails": true,
+    "v2_passes": true
+  }
+}

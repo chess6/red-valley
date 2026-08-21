@@ -1,0 +1,62 @@
+# Asset blockers — deformation, not animation
+
+These are properties of the **mesh and its topology**. No retargeter can fix
+them, and no more effort should be spent inferring structure that is not there.
+
+## 1. Fused hand topology (BLOCKER, was being worked around)
+
+The Rodin master's hand is a fused mass with no clean per-digit loops. Every
+automated attempt to recover five separable digits failed in a different way,
+across three binding methods and one external autorigger:
+
+| attempt | outcome |
+|---|---|
+| custom finger chains, 3 iterations | abandoned permanently by instruction |
+| Mixamo autorig | EVALUATED-NEGATIVE (33 bones, no usable digits) |
+| Rigify + weight-based hand selection | pinky unweighted, ring weak |
+| Rigify + geometry-only selection | inconclusive; "fingers melted together" |
+
+**Recorded as an asset blocker. Do not attempt a fifth segmentation method.**
+
+### Bounded options
+
+| option | what it costs | what it gives |
+|---|---|---|
+| **A. Retopologise the hands** on the existing master | a modelling pass by a human; the rest of the character is untouched and already approved | keeps the approved silhouette and identity; clean digit loops |
+| **B. CC0 MPFB/MakeHuman body + hand baseline** | MPFB is already installed in this Blender (`mpfb.init` in every log); a test rig can be built and bound in one session at zero licence risk | a known-clean topology to prove the pipeline end-to-end, and a fallback body if the Rodin licence question goes the wrong way |
+
+**Recommendation: B first as a pipeline control, then A for production.** B is
+cheap and answers a question A cannot: whether the remaining hand defects are
+topology or binding. It is a *test asset*, not a replacement character.
+
+**Not done in this task:** the production mesh was not altered.
+
+## 2. Jaw/neck blend band strains up to 82%
+
+The old aggregate "face deviation" gate mixed two populations and was
+meaningless. Measured separately:
+
+| region | definition | worst edge strain | verdict |
+|---|---|---|---|
+| rigid face core | 7 922 verts, `DEF-spine.006` weight > 0.999, zero neck weight | **0.021%** | rigid, as intended |
+| jaw/neck blend band | 984 verts weighted to both head and neck | **82.4%** (water), 16.0% (walk) | **defect** |
+
+The face itself is fine. The band between jaw and neck stretches under the head
+rotation the water clip contains, which is a **weighting** problem — the band is
+too narrow and too abruptly weighted for the rotation range. It is bounded to
+984 vertices and does not touch the face core.
+
+Not fixed here: repairing it means editing weights on the production mesh, which
+this task explicitly excludes.
+
+## 3. Watering-can prop
+
+Still the diagnostic proxy (`NOT_FOR_SHIPPING`). A provenance-cleared mesh is
+required before any water clip can be judged as final. The attachment contract
+it must satisfy is recorded in `art/animation/v2/water_can/prop_attachment.json`.
+
+## 4. Rodin character licence — unresolved
+
+No licence entry exists in `art/character/SOURCE_LICENSES.md` or
+`AI_MODEL_LICENSES.md` for the Rodin master. The asset gate will refuse
+promotion to `assets/` without one. Unchanged from the v1 report.

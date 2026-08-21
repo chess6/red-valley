@@ -1,0 +1,157 @@
+{
+  "F1_rotations_discarded": {
+    "retarget_rigify_npz_keys_referenced": [
+      "foot_contacts",
+      "posed_joints"
+    ],
+    "build_water_clip_npz_keys_referenced": [
+      "posed_joints"
+    ],
+    "foot_contacts_referenced_more_than_once_in_retarget": true,
+    "aim_uses_rotation_difference": true,
+    "note": "Vector.rotation_difference returns the minimal-arc rotation between two directions; it has zero component about the target axis, so axial twist cannot be represented at all.",
+    "confirmed": true
+  },
+  "F2_def_constraints_removed": {
+    "retarget_removes_def_constraints": true,
+    "build_water_removes_def_constraints": true,
+    "keyframes_on_def_bones": true,
+    "drives_rigify_controls": true,
+    "confirmed": true
+  },
+  "F3_twist_bones_static": {
+    "def_bones_driven": 20,
+    "driven": [
+      "DEF-foot.L",
+      "DEF-foot.R",
+      "DEF-forearm.L",
+      "DEF-forearm.R",
+      "DEF-hand.L",
+      "DEF-hand.R",
+      "DEF-shin.L",
+      "DEF-shin.R",
+      "DEF-shoulder.L",
+      "DEF-shoulder.R",
+      "DEF-spine",
+      "DEF-spine.001",
+      "DEF-spine.002",
+      "DEF-spine.003",
+      "DEF-spine.004",
+      "DEF-spine.006",
+      "DEF-thigh.L",
+      "DEF-thigh.R",
+      "DEF-upper_arm.L",
+      "DEF-upper_arm.R"
+    ],
+    "twist_segment_bones_driven": [],
+    "confirmed": true
+  },
+  "F4_root_translation_discarded": {
+    "root_positions_read": false,
+    "location_keyframed": false,
+    "confirmed": true
+  },
+  "F5_no_postprocess": {
+    "flag_in_runner": true,
+    "postprocess_mentioned_in_remote_log": false,
+    "confirmed": true
+  },
+  "F8_timing": {
+    "documented_sync_point_s": 0.45,
+    "documented_oneshot_s": 1.2,
+    "delivered_duration_s": 8.0,
+    "confirmed": true
+  },
+  "F9_prop_socket_missing": {
+    "glbs": {
+      "water_can.glb": {
+        "nodes": 73,
+        "skins": 1,
+        "joints": 71,
+        "prop_socket_present": false,
+        "animations": [
+          "water_can"
+        ]
+      },
+      "walk_fwd.glb": {
+        "nodes": 73,
+        "skins": 1,
+        "joints": 71,
+        "prop_socket_present": false,
+        "animations": [
+          "walk_fwd"
+        ]
+      }
+    },
+    "cause": "prop_socket.R has use_deform=False and export_def_bones=True drops it",
+    "attachment_record_exists": true,
+    "godot_attachment_tested": false,
+    "confirmed": true
+  },
+  "F10_walk": {
+    "window": [
+      32,
+      51
+    ],
+    "frames": 19,
+    "duration_s": 0.95,
+    "source_speed_mps": 1.6,
+    "gameplay_WALK_SPEED_mps": 4.3,
+    "speed_ratio_needed": 2.69,
+    "ardy_labelled_airborne_frames_full_clip": [
+      7,
+      160
+    ],
+    "ardy_labelled_airborne_frames_window": [
+      1,
+      19
+    ],
+    "prior_claim_from_height_threshold": "9-10 of 20 frames both-airborne",
+    "correction": "ARDY's own contact labels show 1/19 airborne in the shipped window (4.4% over the full clip). The flight-phase verdict was an artifact of a sole-height threshold, not the source motion.",
+    "body_space_seam_mean_m": 0.0285,
+    "body_space_seam_max_m": 0.0818,
+    "seam_target_m": 0.01,
+    "seam_confirmed_too_large": true,
+    "confirmed": true
+  },
+  "F6_socket_tilt_causes_collision": {
+    "pour_frame": 73,
+    "socket_tilt_deg": 48.0,
+    "with_tilt": {
+      "overlap_tris": 94,
+      "by_bone": {
+        "DEF-forearm.R.001": 282
+      },
+      "spout_above_bed_m": 0.5219
+    },
+    "without_tilt": {
+      "overlap_tris": 0,
+      "by_bone": {},
+      "spout_above_bed_m": 0.6733
+    },
+    "confirmed": true
+  },
+  "F7_spout_height": {
+    "documented_band_m": [
+      0.15,
+      0.3
+    ],
+    "pour_window_frames": [
+      56,
+      96
+    ],
+    "min_m": 0.488,
+    "max_m": 0.5348,
+    "mean_m": 0.5116,
+    "in_band": false,
+    "excess_over_band_m": 0.188
+  },
+  "E_face_gate_split": {
+    "rigid_core_verts": 7922,
+    "blend_band_verts": 984,
+    "core_worst_edge_strain_pct": 0.012,
+    "band_worst_edge_strain_pct": 79.2578,
+    "core_gate_pass_lt_0p5pct": true,
+    "note": "the old aggregate gate mixed these two populations, so blend-band strain (expected) masqueraded as face deformation (unacceptable)"
+  }
+}

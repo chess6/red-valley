@@ -1,0 +1,48 @@
+{
+  "cycle": [
+    38,
+    58
+  ],
+  "frames": 20,
+  "duration_s": 1.0,
+  "stride_foot": "LeftFoot",
+  "seam_before_closure": {
+    "seam_extrapolation_err_max_m": 0.04001,
+    "seam_extrapolation_err_mean_m": 0.01329,
+    "worst_joint": "LeftHandEnd",
+    "interior_extrapolation_err_max_m": 0.11131,
+    "seam_angular_step_change_max_deg": 8.19971
+  },
+  "seam_after_closure": {
+    "seam_extrapolation_err_max_m": 0.03913,
+    "seam_extrapolation_err_mean_m": 0.01263,
+    "worst_joint": "LeftToeBase",
+    "interior_extrapolation_err_max_m": 0.11102,
+    "seam_angular_step_change_max_deg": 6.30874
+  },
+  "gate_documented_seam_lt_1cm": {
+    "value_m": 0.03913,
+    "pass": false,
+    "note": "NOT MET. At 20 fps a swinging foot covers ~12 cm per frame, and the SAME extrapolation test applied inside the cycle scores 0.111 m -- so a 1 cm absolute gate is stricter than the motion itself and cannot be met by any crop of this source."
+  },
+  "gate_proposed_seam_no_worse_than_interior": {
+    "seam_m": 0.03913,
+    "interior_m": 0.11102,
+    "pass": true,
+    "rationale": "A loop reads as continuous when the wrap frame is no more abrupt than a normal frame of the same motion. This is resolution- and speed-independent, unlike a fixed distance. PROPOSED -- awaiting approval; the documented 1 cm figure is reported above unchanged."
+  },
+  "contacts_at_ends": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      0
+    ]
+  ]
+}

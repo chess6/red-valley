@@ -1,0 +1,42 @@
+{
+  "F6_socket_tilt_causes_collision": {
+    "pour_frame": 73,
+    "socket_tilt_deg": 48.0,
+    "with_tilt": {
+      "overlap_tris": 94,
+      "by_bone": {
+        "DEF-forearm.R.001": 282
+      },
+      "spout_above_bed_m": 0.5219
+    },
+    "without_tilt": {
+      "overlap_tris": 0,
+      "by_bone": {},
+      "spout_above_bed_m": 0.6733
+    },
+    "confirmed": true
+  },
+  "F7_spout_height": {
+    "documented_band_m": [
+      0.15,
+      0.3
+    ],
+    "pour_window_frames": [
+      56,
+      96
+    ],
+    "min_m": 0.488,
+    "max_m": 0.5348,
+    "mean_m": 0.5116,
+    "in_band": false,
+    "excess_over_band_m": 0.188
+  },
+  "E_face_gate_split": {
+    "rigid_core_verts": 7922,
+    "blend_band_verts": 984,
+    "core_worst_edge_strain_pct": 0.012,
+    "band_worst_edge_strain_pct": 79.2578,
+    "core_gate_pass_lt_0p5pct": true,
+    "note": "the old aggregate gate mixed these two populations, so blend-band strain (expected) masqueraded as face deformation (unacceptable)"
+  }
+}

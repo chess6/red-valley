@@ -1,0 +1,52 @@
+{
+  "input": "art/animation/ardy_pilot/clips_water_constrained/water_c.npz",
+  "output": "art/animation/v2/water_c_corrected.npz",
+  "method": "ardy.postprocess.post_process_motion (official), local CPU, no model load",
+  "end_effector_error": {
+    "RightHand": {
+      "before_mean_m": 0.0504,
+      "after_mean_m": 0.0504,
+      "before_max_m": 0.0942,
+      "after_max_m": 0.0942
+    },
+    "RightFoot": {
+      "before_mean_m": 0.0193,
+      "after_mean_m": 0.0294,
+      "before_max_m": 0.0375,
+      "after_max_m": 0.0375
+    },
+    "LeftFoot": {
+      "before_mean_m": 0.0547,
+      "after_mean_m": 0.0634,
+      "before_max_m": 0.0695,
+      "after_max_m": 0.0695
+    },
+    "Hips": {
+      "before_mean_m": 0.0378,
+      "after_mean_m": 0.0378,
+      "before_max_m": 0.0682,
+      "after_max_m": 0.0682
+    }
+  },
+  "foot_skating_before": {
+    "LeftFoot": {
+      "total_slide_m": 0.1355,
+      "peak_slide_cm_s": 4.99
+    },
+    "RightFoot": {
+      "total_slide_m": 0.1367,
+      "peak_slide_cm_s": 5.67
+    }
+  },
+  "foot_skating_after": {
+    "LeftFoot": {
+      "total_slide_m": 0.1081,
+      "peak_slide_cm_s": 4.9
+    },
+    "RightFoot": {
+      "total_slide_m": 0.1064,
+      "peak_slide_cm_s": 7.46
+    }
+  },
+  "max_joint_displacement_m": 0.0309
+}

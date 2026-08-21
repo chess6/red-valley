@@ -1,0 +1,17 @@
+{
+  "crop": [
+    40,
+    100
+  ],
+  "source_frames": 60,
+  "source_duration_s": 3.0,
+  "output_frames": 24,
+  "output_duration_s": 1.2,
+  "time_compression": 2.5,
+  "sync": {
+    "source_frame": 64,
+    "output_frame": 9,
+    "output_time_s": 0.45
+  },
+  "compression_verdict": "acceptable for a game one-shot"
+}

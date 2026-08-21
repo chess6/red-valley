@@ -1,0 +1,147 @@
+{
+  "clip": "water_can",
+  "frames": 24,
+  "fps": 20,
+  "locomotion_speed_mps": 0.0373,
+  "scale": 0.99598,
+  "calibration_frame": 0,
+  "calibration_residual_deg": {
+    "spine_fk": 9.28,
+    "spine_fk.001": 1.21,
+    "spine_fk.002": 6.77,
+    "spine_fk.003": 13.89,
+    "neck": 5.9,
+    "shoulder.R": 24.75,
+    "upper_arm_fk.R": 11.05,
+    "forearm_fk.R": 13.74,
+    "hand_fk.R": 66.37,
+    "shoulder.L": 32.01,
+    "upper_arm_fk.L": 13.94,
+    "forearm_fk.L": 12.4,
+    "hand_fk.L": 62.09,
+    "thigh_fk.R": 3.35,
+    "shin_fk.R": 4.98,
+    "foot_fk.R": 8.53,
+    "thigh_fk.L": 1.63,
+    "shin_fk.L": 8.68,
+    "foot_fk.L": 11.92
+  },
+  "inplace": false,
+  "def_motion_delta_error_deg": {
+    "DEF-spine": {
+      "mean_delta_err_deg": 1.26,
+      "max_delta_err_deg": 3.08
+    },
+    "DEF-spine.001": {
+      "mean_delta_err_deg": 0.07,
+      "max_delta_err_deg": 0.33
+    },
+    "DEF-spine.002": {
+      "mean_delta_err_deg": 0.19,
+      "max_delta_err_deg": 0.54
+    },
+    "DEF-spine.003": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-spine.004": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-spine.006": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-shoulder.R": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-upper_arm.R": {
+      "mean_delta_err_deg": 3.23,
+      "max_delta_err_deg": 18.25
+    },
+    "DEF-forearm.R": {
+      "mean_delta_err_deg": 4.57,
+      "max_delta_err_deg": 37.09
+    },
+    "DEF-hand.R": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-shoulder.L": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-upper_arm.L": {
+      "mean_delta_err_deg": 1.0,
+      "max_delta_err_deg": 2.44
+    },
+    "DEF-forearm.L": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-hand.L": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-thigh.R": {
+      "mean_delta_err_deg": 1.31,
+      "max_delta_err_deg": 2.57
+    },
+    "DEF-shin.R": {
+      "mean_delta_err_deg": 1.42,
+      "max_delta_err_deg": 2.64
+    },
+    "DEF-foot.R": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    },
+    "DEF-thigh.L": {
+      "mean_delta_err_deg": 1.09,
+      "max_delta_err_deg": 3.3
+    },
+    "DEF-shin.L": {
+      "mean_delta_err_deg": 1.2,
+      "max_delta_err_deg": 3.38
+    },
+    "DEF-foot.L": {
+      "mean_delta_err_deg": 0.0,
+      "max_delta_err_deg": 0.0
+    }
+  },
+  "forearm_roll_range_deg": {
+    "DEF-forearm.R": {
+      "source_roll_range_deg": 34.01,
+      "target_roll_range_deg": 64.59
+    },
+    "DEF-forearm.L": {
+      "source_roll_range_deg": 30.39,
+      "target_roll_range_deg": 30.39
+    }
+  },
+  "driven_controls": [
+    "foot_fk.L",
+    "foot_fk.R",
+    "forearm_fk.L",
+    "forearm_fk.R",
+    "hand_fk.L",
+    "hand_fk.R",
+    "head",
+    "neck",
+    "shin_fk.L",
+    "shin_fk.R",
+    "shoulder.L",
+    "shoulder.R",
+    "spine_fk",
+    "spine_fk.001",
+    "spine_fk.002",
+    "spine_fk.003",
+    "thigh_fk.L",
+    "thigh_fk.R",
+    "torso",
+    "upper_arm_fk.L",
+    "upper_arm_fk.R"
+  ],
+  "twist_bones_left_to_rig": true,
+  "def_constraints_removed": 0
+}
