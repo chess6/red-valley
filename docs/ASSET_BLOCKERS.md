@@ -18,6 +18,14 @@ across three binding methods and one external autorigger:
 
 **Recorded as an asset blocker. Do not attempt a fifth segmentation method.**
 
+### Settled by measurement (2026-08-21)
+
+The CC0 MPFB control character answers it: the same pipeline, measured
+identically, gives **0 empty digit groups out of 30** on clean topology against
+**13 of 30 empty** on the Rodin mesh — the whole pinky on both hands, most of the
+ring, and the thumb base. The binding pipeline is not the defect; the geometry is.
+Full comparison: `art/character/control_mpfb/VERDICT.md`.
+
 ### Bounded options
 
 | option | what it costs | what it gives |
