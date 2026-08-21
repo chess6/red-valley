@@ -236,8 +236,12 @@ def main():
     ident = torch.eye(3).repeat(1, len(names), 1, 1)
     _, rest_pj, _ = sk.fk(ident, torch.zeros(1, 3))
     rest = rest_pj[0].numpy()                        # Y-up
-    foot_y = min(rest[BI["LeftFoot"], 1], rest[BI["RightFoot"], 1])
-    rest = rest - np.array([0.0, foot_y, 0.0])       # soles on the ground
+    # Ground on the LOWEST foot point, not the ankle. Using the ankle joint put
+    # the toes 7 cm underground, which is exactly the toe-clipping seen on screen.
+    ground_js = [BI[n] for n in ("LeftFoot", "RightFoot", "LeftToeBase", "RightToeBase")
+                 if n in BI]
+    foot_y = min(rest[j, 1] for j in ground_js)
+    rest = rest - np.array([0.0, foot_y, 0.0])
 
     meta = json.load(open(CAN_META))
     up = np.array([0.0, 1.0, 0.0])                   # generator-native Y-up
@@ -339,6 +343,28 @@ def main():
            "Right": [BI["RightUpLeg"], BI["RightLeg"]] if "RightUpLeg" in BI
                     else [BI["RightLeg"], BI["RightShin"]]}
     ARM = [BI["RightShoulder"], BI["RightArm"], BI["RightForeArm"]]
+    HIP_L = "LeftUpLeg" if "LeftUpLeg" in BI else "LeftLeg"
+    KNEE_L = "LeftLeg" if "LeftUpLeg" in BI else "LeftShin"
+    HIP_R = "RightUpLeg" if "RightUpLeg" in BI else "RightLeg"
+    KNEE_R = "RightLeg" if "RightUpLeg" in BI else "RightShin"
+    PW_EASE = max(3, int(round(0.30 * FPS)))
+
+    def pw_lean(fr):
+        """Lean follows the pour: full while pouring, partial while carrying."""
+        if POUR[0] - PW_EASE <= fr <= POUR[-1] + PW_EASE:
+            if fr < POUR[0]:
+                t = (fr - (POUR[0] - PW_EASE)) / float(PW_EASE)
+            elif fr > POUR[-1]:
+                t = 1.0 - (fr - POUR[-1]) / float(PW_EASE)
+            else:
+                t = 1.0
+            t = max(0.0, min(1.0, t))
+            return t * t * (3 - 2 * t)
+        return 0.0
+    SWING_A = int(round(WINDOWS_S["lead_released"][0] * FPS))
+    SWING_B = LEAD_LANDED[0]
+    STEP_LIFT = 0.06 * S
+    KNEE_MIN_OFF = 0.03 * S
 
     # For the preview, author EVERY frame so the contract can be watched as motion.
     # Constraints still use only the sparse keyframes below.
@@ -350,17 +376,47 @@ def main():
     locals_all = np.repeat(np.eye(3)[None, None], N_FRAMES, axis=0).repeat(len(names), axis=1)
     roots_all = np.repeat(rest[BI["Hips"]][None], N_FRAMES, axis=0)
     worst = {"lead": 0.0, "rear": 0.0, "hand": 0.0}
+    swing_worst = [0.0]
+    KEYSET = set(SETTLE) | set(LEAD_LANDED) | set(POUR) | set(SUPPORT) | set(sparse(win("pour"), 3))
 
+    prev_local = None
     for f in all_frames:
-        local = torch.eye(3).repeat(len(names), 1, 1).double()
+        # SEED FROM THE PREVIOUS FRAME. Solving each frame from identity lets CCD
+        # land in a different valid branch every frame, which is what makes the
+        # arm and leg "teleport": the pose is right at each keyframe and
+        # discontinuous between them.
+        local = (prev_local.clone() if prev_local is not None
+                 else torch.eye(3).repeat(len(names), 1, 1).double())
         root = torch.tensor(np.array([0.0, rest[BI["Hips"]][1] - root_dn[f],
                                       root_fwd[f]]))
         # feet: absolute ground targets, so the body advances OVER planted feet
-        lt = lead_end if f >= LEAD_LANDED[0] else lead_start
-        worst["lead"] = max(worst["lead"],
-                            reach(local, root, LEG["Left"], "LeftFoot", lt))
-        worst["rear"] = max(worst["rear"],
-                            reach(local, root, LEG["Right"], "RightFoot", rear_fixed))
+        # The lead foot must SWING. Switching its target between two ground spots
+        # teleports it the full 0.26 m stagger in one frame -- measured as a
+        # 0.265 m single-frame jump, ~7000x the median.
+        if f <= SWING_A:
+            lt = lead_start.copy()
+        elif f >= SWING_B:
+            lt = lead_end.copy()
+        else:
+            u = (f - SWING_A) / float(SWING_B - SWING_A)
+            e = u * u * (3 - 2 * u)
+            lt = lead_start * (1 - e) + lead_end * e
+            # Lift profile with zero VALUE and zero SLOPE at both ends. sin(pi*u)
+            # is zero at the ends but its slope is not, so the foot's vertical
+            # velocity jumped from 0 to full in a single frame at lift-off -- which
+            # showed up as a 0.12 m/frame^2 knee spike exactly at the swing onset.
+            lt[1] += STEP_LIFT * 0.5 * (1.0 - math.cos(2.0 * math.pi * u))
+        # Only the CONSTRAINED keyframes go into the contract, so only they are
+        # asserted. Swing frames exist for the preview and are allowed a looser
+        # residual -- reported separately rather than blocking the build.
+        key = f in KEYSET
+        e_l = reach(local, root, LEG["Left"], "LeftFoot", lt)
+        e_r = reach(local, root, LEG["Right"], "RightFoot", rear_fixed)
+        if key:
+            worst["lead"] = max(worst["lead"], e_l)
+            worst["rear"] = max(worst["rear"], e_r)
+        else:
+            swing_worst[0] = max(swing_worst[0], e_l, e_r)
         in_pour = (POUR[0] <= f <= POUR[-1]) if a.preview_npz else (f in POUR)
         # OUTSIDE the pour the arm must be posed too, or it stays in the skeleton's
         # REST pose -- and ARDY's rest is a T-pose, so the preview showed the can
@@ -375,32 +431,104 @@ def main():
         # says this pose needs it; without authoring it the preview stands bolt
         # upright and the reach comes entirely from the shoulder, which is both
         # unnatural and not what the feasibility check assumed.
-        lean_w = w[f] if in_pour or f >= f0 else 0.0
+        # Lean is an ABSOLUTE pose, applied to a reset spine.
+        #
+        # Seeding each frame from the previous one (which is what removed the
+        # teleports) means any INCREMENTAL rotation compounds frame over frame:
+        # 32 degrees added 48 times folded the character double. Reset the spine
+        # first, then apply the absolute angle for this frame.
+        spine = [BI[n] for n in ("Spine", "Spine1", "Spine2", "Spine3")
+                 if n in BI] or [BI[n] for n in ("Spine1", "Spine2", "Chest") if n in BI]
+        for sj in spine:
+            local[sj] = torch.eye(3, dtype=local.dtype)
+        lean_w = w[f] * (0.35 + 0.65 * pw_lean(f))
         if lean_w > 1e-3 and LEAN_NEEDED > 0.5:
-            spine = [BI[n] for n in ("Spine", "Spine1", "Spine2", "Spine3")
-                     if n in BI] or [BI[n] for n in ("Spine1", "Spine2", "Chest") if n in BI]
             per = math.radians(LEAN_NEEDED * lean_w) / max(1, len(spine))
             for sj in spine:
                 gr, _ = fk(local, root)
                 rot_world_at(local, gr, sj, (1.0, 0.0, 0.0), per)
-        if in_pour:
-            worst["hand"] = max(worst["hand"],
-                                reach(local, root, ARM, "RightHand", grip))
-        else:
-            reach(local, root, ARM, "RightHand", carry)
+        # Blend carry -> pour -> carry with a smooth weight. A binary switch at the
+        # window edge is a teleport no matter how good each end pose is.
+        pw = 0.0
+        if POUR[0] - PW_EASE <= f <= POUR[-1] + PW_EASE:
+            if f < POUR[0]:
+                t_ = (f - (POUR[0] - PW_EASE)) / float(PW_EASE)
+            elif f > POUR[-1]:
+                t_ = 1.0 - (f - POUR[-1]) / float(PW_EASE)
+            else:
+                t_ = 1.0
+            pw = max(0.0, min(1.0, t_))
+            pw = pw * pw * (3 - 2 * pw)
+        hand_t = carry * (1.0 - pw) + np.asarray(grip) * pw
+        err_h = reach(local, root, ARM, "RightHand", hand_t)
+        if pw > 0.99 and key:
+            worst["hand"] = max(worst["hand"], err_h)
+
+        # Wrist orientation, RAMPED with the same pour weight. Setting it only
+        # inside the window snapped the can upright-to-tipped in one frame.
+        if pw > 1e-3:
             gr, _ = fk(local, root)
-            # wrist orientation so the handle sits in the palm and the spout tips
-            want = torch.tensor(R_wrist)
+            Rw = np.asarray(R_wrist, dtype=float)
+            ang = math.acos(max(-1.0, min(1.0, (np.trace(Rw) - 1.0) / 2.0)))
+            if ang > 1e-6:
+                ax = np.array([Rw[2, 1] - Rw[1, 2], Rw[0, 2] - Rw[2, 0],
+                               Rw[1, 0] - Rw[0, 1]]) / (2.0 * math.sin(ang))
+                Rb = rot_axis(ax, math.degrees(ang * pw))
+            else:
+                Rb = np.eye(3)
             p_ = parents[BI["RightHand"]]
-            local[BI["RightHand"]] = gr[p_].T @ want
+            local[BI["RightHand"]] = gr[p_].T @ torch.tensor(Rb)
+
+        # Feet flat, knees forward. The CCD only controls the ANKLE POSITION, so
+        # the foot was free to rotate about it (toes driving through the ground)
+        # and the knee was free to sit anywhere on its circle (legs folding
+        # inward). Both are fixed after the position solve.
+        for side_p, foot_n, knee_n, hip_n in (
+                ("L", "LeftFoot", KNEE_L, HIP_L), ("R", "RightFoot", KNEE_R, HIP_R)):
+            gr, pj = fk(local, root)
+            # knee toward +Z (the way the body faces)
+            hipp, kneep, anklep = pj[BI[hip_n]], pj[BI[knee_n]], pj[BI[foot_n]]
+            limb = (anklep - hipp)
+            if limb.norm() > 1e-6:
+                u = limb / limb.norm()
+                off = (kneep - hipp) - u * torch.dot(kneep - hipp, u)
+                want = torch.tensor(FWD, dtype=off.dtype)
+                want = want - u * torch.dot(want, u)
+                # Only correct a knee whose direction is well defined. Near a
+                # straight leg the offset is noise, and "correcting" it swings the
+                # knee across its circle frame to frame -- a 0.16 m pop.
+                # Ramp the correction with how well-defined the knee direction is.
+                # A hard threshold means the correction switches on the instant the
+                # leg bends, snapping the knee across its circle -- measured as a
+                # 0.12 m/frame^2 acceleration spike at the first swing frame.
+                if want.norm() > 1e-4 and off.norm() > 1e-5:
+                    q = float((off.norm() - KNEE_MIN_OFF * 0.4)
+                              / max(1e-6, KNEE_MIN_OFF * 0.6))
+                    q = max(0.0, min(1.0, q))
+                    q = q * q * (3 - 2 * q)
+                    a_ = off / off.norm(); b_ = want / want.norm()
+                    ang = math.acos(float(torch.clamp(torch.dot(a_, b_), -1, 1)))
+                    if q > 1e-3 and ang > math.radians(1):
+                        sgn = 1.0 if float(torch.dot(torch.cross(a_, b_), u)) > 0 else -1.0
+                        rot_world_at(local, gr, BI[hip_n], tuple(u.tolist()),
+                                     sgn * ang * q)
+            # sole flat: cancel the foot's own global rotation back to rest
+            gr, _ = fk(local, root)
+            p_ = parents[BI[foot_n]]
+            local[BI[foot_n]] = gr[p_].T @ torch.eye(3, dtype=local.dtype)
+
+        prev_local = local.clone()
         locals_all[f] = local.numpy()
         roots_all[f] = root.numpy()
         gr, pj = fk(local, root)
         poses[f] = pj.numpy()
         rots[f] = gr.numpy()
 
-    print("  IK residuals: lead foot %.4f m, rear foot %.4f m, hand %.4f m"
+    print("  IK residuals on CONSTRAINED keys: lead %.4f m, rear %.4f m, hand %.4f m"
           % (worst["lead"], worst["rear"], worst["hand"]))
+    if swing_worst[0]:
+        print("  (swing/interpolated preview frames peak at %.4f m -- not constrained)"
+              % swing_worst[0])
     assert max(worst.values()) < 0.02, "IK did not reach its targets: %s" % worst
 
     def mk(cls, frames):
