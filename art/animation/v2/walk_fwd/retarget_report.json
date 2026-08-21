@@ -29,64 +29,64 @@
   "inplace": true,
   "def_motion_delta_error_deg": {
     "DEF-spine": {
-      "mean_delta_err_deg": 0.05,
-      "max_delta_err_deg": 0.11
+      "mean_delta_err_deg": 0.34,
+      "max_delta_err_deg": 1.02
     },
     "DEF-spine.001": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.35,
+      "max_delta_err_deg": 0.98
     },
     "DEF-spine.002": {
-      "mean_delta_err_deg": 0.05,
-      "max_delta_err_deg": 0.15
+      "mean_delta_err_deg": 0.46,
+      "max_delta_err_deg": 0.97
     },
     "DEF-spine.003": {
       "mean_delta_err_deg": 0.0,
       "max_delta_err_deg": 0.0
     },
     "DEF-spine.004": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.05,
+      "max_delta_err_deg": 0.13
     },
     "DEF-spine.006": {
       "mean_delta_err_deg": 0.0,
       "max_delta_err_deg": 0.0
     },
     "DEF-shoulder.R": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.31,
+      "max_delta_err_deg": 0.59
     },
     "DEF-upper_arm.R": {
-      "mean_delta_err_deg": 1.11,
-      "max_delta_err_deg": 2.53
+      "mean_delta_err_deg": 1.4,
+      "max_delta_err_deg": 2.96
     },
     "DEF-forearm.R": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.47,
+      "max_delta_err_deg": 0.94
     },
     "DEF-hand.R": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.55,
+      "max_delta_err_deg": 0.95
     },
     "DEF-shoulder.L": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.29,
+      "max_delta_err_deg": 0.74
     },
     "DEF-upper_arm.L": {
-      "mean_delta_err_deg": 0.93,
-      "max_delta_err_deg": 2.5
+      "mean_delta_err_deg": 1.08,
+      "max_delta_err_deg": 2.29
     },
     "DEF-forearm.L": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.56,
+      "max_delta_err_deg": 0.99
     },
     "DEF-hand.L": {
-      "mean_delta_err_deg": 0.0,
-      "max_delta_err_deg": 0.0
+      "mean_delta_err_deg": 0.71,
+      "max_delta_err_deg": 1.51
     },
     "DEF-thigh.R": {
-      "mean_delta_err_deg": 2.01,
-      "max_delta_err_deg": 5.19
+      "mean_delta_err_deg": 2.11,
+      "max_delta_err_deg": 5.04
     },
     "DEF-shin.R": {
       "mean_delta_err_deg": 2.16,
@@ -97,8 +97,8 @@
       "max_delta_err_deg": 0.0
     },
     "DEF-thigh.L": {
-      "mean_delta_err_deg": 2.29,
-      "max_delta_err_deg": 6.32
+      "mean_delta_err_deg": 2.3,
+      "max_delta_err_deg": 6.35
     },
     "DEF-shin.L": {
       "mean_delta_err_deg": 2.59,
@@ -112,11 +112,11 @@
   "forearm_roll_range_deg": {
     "DEF-forearm.R": {
       "source_roll_range_deg": 93.75,
-      "target_roll_range_deg": 93.75
+      "target_roll_range_deg": 93.94
     },
     "DEF-forearm.L": {
       "source_roll_range_deg": 53.85,
-      "target_roll_range_deg": 53.85
+      "target_roll_range_deg": 54.12
     }
   },
   "driven_controls": [

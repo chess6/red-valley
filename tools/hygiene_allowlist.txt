@@ -6,3 +6,4 @@ art/animation/rigify/walk_fwd/walk_fwd.glb
 art/animation/rigify/water_can/water_can.glb
 art/animation/v2/walk_fwd/walk_fwd.glb
 art/animation/v2/water_can/water_can.glb
+art/animation/v2/isolate/plain/plain.glb

@@ -145,6 +145,17 @@ bones, while exempt from the fidelity gate, now face explicit **elbow range,
 wrist articulation, knee range and joint-jitter** gates — which immediately
 caught the locked elbow and a 65°/frame jump that the exemption had been hiding.
 
+## Isolation test (before Kimodo)
+
+Full write-up: `docs/ISOLATION_TEST.md`. Headline: the authored interaction
+layers are **innocent** — plain and polished retargets measured identically on
+every task-space quantity. Two retargeter defects were real and are fixed: a
+spine *shape* error that produced the lower-back arch (rotation-matching is not
+direction-matching across skeletons with different rest orientations), and
+pelvis placement being corrected before the spine solve moved it. The missing
+step and the deep hip hinge are properties of the **source**, and the missing
+step traces to a constraint file that pinned both feet.
+
 ## Open gate failures (not waived)
 
 1. **Walk foot skating 7.4 cm/s peak** (left) vs a 5 cm/s gate; water 12.5 cm/s

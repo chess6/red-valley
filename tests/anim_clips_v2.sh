@@ -65,6 +65,17 @@ for label, f in (("walk_fwd", "compare/v2_walk_validation.json"),
              % (sp["pour_window_frames"][0], sp["pour_window_frames"][1],
                 sp["window_min_m"], sp["window_max_m"], sp["window_frames_in_band"],
                 sp["window_frames_total"], sp["documented_band_m"]))
+    ts = r.get("task_space")
+    if ts:
+        gate("%s: forward reach preserved" % label, ts["gate_reach_preserved"],
+             "normalised %.3f vs %.3f = %.2fx" % (ts["forward_reach_normalised"]["rig"],
+                                                  ts["forward_reach_normalised"]["src"],
+                                                  ts["forward_reach_normalised"]["ratio"]))
+        gate("%s: step displacement matches source" % label, ts["gate_step_preserved"],
+             ", ".join("%s rig %.3f src %.3f" % (k, v["rig_m"], v["src_m"])
+                       for k, v in ts["step_displacement"].items()))
+        gate("%s: spine shape preserved" % label, ts["gate_spine_shape"],
+             "per-segment pitch err %s deg" % ts["spine_segment_pitch_err_deg"])
     jl = r.get("joint_limits")
     if jl:
         gate("%s: elbow within anatomical range" % label, jl["gate_elbow_range"],

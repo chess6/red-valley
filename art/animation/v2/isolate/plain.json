@@ -1,0 +1,61 @@
+{
+  "label": "plain",
+  "frames": 24,
+  "wrist_forward_reach": {
+    "rig_min": 0.0183,
+    "rig_max": 0.4791,
+    "rig_range": 0.4608,
+    "src_min": 0.1002,
+    "src_max": 0.429,
+    "src_range": 0.3288,
+    "reach_preserved_pct": 140.2
+  },
+  "shoulder_to_wrist": {
+    "rig_min": 0.6881,
+    "rig_max": 0.7063,
+    "src_min": 0.5125,
+    "src_max": 0.524
+  },
+  "trunk_lean_deg": {
+    "rig_min": 2.5,
+    "rig_max": 25.6,
+    "src_min": 1.1,
+    "src_max": 22.6,
+    "lean_amplification": 1.07
+  },
+  "pelvis_translation": {
+    "rig_excursion_y_m": 0.0744,
+    "src_excursion_y_m": 0.0747,
+    "rig_excursion_z_m": 0.0067,
+    "src_excursion_z_m": 0.0067,
+    "ratio_y": 1.0
+  },
+  "lead_foot_displacement": {
+    "rig_left_m": 0.0058,
+    "rig_right_m": 0.0037,
+    "src_left_m": 0.0175,
+    "src_right_m": 0.0219,
+    "ratio_left": 0.33,
+    "ratio_right": 0.17
+  },
+  "spine_segment_pitch_deg": {
+    "rig_per_segment_max": [
+      9.7,
+      25.1,
+      32.4,
+      39.1
+    ],
+    "src_per_segment_max": [
+      9.7,
+      25.1,
+      32.4,
+      39.1
+    ],
+    "rig_minus_src": [
+      0.0,
+      -0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

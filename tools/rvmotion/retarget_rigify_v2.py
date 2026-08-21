@@ -271,6 +271,7 @@ for side in ("L", "R"):
     PB["upper_arm_parent.%s" % side].keyframe_insert('["IK_FK"]', frame=1)
 
 POLE_DIST = 0.45
+LOCK_MIN_DRIFT = 0.03
 # Near a straight limb the knee/elbow offset from the hip-ankle line shrinks to
 # noise, and a pole aimed along it flips frame to frame -- which shows up as the
 # shin spinning 180 deg about its own axis while the knee angle looks fine. Hold
@@ -434,6 +435,11 @@ if PROP:
 
 DEF_OF = {"Spine": "DEF-spine", "Spine1": "DEF-spine.001", "Spine2": "DEF-spine.002",
           "Spine3": "DEF-spine.003", "Neck": "DEF-spine.004"}
+DEF_CHILD = {"Spine": "DEF-spine.001", "Spine1": "DEF-spine.002",
+             "Spine2": "DEF-spine.003", "Spine3": "DEF-spine.004",
+             "Neck": "DEF-spine.006"}
+SRC_CHILD = {"Spine": "Spine1", "Spine1": "Spine2", "Spine2": "Spine3",
+             "Spine3": "Neck", "Neck": "Head"}
 SPINE_SOLVE = [j for j in ("Spine", "Spine1", "Spine2", "Spine3", "Neck") if j in present]
 OFFSET_DEF = {j: np2m(G[CAL_F, JN.index(j)]).transposed()
                  @ (W @ rig.data.bones[DEF_OF[j]].matrix_local).to_3x3()
@@ -486,6 +492,13 @@ for f in range(T):
     loc = Vector(body_pos[f]) - rot @ d_rest
     tb.matrix = Matrix.Translation(loc) @ rot.to_4x4()
     upd()
+    # ...then correct until the PELVIS actually lands on target. The analytic
+    # pivot compensation above is only exact if nothing downstream moves the
+    # pelvis; measured, it still let the pelvis travel 0.121 m where the source
+    # moved 0.045 -- and the feet, targeted from the animated hip, inherited that
+    # error sevenfold.
+
+    upd()
     for j in ORDER[1:]:
         pb = PB[present[j]]
         cur = pb.matrix.to_translation()
@@ -499,21 +512,54 @@ for f in range(T):
     # the thing that actually deforms the mesh -- measure each DEF bone and correct
     # its driving control until they agree. Three passes converge to well under a
     # degree here.
-    for _pass in range(3):
+    # Match each spine segment's DIRECTION, not just its rotation.
+    #
+    # Rotation-matching is the right thing for limbs, but for the spine it left
+    # the SHAPE wrong: measured per-segment pitch came out [18.7, 23.9, 25.6,
+    # 25.3] against a source of [9.7, 25.1, 32.4, 39.1] -- nearly flat, with the
+    # lumbar base almost doubled and the upper spine cut by a third. That is a
+    # lower-back arch with a torso that fails to curve over, which is exactly the
+    # "back slightly arched, subtly unnatural" read. Rest orientations differ
+    # between the two skeletons, so equal rotations do not mean equal directions;
+    # the silhouette follows directions. Roll is inherited from the rotation
+    # transfer already applied, then direction is corrected on top.
+    for _pass in range(4):
         worst = 0.0
         for j in SPINE_SOLVE:
-            dbone = DEF_OF[j]
-            want = np2m(G[f, JN.index(j)]) @ OFFSET_DEF[j]
-            got = (W @ PB[dbone].matrix).to_3x3()
-            corr = want @ got.inverted()
+            dbone, child = DEF_OF[j], DEF_CHILD[j]
+            src_dir = Vector(tuple(POS[f, JN.index(SRC_CHILD[j])] - POS[f, JN.index(j)]))
+            if src_dir.length < 1e-6:
+                continue
+            src_dir.normalize()
+            a_ = (W @ PB[dbone].matrix).to_translation()
+            b_ = (W @ PB[child].matrix).to_translation()
+            cur = (b_ - a_)
+            if cur.length < 1e-6:
+                continue
+            corr = cur.normalized().rotation_difference(src_dir).to_matrix()
             worst = max(worst, abs(corr.to_quaternion().angle))
             ctrl = PB[present[j]]
             mtx = ctrl.matrix.copy()
             Tm = Matrix.Translation(mtx.to_translation())
             ctrl.matrix = Tm @ corr.to_4x4() @ Tm.inverted() @ mtx
             upd()
-        if math.degrees(worst) < 0.25:
+        if math.degrees(worst) < 0.2:
             break
+
+    # Pelvis placement must be the LAST word: the spine solve above rotates
+    # controls the pelvis hangs from, so correcting before it left the pelvis
+    # 1.6x over-travelled -- and the feet, targeted off the animated hip,
+    # inherited that error four to six fold.
+    for _ in range(4):
+        pel = ((W @ PB["DEF-thigh.L"].matrix).to_translation()
+               + (W @ PB["DEF-thigh.R"].matrix).to_translation()) * 0.5
+        err = Vector(body_pos[f]) - pel
+        if err.length < 1e-4:
+            break
+        mtx = tb.matrix.copy()
+        mtx.translation = mtx.translation + err
+        tb.matrix = mtx
+        upd()
     if f == 0:
         print("spine closed-loop: converged to %.3f deg after %d pass(es)"
               % (math.degrees(worst), _pass + 1))

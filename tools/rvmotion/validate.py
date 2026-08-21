@@ -371,6 +371,62 @@ R["joint_limits"] = {
     "note": ("applies to authored-override bones too -- exemption from the fidelity "
              "gate is not exemption from anatomy")}
 
+# ---------- 5c. task-space preservation: reach, step, spine shape ----------
+# These are the gates the earlier suite lacked entirely: it could confirm that
+# rotations transferred while the delivered pose lost the reach, dropped a step,
+# or arched the lower back -- none of which a rotation metric can see.
+hip_j = JN.index("Hips")
+def rig_pel(f):
+    return (pos["DEF-thigh.L"][f] + pos["DEF-thigh.R"][f]) * 0.5
+rig_reach = np.array([-(pos["DEF-hand.R"][f].y - rig_pel(f).y) for f in SAMPLE])
+src_reach = -(POS[SAMPLE][:, JN.index("RightHand"), 1] - POS[SAMPLE][:, hip_j, 1])
+# arm length differs between skeletons, so compare reach NORMALISED by arm length
+rig_arm = float(rig.data.bones["upper_arm_fk.R"].length + rig.data.bones["forearm_fk.R"].length)
+src_arm = float(np.linalg.norm(POS[0, JN.index("RightForeArm")] - POS[0, JN.index("RightArm")])
+                + np.linalg.norm(POS[0, JN.index("RightHand")] - POS[0, JN.index("RightForeArm")]))
+rr = float(np.ptp(rig_reach) / rig_arm)
+sr = float(np.ptp(src_reach) / src_arm)
+# Step is measured RELATIVE TO THE PELVIS. Comparing world-space foot travel is
+# meaningless for an in-place clip: the source walks 1.5 m and the delivered loop
+# walks on the spot, so a faithful stride scored as a lost step.
+step = {}
+for side, cn in (("L", "LeftFoot"), ("R", "RightFoot")):
+    d = "DEF-foot.%s" % side
+    rig_rel = [pos[d][f].y - rig_pel(f).y for f in SAMPLE]
+    src_rel = POS[SAMPLE][:, JN.index(cn), 1] - POS[SAMPLE][:, hip_j, 1]
+    step[side] = {"rig_m": round(float(np.ptp(rig_rel)), 4),
+                  "src_m": round(float(np.ptp(src_rel)), 4),
+                  "ratio": round(float(np.ptp(rig_rel) / max(1e-6, np.ptp(src_rel))), 3)}
+segs_rig, segs_src = [], []
+CH = [("DEF-spine", "DEF-spine.001", "Spine", "Spine1"),
+      ("DEF-spine.001", "DEF-spine.002", "Spine1", "Spine2"),
+      ("DEF-spine.002", "DEF-spine.003", "Spine2", "Spine3"),
+      ("DEF-spine.003", "DEF-spine.004", "Spine3", "Neck")]
+for a_, b_, sa, sb in CH:
+    if a_ not in pos or b_ not in pos: continue
+    rv = [math.degrees(math.atan2(Vector(((pos[b_][f] - pos[a_][f]).x,
+                                          (pos[b_][f] - pos[a_][f]).y)).length,
+                                  (pos[b_][f] - pos[a_][f]).z)) for f in SAMPLE]
+    dv = POS[SAMPLE][:, JN.index(sb)] - POS[SAMPLE][:, JN.index(sa)]
+    sv = np.degrees(np.arctan2(np.linalg.norm(dv[:, :2], axis=1), dv[:, 2]))
+    segs_rig.append(float(np.max(rv))); segs_src.append(float(np.max(sv)))
+shape_err = [round(a_ - b_, 2) for a_, b_ in zip(segs_rig, segs_src)]
+R["task_space"] = {
+    "forward_reach_normalised": {"rig": round(rr, 4), "src": round(sr, 4),
+                                 "ratio": round(rr / max(1e-6, sr), 3)},
+    "forward_reach_raw_m": {"rig": round(float(np.ptp(rig_reach)), 4),
+                            "src": round(float(np.ptp(src_reach)), 4),
+                            "note": "raw ratio tracks the arm-length ratio (%.2f) and is not a defect"
+                                    % (rig_arm / max(1e-6, src_arm))},
+    "step_displacement": step,
+    "spine_segment_pitch_err_deg": shape_err,
+    "gate_reach_preserved": abs(rr / max(1e-6, sr) - 1.0) <= 0.25,
+    "gate_step_preserved": all(abs(v["ratio"] - 1.0) <= 0.30 for v in step.values()),
+    "gate_spine_shape": max(abs(x) for x in shape_err) <= 4.0 if shape_err else True,
+    "note": ("reach is normalised by arm length because the skeletons differ; step "
+             "preservation compares against the SOURCE, so a source with no step "
+             "passes only if the rig also has none")}
+
 # ---------- 6. face: rigid core vs blend band, measured separately ---------
 GIx = {g.name: g.index for g in body.vertex_groups}
 hi_, ni_ = GIx.get("DEF-spine.006"), GIx.get("DEF-spine.004")
