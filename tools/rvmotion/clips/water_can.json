@@ -1,0 +1,23 @@
+{
+  "name": "water_can",
+  "fps": 20,
+  "duration_s": 1.6,
+  "soil_height_m": 0.22,
+  "prop": {
+    "glb": "art/animation/ardy_pilot/proxy/watering_can_proxy.glb",
+    "meta": "art/animation/ardy_pilot/proxy/watering_can_proxy.json",
+    "socket_parent": "DEF-hand.R"
+  },
+  "notes": "Authored keyframes per ADR 0001. Targets are world metres on the shipping character; times in seconds; everything between keys is smoothly eased.",
+  "sync_point_s": 0.80,
+  "step": {"foot": "L", "lift_m": 0.055, "swing_from_s": 0.10, "swing_to_s": 0.35},
+  "keys": [
+    {"t": 0.00, "phase": "carry",   "hand_r": [-0.30, -0.02, 0.86], "can_tilt_deg": 0,  "lean_deg": 0,  "pelvis_dy": 0.00, "foot_l_fwd": 0.00},
+    {"t": 0.35, "phase": "step",    "hand_r": [-0.30, -0.10, 0.84], "can_tilt_deg": 0,  "lean_deg": 4,  "pelvis_dy": 0.02, "foot_l_fwd": 0.26},
+    {"t": 0.60, "phase": "reach",   "hand_r": [-0.26, -0.44, 0.78], "can_tilt_deg": 18, "lean_deg": 16, "pelvis_dy": 0.07, "foot_l_fwd": 0.26},
+    {"t": 0.80, "phase": "pour",    "hand_r": [-0.24, -0.52, 0.74], "can_tilt_deg": 46, "lean_deg": 20, "pelvis_dy": 0.09, "foot_l_fwd": 0.26},
+    {"t": 1.20, "phase": "pour",    "hand_r": [-0.24, -0.52, 0.74], "can_tilt_deg": 46, "lean_deg": 20, "pelvis_dy": 0.09, "foot_l_fwd": 0.26},
+    {"t": 1.45, "phase": "recover", "hand_r": [-0.29, -0.16, 0.83], "can_tilt_deg": 8,  "lean_deg": 6,  "pelvis_dy": 0.03, "foot_l_fwd": 0.26},
+    {"t": 1.60, "phase": "carry",   "hand_r": [-0.30, -0.04, 0.86], "can_tilt_deg": 0,  "lean_deg": 0,  "pelvis_dy": 0.00, "foot_l_fwd": 0.26}
+  ]
+}

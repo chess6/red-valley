@@ -24,3 +24,7 @@ art/animation/ab/logs2/kimodo_gen.log
 art/animation/contract_preview/contract_side.mp4
 art/animation/contract_preview/contract_threequarter.mp4
 art/animation/contract_preview/contract_gameplay.mp4
+art/animation/authored/water_can.glb
+art/animation/authored/authored_water_can_side.mp4
+art/animation/authored/authored_water_can_threequarter.mp4
+art/animation/authored/authored_water_can_gameplay.mp4
