@@ -10,3 +10,11 @@ art/animation/v2/isolate/plain/plain.glb
 art/animation/ab/logs/ab.log
 art/animation/ab/logs/ardy_gen.log
 art/animation/ab/logs/kimodo_gen.log
+art/animation/v2/water_can/v2_water_can_side.mp4
+art/animation/v2/water_can/v2_water_can_threequarter.mp4
+art/animation/v2/water_can/v2_water_can_gameplay.mp4
+art/animation/v2/walk_fwd/v2_walk_fwd_side.mp4
+art/animation/v2/walk_fwd/v2_walk_fwd_threequarter.mp4
+art/animation/v2/walk_fwd/v2_walk_fwd_gameplay.mp4
+art/animation/v2/native/native_water_can_oneshot.mp4
+art/animation/v2/native/native_walk_fwd.mp4
